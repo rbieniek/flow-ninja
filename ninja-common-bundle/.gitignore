@@ -4,7 +4,4 @@ target
 .externalToolBuilders
 .classpath
 .metadata
-.attach*
 bin
-*.log
-.buildpath
