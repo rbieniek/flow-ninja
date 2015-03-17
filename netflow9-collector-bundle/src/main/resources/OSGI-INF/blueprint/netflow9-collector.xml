@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0"
+	xsi:schemaLocation="
+	http://www.osgi.org/xmlns/blueprint/v1.0.0 https://osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd
+	http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0 http://aries.apache.org/schemas/blueprint-cm/blueprint-cm-1.1.0.xsd
+	">
+	
+	<cm:property-placeholder persistent-id="ninja.netflow9">
+		<cm:default-properties>
+			<cm:property name="bindAddress" >
+				<value>0.0.0.0</value>
+			</cm:property>
+			<cm:property name="bindPort">
+				<value type="java.lang.Integer">2055</value>
+			</cm:property>
+		</cm:default-properties>
+	</cm:property-placeholder>
+
+	<service interface="org.flowninja.collector.netflow9.Netflow9CollectorService" ref="netflowService"/>
+	
+	<bean id="bindAddress" class="java.net.InetAddress" factory-method="getByName">
+		<argument value="${bindAddress}"/>
+	</bean>	
+	
+	<bean id="netflowService" class="org.flowninja.collector.netflow9.impl.Netflow9CollectorServiceImpl" init-method="init" destroy-method="destroy">
+		<property name="bindAddress" ref="bindAddress"/>
+		<property name="bindPort" value="${bindPort}"/>
+		<property name="netflowCollector" ref="netflowCollector"/>
+	</bean>
+
+	<bean id="netflowCollector" class="org.flowninja.collector.netflow9.impl.Netflow9CollectorHandler">
+		
+	</bean>
+	
+	
+	<!--
+	<cm:managed-service-factory factory-pid="ninja.netflow9" auto-export="interfaces">
+		<service-properties>
+			<cm:cm-properties persistent-id=""/>
+		</service-properties>
+		<cm:managed-component 
+				class="org.flowninja.collector.netflow9.impl.Netflow9CollectorServiceImpl" 
+				init-method="init" 
+				destroy-method="destroy">
+			<cm:managed-properties persistent-id="" update-strategy="container-managed"/>			
+			<property name="bindAddress">
+				<value type="java.net.InetAddress">0.0.0.0</value>
+			</property>
+			<property name="bindPort" value="2055"/>
+			<property name="netflowCollector" ref="netflowCollector"/>
+		</cm:managed-component>
+	</cm:managed-service-factory>
+-->
+	
+</blueprint>
