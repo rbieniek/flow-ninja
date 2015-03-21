@@ -35,6 +35,7 @@ public class Netflow9CollectorServiceImpl implements Netflow9CollectorService {
 	private AtomicReference<InetAddress> bindAddress = new AtomicReference<InetAddress>();
 	private AtomicInteger bindPort = new AtomicInteger(-1);
 	private Netflow9CollectorHandler netflowCollector;
+	private Netflow9PacketDecoder netflowDecoder;
 	private AtomicBoolean canRun = new AtomicBoolean(false);
 	private AtomicBoolean serverRunning = new AtomicBoolean(false);
 	private EventLoopGroup group = null;
@@ -116,6 +117,13 @@ public class Netflow9CollectorServiceImpl implements Netflow9CollectorService {
 	public void setNetflowCollector(Netflow9CollectorHandler netflowCollector) {
 		this.netflowCollector = netflowCollector;
 	}
+	
+	/**
+	 * @param netflowDecoder the netflowDecoder to set
+	 */
+	public void setNetflowDecoder(Netflow9PacketDecoder netflowDecoder) {
+		this.netflowDecoder = netflowDecoder;
+	}
 
 	private void stopServer() {
 		logger.info("stopping netflow v9 collector server");
@@ -153,7 +161,7 @@ public class Netflow9CollectorServiceImpl implements Netflow9CollectorService {
 				.channel(NioDatagramChannel.class)
 				.option(ChannelOption.SO_BROADCAST, true)
 				.option(ChannelOption.SO_REUSEADDR, true)
-				.handler(new Netflow9PacketDecoder())
+				.handler(netflowDecoder)
 				.handler(netflowCollector);
 			
 			b.bind(this.bindAddress.get(), this.bindPort.get()).addListener(new ChannelFutureListener() {
@@ -166,6 +174,5 @@ public class Netflow9CollectorServiceImpl implements Netflow9CollectorService {
 			});
 		}
 	}
-
 
 }
