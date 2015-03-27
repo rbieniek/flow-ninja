@@ -4,13 +4,8 @@
 package org.flowninja.collector.netflow9.packet;
 
 import java.net.InetAddress;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalUnit;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -24,12 +19,9 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
-import org.quartz.SchedulerFactory;
 import org.quartz.SimpleScheduleBuilder;
 import org.quartz.Trigger;
-import org.quartz.Trigger.CompletedExecutionInstruction;
 import org.quartz.TriggerBuilder;
-import org.quartz.TriggerListener;
 import org.quartz.impl.StdSchedulerFactory;
 import org.quartz.listeners.TriggerListenerSupport;
 import org.slf4j.Logger;
@@ -102,14 +94,14 @@ public class PeerRegistry {
 			logger.info("peer expiry trigger fired, checking for peer expired before {}", expiryDate);
 			
 			synchronized (PeerRegistry.this) {
-				List<InetAddress> removeable = new LinkedList<InetAddress>();
+				List<PeerKey> removeable = new LinkedList<PeerKey>();
 
-				for(Entry<InetAddress, PeerEntry> entry : peers.entrySet()) {
+				for(Entry<PeerKey, PeerEntry> entry : peers.entrySet()) {
 					if(entry.getValue().getLastUsedStamp().isBefore(expiryDate))
 						removeable.add(entry.getKey());
 				}
 				
-				for(InetAddress key : removeable) {
+				for(PeerKey key : removeable) {
 					logger.info("Remove peer {}", key);
 					
 					peers.remove(key);
@@ -122,7 +114,7 @@ public class PeerRegistry {
 	}
 	
 	private int peerTtl;
-	private Map<InetAddress, PeerEntry> peers = new HashMap<InetAddress, PeerRegistry.PeerEntry>();
+	private Map<PeerKey, PeerEntry> peers = new HashMap<PeerKey, PeerRegistry.PeerEntry>();
 	private Scheduler scheduler;
 
 	/**
@@ -175,15 +167,17 @@ public class PeerRegistry {
 		}
 	}
 	
-	public synchronized FlowRegistry registryForPeerAddress(InetAddress peerAddress) {
-		logger.info("obtaing flow registry for peer address {}", peerAddress);
+	public synchronized FlowRegistry registryForPeerAddress(InetAddress peerAddress, long sourceID) {
+		PeerKey key = new PeerKey(peerAddress, sourceID);
 		
-		PeerEntry peer = peers.get(peerAddress);
+		logger.info("obtaing flow registry for peer address {} and source ID {}", peerAddress, sourceID);
+		
+		PeerEntry peer = peers.get(key);
 		
 		if(peer == null) {
 			peer = new PeerEntry();
 			
-			peers.put(peerAddress, peer);
+			peers.put(key, peer);
 		}
  		
 		return peer.getFlowRegistry();

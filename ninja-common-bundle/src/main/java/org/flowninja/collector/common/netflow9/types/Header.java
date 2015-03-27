@@ -4,6 +4,7 @@
 package org.flowninja.collector.common.netflow9.types;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Packet header leading in a Netflow 9 packet
@@ -22,6 +23,7 @@ public class Header implements Serializable {
 	private long unixSeconds;
 	private long sequenceNumber;
 	private long sourceId;
+	private Date timestamp;
 	
 	public Header() {}
 	
@@ -31,6 +33,7 @@ public class Header implements Serializable {
 		this.unixSeconds = unixSeconds;
 		this.sequenceNumber = sequenceNumber;
 		this.sourceId = sourceId;
+		this.timestamp = new Date(unixSeconds * 1000L);
 	}
 
 	/**
@@ -73,5 +76,12 @@ public class Header implements Serializable {
 	 */
 	public long getSourceId() {
 		return sourceId;
+	}
+
+	/**
+	 * @return the timestamp
+	 */
+	public Date getTimestamp() {
+		return timestamp;
 	}
 }

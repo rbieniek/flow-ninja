@@ -8,7 +8,6 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
 
 import java.net.InetAddress;
-import java.net.InetSocketAddress;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -39,6 +38,7 @@ public class Netflow9PacketDecoder extends ByteToMessageDecoder {
 	private static final int OPTIONS_TEMPLATE_FLOWSET_ID = 1;
 	
 	private PeerRegistry peerRegistry;
+	private PeerAddressMapper peerAddressMapper = new InetSocketAddressPeerAddressMapper();
 	
 	/**
 	 * @param peerFlowRegistry the peerFlowRegistry to set
@@ -68,81 +68,75 @@ public class Netflow9PacketDecoder extends ByteToMessageDecoder {
 	 */
 	@Override
 	protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
-		InetAddress peerAddress = ((InetSocketAddress)ctx.channel().remoteAddress()).getAddress();
+		InetAddress peerAddress = peerAddressMapper.mapRemoteAddress(ctx.channel().remoteAddress());
 		
 		logger.info("received flow packet from peer {}", peerAddress);
-		
-		FlowRegistry flowRegistry = peerRegistry.registryForPeerAddress(peerAddress);
 		
 		if(in.readableBytes() > PACKET_HEADER_LENGTH) {
 			int versionNumber = in.readUnsignedShort();
 			
 			if(versionNumber == VERSION_NUMBER) {
 				Header header = new Header(in.readUnsignedShort(), 
-						in.readLong(), 
-						in.readLong(), 
-						in.readLong(), 
-						in.readLong());
+						in.readUnsignedInt(), 
+						in.readUnsignedInt(), 
+						in.readUnsignedInt(), 
+						in.readUnsignedInt());
 
 				List<Template> templates = new LinkedList<Template>();
 				List<FlowBuffer> flows = new LinkedList<FlowBuffer>();
 				
-				for(int packetNumber=0; packetNumber<header.getRecordCount(); packetNumber++) {
-					if(in.readableBytes() < 4) {
-						logger.error("packet short to {} bytes in record {}", in.readableBytes(), packetNumber);
-						
-						return;
-					}
-					
+				int recordNumber = 0;
+				while(in.readableBytes() > 4) {					
 					int flowSetId = in.readUnsignedShort();
 					int length = in.readUnsignedShort();
 					int remainingOctets = length - 4; // subtract length of flowset ID and flowset length 
-					ByteBuf workBuf = null;
 					
 					if(in.readableBytes() < remainingOctets) {
 						logger.error("packet short to {} bytes when {} bytes required in record {}", 
-								in.readableBytes(), remainingOctets, packetNumber);
+								in.readableBytes(), remainingOctets, recordNumber);
 
 						return;
 					}
 
-					try {
-						workBuf = in.readSlice(remainingOctets);
-						
-						switch(flowSetId) {
-						case TEMPLATE_FLOWSET_ID:
-							while(workBuf.readableBytes() > 4) {
-								int flowSetID = workBuf.readUnsignedShort();
-								int fieldCount = workBuf.readUnsignedShort();
-								List<TemplateField> fields = new LinkedList<TemplateField>();
-								
-								if(workBuf.readableBytes() < fieldCount * 4) {
-									logger.error("packet short to {} bytes when {} bytes required in record {}",
-											workBuf.readableBytes(), fieldCount * 4, packetNumber);
-									
-									return;
-								}
-								
-								for(int fieldNumber=0; fieldNumber < fieldCount; fieldNumber++) {
-									fields.add(new TemplateField(FieldType.fromCode(workBuf.readUnsignedShort()), 
-											workBuf.readUnsignedShort()));
-								}
-								
-								templates.add(new Template(flowSetID, fields));
-							}
-							break;
-						case OPTIONS_TEMPLATE_FLOWSET_ID:
+					ByteBuf workBuf = in.readSlice(remainingOctets);
+					
+					switch(flowSetId) {
+					case TEMPLATE_FLOWSET_ID:
+						while(workBuf.readableBytes() > 4) {
+							int flowSetID = workBuf.readUnsignedShort();
+							int fieldCount = workBuf.readUnsignedShort();
+							List<TemplateField> fields = new LinkedList<TemplateField>();
 							
-							break;
-						default:
-							flows.add(new FlowBuffer(flowSetId, workBuf));
+							if(workBuf.readableBytes() < fieldCount * 4) {
+								logger.error("packet short to {} bytes when {} bytes required in record {}",
+										workBuf.readableBytes(), fieldCount * 4, recordNumber);
+								
+								return;
+							}
+							
+							for(int fieldNumber=0; fieldNumber < fieldCount; fieldNumber++) {
+								fields.add(new TemplateField(FieldType.fromCode(workBuf.readUnsignedShort()), 
+										workBuf.readUnsignedShort()));
+							}
+							
+							templates.add(new Template(flowSetID, fields));								
+							recordNumber++;
 						}
-					} finally {
-						if(workBuf != null)
-							workBuf.release();
+						break;
+					case OPTIONS_TEMPLATE_FLOWSET_ID: {
+							int flowSetID = workBuf.readUnsignedShort();
+							
+							recordNumber++;
+						}
+						break;
+					default:
+						flows.add(new FlowBuffer(flowSetId, workBuf));
 					}
 				}
 				
+				FlowRegistry flowRegistry = peerRegistry.registryForPeerAddress(peerAddress, header.getSourceId());
+				
+
 				flowRegistry.addFlowTemplates(templates);
 			} 
 		} else {
@@ -151,12 +145,10 @@ public class Netflow9PacketDecoder extends ByteToMessageDecoder {
 		}
 	}
 
-	private Template decodeTempate(ByteBuf workBuf) {
-		List<TemplateField> fields = new LinkedList<TemplateField>();
-		int flowId = workBuf.readShort();
-		int fieldCount = workBuf.readShort();
-		
-		return new Template(flowId, fields);
+	/**
+	 * @param peerAddressMapper the peerAddressMapper to set
+	 */
+	public void setPeerAddressMapper(PeerAddressMapper peerAddressMapper) {
+		this.peerAddressMapper = peerAddressMapper;
 	}
-
 }

@@ -34,6 +34,8 @@ public enum FieldType {
 	FIRST_SWITCHED,
 	OUT_BYTES,
 	OUT_PKTS,
+	MIN_PKT_LNGTH,
+	MAX_PKT_LNGTH,
 	IPV6_SRC_ADDR,
 	IPV6_DST_ADDR,
 	IPV6_SRC_MASK,
@@ -50,11 +52,16 @@ public enum FieldType {
 	TOTAL_BYTES_EXP,
 	TOTAL_PKTS_EXP,
 	TOTAL_FLOWS_EXP,
+	IPV4_SRC_PREFIX,
+	IPV4_DST_PREFIX,
 	MPLS_TOP_LABEL_TYPE,
 	MPLS_TOP_LABEL_IP_ADDR,
 	FLOW_SAMPLER_ID,
 	FLOW_SAMPLER_MODE,
 	FLOW_SAMPLER_RANDOM_INTERVAL,
+	MIN_TTL,
+	MAX_TTL,
+	IPV4_IDENT,
 	DST_TOS,
 	SRC_MAC,
 	DST_MAC,
@@ -75,6 +82,28 @@ public enum FieldType {
 	MPLS_LABEL_8,
 	MPLS_LABEL_9,
 	MPLS_LABEL_10,
+	IN_DST_MAC,
+	OUT_SRC_MAC,
+	IF_NAME,
+	IF_DESC,
+	SAMPLER_NAME,
+	IN_PERMANENT_BYTES,
+	IN_PERMANENT_PKTS,
+	FRAGMENT_OFFSET,
+	FORWARDING_STATUS,
+	MPLS_PAL_RD,
+	MPLS_PREFIX_LEN,
+	SRC_TRAFFIC_INDEX,
+	DST_TRAFFIC_INDEX,
+	APPLICATION_DESCRIPTION,
+	APPLICATION_TAG,
+	APPLICATION_NAME,
+	POST_IP_DIFF_SERV_CODE_POINT,
+	REPLICATION_FACTOR,
+	L2_PKT_SECT_OFFSET,
+	L2_PKT_SECT_SIZE,
+	L2_PKT_SECT_DATA,
+	DEPRECATED,
 	PROPRIETARY, 
 	EXTENSION;
 	
@@ -135,8 +164,9 @@ public enum FieldType {
 		case 24:
 			return OUT_PKTS;
 		case 25:
+			return MIN_PKT_LNGTH;
 		case 26:
-			return PROPRIETARY;
+			return MAX_PKT_LNGTH;
 		case 27:
 			return IPV6_SRC_ADDR;
 		case 28:
@@ -170,9 +200,11 @@ public enum FieldType {
 		case 42:
 			return TOTAL_FLOWS_EXP;
 		case 43:
-		case 44:
-		case 45:
 			return PROPRIETARY;
+		case 44:
+			return IPV4_SRC_PREFIX;
+		case 45:
+			return IPV4_DST_PREFIX;
 		case 46:
 			return MPLS_TOP_LABEL_TYPE;
 		case 47:
@@ -184,10 +216,13 @@ public enum FieldType {
 		case 50:
 			return FLOW_SAMPLER_RANDOM_INTERVAL;
 		case 51:
-		case 52:
-		case 53:
-		case 54:
 			return PROPRIETARY;
+		case 52:
+			return MIN_TTL;
+		case 53:
+			return MAX_TTL;
+		case 54:
+			return IPV4_IDENT;
 		case 55:
 			return DST_TOS;
 		case 56:
@@ -234,6 +269,56 @@ public enum FieldType {
 			return MPLS_LABEL_9;
 		case 79:
 			return MPLS_LABEL_10;
+		case 80:
+			return IN_DST_MAC;
+		case 81:
+			return OUT_SRC_MAC;
+		case 82:
+			return IF_NAME;
+		case 83:
+			return IF_DESC;
+		case 84:
+			return SAMPLER_NAME;
+		case 85:
+			return IN_PERMANENT_BYTES;
+		case 86:
+			return IN_PERMANENT_PKTS;
+		case 87:
+			return PROPRIETARY;
+		case 88:
+			return FRAGMENT_OFFSET;
+		case 89:
+			return FORWARDING_STATUS;
+		case 90:
+			return MPLS_PAL_RD;
+		case 91:
+			return MPLS_PREFIX_LEN;
+		case 92:
+			return SRC_TRAFFIC_INDEX;
+		case 93:
+			return DST_TRAFFIC_INDEX;
+		case 94:
+			return APPLICATION_DESCRIPTION;
+		case 95:
+			return APPLICATION_TAG;
+		case 96:
+			return APPLICATION_NAME;
+		case 97:
+			return EXTENSION;
+		case 98:
+			return POST_IP_DIFF_SERV_CODE_POINT;
+		case 99:
+			return REPLICATION_FACTOR;
+		case 100:
+			return DEPRECATED;
+		case 101:
+			return EXTENSION;
+		case 102:
+			return L2_PKT_SECT_OFFSET;
+		case 103:
+			return L2_PKT_SECT_SIZE;
+		case 104:
+			return L2_PKT_SECT_DATA;
 		default:
 			return EXTENSION;
 		}		
@@ -260,6 +345,15 @@ public enum FieldType {
 		case TOTAL_BYTES_EXP:
 		case TOTAL_PKTS_EXP:
 		case TOTAL_FLOWS_EXP:
+		case IF_NAME:
+		case IF_DESC:
+		case SAMPLER_NAME:
+		case IN_PERMANENT_BYTES:
+		case IN_PERMANENT_PKTS:
+		case APPLICATION_DESCRIPTION:
+		case APPLICATION_NAME:
+		case APPLICATION_TAG:
+		case DEPRECATED:
 			return true;
 		default:
 			return false;
@@ -282,6 +376,8 @@ public enum FieldType {
 		case TOTAL_BYTES_EXP:
 		case TOTAL_PKTS_EXP:
 		case TOTAL_FLOWS_EXP:
+		case IN_PERMANENT_BYTES:
+		case IN_PERMANENT_PKTS:
 			return true;
 		default:
 			return false;

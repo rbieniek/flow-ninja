@@ -19,7 +19,7 @@ public class FlowRegistry {
 	
 	public void addFlowTemplates(List<Template> templates) {
 		for(Template template : templates) {
-			
+			flowTemplates.put(template.getFlowsetId(), template);
 		}
 	}
 
