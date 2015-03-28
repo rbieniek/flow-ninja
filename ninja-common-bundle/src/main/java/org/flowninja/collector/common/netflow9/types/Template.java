@@ -16,9 +16,10 @@ public class Template {
 	private List<TemplateField> fields = new LinkedList<TemplateField>();
 	
 	public Template(int flowsetId, List<TemplateField> fields) {
-		this.fields = fields;
+		this.flowsetId = flowsetId;
+		
 		if(fields != null)
-			fields.addAll(fields);
+			this.fields.addAll(fields);
 	}
 	
 	/**

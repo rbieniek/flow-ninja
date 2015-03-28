@@ -182,5 +182,9 @@ public class PeerRegistry {
  		
 		return peer.getFlowRegistry();
 	}
+
+	public synchronized boolean hasRegistryForPeer(InetAddress peerAddress, long sourceID) {
+		return peers.containsKey(new PeerKey(peerAddress, sourceID));
+	}
 	
 }

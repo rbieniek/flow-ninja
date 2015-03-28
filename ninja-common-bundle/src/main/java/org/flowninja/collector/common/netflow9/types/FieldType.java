@@ -56,6 +56,7 @@ public enum FieldType {
 	IPV4_DST_PREFIX,
 	MPLS_TOP_LABEL_TYPE,
 	MPLS_TOP_LABEL_IP_ADDR,
+	FLOW_CLASS,
 	FLOW_SAMPLER_ID,
 	FLOW_SAMPLER_MODE,
 	FLOW_SAMPLER_RANDOM_INTERVAL,
@@ -144,7 +145,7 @@ public enum FieldType {
 		case 14:
 			return OUTPUT_SNMP;
 		case 15:
-			return IPV4_DST_ADDR;
+			return IPV4_NEXT_HOP;
 		case 16:
 			return SRC_AS;
 		case 17:
@@ -216,7 +217,7 @@ public enum FieldType {
 		case 50:
 			return FLOW_SAMPLER_RANDOM_INTERVAL;
 		case 51:
-			return PROPRIETARY;
+			return FLOW_CLASS;
 		case 52:
 			return MIN_TTL;
 		case 53:
