@@ -11,6 +11,10 @@ import java.util.Iterator;
 import io.netty.channel.embedded.EmbeddedChannel;
 
 import org.flowninja.collector.common.netflow9.types.FieldType;
+import org.flowninja.collector.common.netflow9.types.OptionField;
+import org.flowninja.collector.common.netflow9.types.OptionsTemplate;
+import org.flowninja.collector.common.netflow9.types.ScopeField;
+import org.flowninja.collector.common.netflow9.types.ScopeType;
 import org.flowninja.collector.common.netflow9.types.Template;
 import org.flowninja.collector.common.netflow9.types.TemplateField;
 import org.junit.After;
@@ -207,6 +211,179 @@ public class Netflow9PacketDecoderTest {
 
 	};
 
+	private static final byte[] optionsTemplateOnlyDatagram = new byte[] {
+		0x00, 0x09, // Version 9
+		0x00, 0x01, // record count: 1
+		0x00, 0x1e, 0x2a, 0x48, // sys uptime: 1976904
+		0x55, 0x10, 0x6a, (byte)0xb3, // timestamp 1427139251
+		0x00, 0x00, 0x00, 0x1f, // packet sequence: 31
+		0x00, 0x00, 0x00, 0x00, // source id
+		0x00, 0x01, // flow set ID (options template)
+		0x00, 0x18, // length: 24 octets
+		0x01, 0x04, // Template ID: 260
+		0x00, 0x04, // Scope length: 4 octets,
+		0x00, 0x08, // Options length: 8 octets
+		0x00, 0x01, // Scope type: System
+		0x00, 0x00, // Length: 0 octets
+		0x00, 0x2a, // Type: Total flows exported (code 42)
+		0x00, 0x04, // Length: 4 octets
+		0x00, 0x29, // Type: Total packets exported (code 41)
+		0x00, 0x04, // Length: 4 octets
+		0x00, 0x00, // Padding
+		
+	};
+
+	private static final byte[] optionsTemplateAndOptionsDataDatagram = new byte[] {
+		0x00, 0x09, // Version 9
+		0x00, 0x01, // record count: 1
+		0x00, 0x1e, 0x2a, 0x48, // sys uptime: 1976904
+		0x55, 0x10, 0x6a, (byte)0xb3, // timestamp 1427139251
+		0x00, 0x00, 0x00, 0x1f, // packet sequence: 31
+		0x00, 0x00, 0x00, 0x00, // source id
+		0x00, 0x01, // flow set ID (options template)
+		0x00, 0x18, // length: 24 octets
+		0x01, 0x04, // Template ID: 260
+		0x00, 0x04, // Scope length: 4 octets,
+		0x00, 0x08, // Options length: 8 octets
+		0x00, 0x01, // Scope type: System
+		0x00, 0x00, // Length: 0 octets
+		0x00, 0x2a, // Type: Total flows exported (code 42)
+		0x00, 0x04, // Length: 4 octets
+		0x00, 0x29, // Type: Total packets exported (code 41)
+		0x00, 0x04, // Length: 4 octets
+		0x00, 0x00, // Padding
+		
+		0x01, 0x04, // Flow set ID: 260
+		0x00, 0x0c, // Length: 12 octets
+		0x00, 0x04, (byte)0xbc, (byte)0xd7, // Flows export 310487
+		0x00, 0x00, 0x35, 0x52, // packets exported 13560
+	};
+
+	private static final byte[] optionsAndDataTemplateDatagram = new byte[] {
+		0x00, 0x09, // Version 9
+		0x00, 0x01, // record count: 2
+		0x00, 0x1e, 0x2a, 0x48, // sys uptime: 1976904
+		0x55, 0x10, 0x6a, (byte)0xb3, // timestamp 1427139251
+		0x00, 0x00, 0x00, 0x1f, // packet sequence: 31
+		0x00, 0x00, 0x00, 0x00, // source id
+
+		0x00, 0x01, // flow set ID (options template)
+		0x00, 0x18, // length: 24 octets
+		0x01, 0x04, // Template ID: 260
+		0x00, 0x04, // Scope length: 4 octets,
+		0x00, 0x08, // Options length: 8 octets
+		0x00, 0x01, // Scope type: System
+		0x00, 0x00, // Length: 0 octets
+		0x00, 0x2a, // Type: Total flows exported (code 42)
+		0x00, 0x04, // Length: 4 octets
+		0x00, 0x29, // Type: Total packets exported (code 41)
+		0x00, 0x04, // Length: 4 octets
+		0x00, 0x00, // Padding
+		
+		0x00, 0x00, // flow set ID (data template)
+		0x00, 0x5c, // template length: 92 octets
+		0x01, 0x00, // template ID: 256
+		0x00, 0x15, // field count: 21
+		0x00, 0x15, 0x00, 0x04, // Field 1: Last switched, length = 4
+		0x00, 0x16, 0x00, 0x04, // Field 2: First switched, length = 4
+		0x00, 0x01, 0x00, 0x04, // Field 3: Bytes, length = 4
+		0x00, 0x02, 0x00, 0x04, // Field 4: Pkts, length = 4
+		0x00, 0x0a, 0x00, 0x02, // Field 5: Input SNMP, length = 2
+		0x00, 0x0e, 0x00, 0x02, // Field 6: Output SNMP, length = 2
+		0x00, 0x08, 0x00, 0x04, // Field 7: IP SRC Addr, length = 4
+		0x00, 0x0c, 0x00, 0x04, // Field 8: IP DST Addr, length = 4
+		0x00, 0x04, 0x00, 0x01, // Field 9: Protocol, length=1,
+		0x00, 0x05, 0x00, 0x01, // Field 10: IP TOS, length=1,
+		0x00, 0x07, 0x00, 0x02, // Field 11: L4 SRC Port, length=2
+		0x00, 0x0b, 0x00, 0x02, // Field 12: L4 DST Port, length=2
+		0x00, 0x30, 0x00, 0x01, // Field 13: Flow sampler ID, length=1
+		0x00, 0x33, 0x00, 0x01, // Field 14: Flow class, length=1
+		0x00, 0x0f, 0x00, 0x04, // Field 15: IPv4 next hop, length=4
+		0x00, 0x0d, 0x00, 0x01, // Field 16: Dst mask, length=1
+		0x00, 0x09, 0x00, 0x01, // Field 17: Src mask, length=1
+		0x00, 0x06, 0x00, 0x01, // Field 18: TCP Flags, length=1
+		0x00, 0x3d, 0x00, 0x01, // Field 19: Direction, length=1
+		0x00, 0x11, 0x00, 0x02, // Field 20: Dst AS, length=2
+		0x00, 0x10, 0x00, 0x02, // Field 21: Src AS, length=2
+	};
+
+	private static final byte[] dataAndOptionsTemplateOneDataFlowOneOptionFlowDatagram = new byte[] {
+		0x00, 0x09, // Version 9
+		0x00, 0x02, // record count: 4
+		0x00, 0x1e, 0x2a, 0x48, // sys uptime: 1976904
+		0x55, 0x10, 0x6a, (byte)0xb3, // timestamp 1427139251
+		0x00, 0x00, 0x00, 0x1f, // packet sequence: 31
+		0x00, 0x00, 0x00, 0x00, // source id
+
+		0x00, 0x00, // flow set ID (data template)
+		0x00, 0x5c, // template length: 92 octets
+		0x01, 0x00, // template ID: 256
+		0x00, 0x15, // field count: 21
+		0x00, 0x15, 0x00, 0x04, // Field 1: Last switched, length = 4
+		0x00, 0x16, 0x00, 0x04, // Field 2: First switched, length = 4
+		0x00, 0x01, 0x00, 0x04, // Field 3: Bytes, length = 4
+		0x00, 0x02, 0x00, 0x04, // Field 4: Pkts, length = 4
+		0x00, 0x0a, 0x00, 0x02, // Field 5: Input SNMP, length = 2
+		0x00, 0x0e, 0x00, 0x02, // Field 6: Output SNMP, length = 2
+		0x00, 0x08, 0x00, 0x04, // Field 7: IP SRC Addr, length = 4
+		0x00, 0x0c, 0x00, 0x04, // Field 8: IP DST Addr, length = 4
+		0x00, 0x04, 0x00, 0x01, // Field 9: Protocol, length=1,
+		0x00, 0x05, 0x00, 0x01, // Field 10: IP TOS, length=1,
+		0x00, 0x07, 0x00, 0x02, // Field 11: L4 SRC Port, length=2
+		0x00, 0x0b, 0x00, 0x02, // Field 12: L4 DST Port, length=2
+		0x00, 0x30, 0x00, 0x01, // Field 13: Flow sampler ID, length=1
+		0x00, 0x33, 0x00, 0x01, // Field 14: Flow class, length=1
+		0x00, 0x0f, 0x00, 0x04, // Field 15: IPv4 next hop, length=4
+		0x00, 0x0d, 0x00, 0x01, // Field 16: Dst mask, length=1
+		0x00, 0x09, 0x00, 0x01, // Field 17: Src mask, length=1
+		0x00, 0x06, 0x00, 0x01, // Field 18: TCP Flags, length=1
+		0x00, 0x3d, 0x00, 0x01, // Field 19: Direction, length=1
+		0x00, 0x11, 0x00, 0x02, // Field 20: Dst AS, length=2
+		0x00, 0x10, 0x00, 0x02, // Field 21: Src AS, length=2
+		
+		0x00, 0x01, // flow set ID (options template)
+		0x00, 0x18, // length: 24 octets
+		0x01, 0x04, // Template ID: 260
+		0x00, 0x04, // Scope length: 4 octets,
+		0x00, 0x08, // Options length: 8 octets
+		0x00, 0x01, // Scope type: System
+		0x00, 0x00, // Length: 0 octets
+		0x00, 0x2a, // Type: Total flows exported (code 42)
+		0x00, 0x04, // Length: 4 octets
+		0x00, 0x29, // Type: Total packets exported (code 41)
+		0x00, 0x04, // Length: 4 octets
+		0x00, 0x00, // Padding
+
+		0x01, 0x00, // Flowset ID: 256
+		0x00, 0x34, // Flowset length: 52,
+		0x00, 0x1d, (byte)0xed, 0x18, // First switched
+		0x00, 0x1d, (byte)0xed, 0x18, // Last switched
+		0x00, 0x00, 0x00, 0x43, // Bytes: 67
+		0x00, 0x00, 0x00, 0x01, // Pkts: 1
+		0x00, 0x04, // Input SNMP
+		0x00, 0x05, // Output SNMP
+		(byte)0xc0, (byte)0xa8, 0x04, 0x0a, // IP SRC Addr 192.168.4.10
+		(byte)0xc0, 0x2b, (byte)0xac, 0x1e, // IP DST Addr 192.43.172.30
+		0x11, // Protocol UDP
+		0x00, // IP TOS
+		(byte)0xb3, (byte)0xd5, // L4 SRC Port 46037
+		0x00, 0x35, // L4 DST Port 53
+		0x00, // Flow sampler ID 0
+		0x00, // Flow class 0
+		(byte)0xc0, (byte)0xa8, 0x04, 0x04, // Next hop 192.168.4.4
+		0x00, // Dst mask 0
+		0x1d, // Src mask 29
+		0x10, // TCP flags
+		0x01, // Direction Egress
+		0x00, 0x00, // DST AS
+		0x00, 0x00, // SRC AS
+
+		0x01, 0x04, // Flow set ID: 260
+		0x00, 0x0c, // Length: 12 octets
+		0x00, 0x04, (byte)0xbc, (byte)0xd7, // Flows export 310487
+		0x00, 0x00, 0x35, 0x52, // packets exported 13560
+	};
+
 	private PeerRegistry peerRegistry;
 	private Netflow9PacketDecoder packetDecoder;
 	private EmbeddedChannel channel;
@@ -229,7 +406,7 @@ public class Netflow9PacketDecoderTest {
 	}
 	
 	@Test
-	public void decodeTemplateOnlyDatagram() {
+	public void decodeDataTemplateOnlyDatagram() {
 		channel.writeInbound(channel.alloc().buffer().writeBytes(dataTemplateOnlyDatagram));
 		
 		assertThat(channel.outboundMessages()).hasSize(0);
@@ -264,6 +441,31 @@ public class Netflow9PacketDecoderTest {
 		assertThat(fields.next()).has(new TemplateFieldCondition(FieldType.DIRECTION, 1));
 		assertThat(fields.next()).has(new TemplateFieldCondition(FieldType.DST_AS, 2));
 		assertThat(fields.next()).has(new TemplateFieldCondition(FieldType.SRC_AS, 2));
+		assertThat(fields.hasNext()).isFalse();
 	}
-	
+
+	@Test
+	public void decodeOptionsTemplateOnlyDatagram() {
+		channel.writeInbound(channel.alloc().buffer().writeBytes(optionsTemplateOnlyDatagram));
+		
+		assertThat(channel.outboundMessages()).hasSize(0);
+		assertThat(peerRegistry.hasRegistryForPeer(LOCALHOST, 0)).isTrue();
+		
+		FlowRegistry flowRegistry = peerRegistry.registryForPeerAddress(LOCALHOST, 0);
+
+		assertThat(flowRegistry.hasOptionTemplateForFlowsetID(260)).isTrue();
+		
+		OptionsTemplate template = flowRegistry.optionTemplateForFlowsetID(260);
+		
+		Iterator<ScopeField> scopeFields = template.getScopeFields().iterator();
+		
+		assertThat(scopeFields.next()).has(new ScopeFieldCondition(ScopeType.SYSTEM, 0));
+		assertThat(scopeFields.hasNext()).isFalse();
+		
+		Iterator<OptionField> optionFields = template.getOptionFields().iterator();
+		
+		assertThat(optionFields.next()).has(new OptionFieldCondition(FieldType.TOTAL_FLOWS_EXP, 4));
+		assertThat(optionFields.next()).has(new OptionFieldCondition(FieldType.TOTAL_PKTS_EXP, 4));
+		assertThat(optionFields.hasNext()).isFalse();
+	}
 }

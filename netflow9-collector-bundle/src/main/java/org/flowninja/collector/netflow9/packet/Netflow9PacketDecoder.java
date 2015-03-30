@@ -13,6 +13,10 @@ import java.util.List;
 
 import org.flowninja.collector.common.netflow9.types.FieldType;
 import org.flowninja.collector.common.netflow9.types.Header;
+import org.flowninja.collector.common.netflow9.types.OptionField;
+import org.flowninja.collector.common.netflow9.types.OptionsTemplate;
+import org.flowninja.collector.common.netflow9.types.ScopeField;
+import org.flowninja.collector.common.netflow9.types.ScopeType;
 import org.flowninja.collector.common.netflow9.types.Template;
 import org.flowninja.collector.common.netflow9.types.TemplateField;
 import org.slf4j.Logger;
@@ -83,6 +87,7 @@ public class Netflow9PacketDecoder extends ByteToMessageDecoder {
 						in.readUnsignedInt());
 
 				List<Template> templates = new LinkedList<Template>();
+				List<OptionsTemplate> optionsTemplates = new LinkedList<OptionsTemplate>();
 				List<FlowBuffer> flows = new LinkedList<FlowBuffer>();
 				
 				int recordNumber = 0;
@@ -125,6 +130,24 @@ public class Netflow9PacketDecoder extends ByteToMessageDecoder {
 						break;
 					case OPTIONS_TEMPLATE_FLOWSET_ID: {
 							int flowSetID = workBuf.readUnsignedShort();
+							int scopeLength = workBuf.readUnsignedShort();
+							int optionsLength = workBuf.readUnsignedShort();
+							List<ScopeField> scopeFields = new LinkedList<ScopeField>();
+							List<OptionField> optionFields = new LinkedList<OptionField>();
+							
+							while(scopeLength >= 4) {
+								scopeFields.add(new ScopeField(ScopeType.fromCode(workBuf.readUnsignedShort()), 
+										workBuf.readUnsignedShort()));
+								scopeLength -= 4;
+							}
+							
+							while(optionsLength >= 4) {
+								optionFields.add(new OptionField(FieldType.fromCode(workBuf.readUnsignedShort()), 
+										workBuf.readUnsignedShort()));
+								optionsLength -= 4;
+							}
+							
+							optionsTemplates.add(new OptionsTemplate(flowSetID, scopeFields, optionFields));
 							
 							recordNumber++;
 						}
@@ -134,10 +157,10 @@ public class Netflow9PacketDecoder extends ByteToMessageDecoder {
 					}
 				}
 				
-				FlowRegistry flowRegistry = peerRegistry.registryForPeerAddress(peerAddress, header.getSourceId());
-				
+				FlowRegistry flowRegistry = peerRegistry.registryForPeerAddress(peerAddress, header.getSourceId());				
 
 				flowRegistry.addFlowTemplates(templates);
+				flowRegistry.addOptionTemplates(optionsTemplates);
 			} 
 		} else {
 			logger.error("dropping received packet with {} bytes size but expected at least {} bytes", 

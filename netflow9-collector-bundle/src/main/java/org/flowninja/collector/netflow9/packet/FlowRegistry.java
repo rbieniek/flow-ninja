@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.flowninja.collector.common.netflow9.types.OptionsTemplate;
 import org.flowninja.collector.common.netflow9.types.Template;
 
 /**
@@ -16,6 +17,7 @@ import org.flowninja.collector.common.netflow9.types.Template;
 public class FlowRegistry {
 
 	private Map<Integer, Template> flowTemplates = new HashMap<Integer, Template>();
+	private Map<Integer, OptionsTemplate> optionTemplates = new HashMap<Integer, OptionsTemplate>();
 
 	/**
 	 * Add a template set to the known templates
@@ -40,5 +42,23 @@ public class FlowRegistry {
 	public Template templateForFlowsetID(int flowsetID) {
 		return flowTemplates.get(flowsetID);
 	}
+
+	public void addOptionTemplates(List<OptionsTemplate> optionsTemplates) {
+		for(OptionsTemplate template : optionsTemplates) {
+			optionTemplates.put(template.getFlowsetId(), template);
+		}
+	}
 	
+	/**
+	 * check if a template for a particular flow ID exists
+	 * @param flowsetID
+	 * @return
+	 */
+	public boolean hasOptionTemplateForFlowsetID(int flowsetID) {
+		return optionTemplates.containsKey(flowsetID);
+	}
+
+	public OptionsTemplate optionTemplateForFlowsetID(int flowsetID) {
+		return optionTemplates.get(flowsetID);
+	}
 }

@@ -5,19 +5,19 @@ package org.flowninja.collector.netflow9.packet;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.fest.assertions.core.Condition;
-import org.flowninja.collector.common.netflow9.types.FieldType;
-import org.flowninja.collector.common.netflow9.types.TemplateField;
+import org.flowninja.collector.common.netflow9.types.ScopeField;
+import org.flowninja.collector.common.netflow9.types.ScopeType;
 
 /**
  * @author rainer
  *
  */
-public class TemplateFieldCondition extends Condition<TemplateField> {
+public class ScopeFieldCondition extends Condition<ScopeField> {
 
-	private FieldType type;
+	private ScopeType type;
 	private int length;
 
-	public TemplateFieldCondition(FieldType type, int length) {
+	public ScopeFieldCondition(ScopeType type, int length) {
 		this.length = length;
 		this.type = type;
 	}
@@ -26,7 +26,7 @@ public class TemplateFieldCondition extends Condition<TemplateField> {
 	 * @see org.fest.assertions.core.Condition#matches(java.lang.Object)
 	 */
 	@Override
-	public boolean matches(TemplateField value) {
+	public boolean matches(ScopeField value) {
 		return value.getLength() == length && value.getType() == type;
 	}
 
@@ -34,5 +34,4 @@ public class TemplateFieldCondition extends Condition<TemplateField> {
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this);
 	}
-
 }
