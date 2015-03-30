@@ -11,6 +11,8 @@ import java.net.InetAddress;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.flowninja.collector.common.netflow9.types.DataFlow;
+import org.flowninja.collector.common.netflow9.types.DataFlowRecord;
 import org.flowninja.collector.common.netflow9.types.FieldType;
 import org.flowninja.collector.common.netflow9.types.Header;
 import org.flowninja.collector.common.netflow9.types.OptionField;
@@ -19,6 +21,7 @@ import org.flowninja.collector.common.netflow9.types.ScopeField;
 import org.flowninja.collector.common.netflow9.types.ScopeType;
 import org.flowninja.collector.common.netflow9.types.Template;
 import org.flowninja.collector.common.netflow9.types.TemplateField;
+import org.flowninja.collector.common.types.CounterFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -161,11 +164,73 @@ public class Netflow9PacketDecoder extends ByteToMessageDecoder {
 
 				flowRegistry.addFlowTemplates(templates);
 				flowRegistry.addOptionTemplates(optionsTemplates);
+				
+				flows.addAll(flowRegistry.backlogFlows());
+				
+				
+				List<FlowBuffer> backlogFlows = new LinkedList<FlowBuffer>();
+				
+				for(FlowBuffer flowBuffer : flows) {
+					Template template = null;
+					OptionsTemplate optionsTemplate = null;
+					
+					if((template = flowRegistry.templateForFlowsetID(flowBuffer.getFlowSetId())) != null) {
+						out.add(decodeDataTemplate(header, flowBuffer, template));
+					} else if((optionsTemplate = flowRegistry.optionTemplateForFlowsetID(flowBuffer.getFlowSetId())) != null) {
+						
+					} else {
+						backlogFlows.add(flowBuffer);
+					}
+				}
+				
+				flowRegistry.backlogFlows(backlogFlows);
 			} 
 		} else {
 			logger.error("dropping received packet with {} bytes size but expected at least {} bytes", 
 					in.readableBytes(), PACKET_HEADER_LENGTH);
 		}
+	}
+
+	/**
+	 * Decode a data flow from a data buffer and a given template
+	 * 
+	 * @param header
+	 * @param flowBuffer
+	 * @param template
+	 * @return
+	 */
+	private DataFlow decodeDataTemplate(Header header, FlowBuffer flowBuffer, Template template) {
+		List<DataFlowRecord> flowRecords = new LinkedList<DataFlowRecord>();
+		ByteBuf buffer = flowBuffer.getBuffer();
+		
+		for(TemplateField field : template.getFields()) {
+			flowRecords.add(new DataFlowRecord(field.getType(), decodeValue(field.getType(), field.getLength(), buffer)));
+		}
+		
+		return new DataFlow(header, flowRecords);
+	}
+
+	/**
+	 * 
+	 * @param type
+	 * @param buffer
+	 * @return
+	 */
+	private Object decodeValue(FieldType type, int length, ByteBuf buffer) {
+		Object value = null;
+		
+		if(type.isCounterLike()) {
+			byte[] dst = new byte[length];
+			
+			buffer.readBytes(dst);
+			value = CounterFactory.decode(dst);
+		} else {
+			switch(type) {
+			
+			}
+		}
+		
+		return value;
 	}
 
 	/**
