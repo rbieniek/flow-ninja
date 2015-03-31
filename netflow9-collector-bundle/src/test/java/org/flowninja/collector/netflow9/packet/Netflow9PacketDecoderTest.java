@@ -429,7 +429,7 @@ public class Netflow9PacketDecoderTest {
 		assertThat(fields.next()).has(new TemplateFieldCondition(FieldType.IPV4_SRC_ADDR, 4));
 		assertThat(fields.next()).has(new TemplateFieldCondition(FieldType.IPV4_DST_ADDR, 4));
 		assertThat(fields.next()).has(new TemplateFieldCondition(FieldType.PROTOCOL, 1));
-		assertThat(fields.next()).has(new TemplateFieldCondition(FieldType.TOS, 1));
+		assertThat(fields.next()).has(new TemplateFieldCondition(FieldType.SRC_TOS, 1));
 		assertThat(fields.next()).has(new TemplateFieldCondition(FieldType.L4_SRC_PORT, 2));
 		assertThat(fields.next()).has(new TemplateFieldCondition(FieldType.L4_DST_PORT, 2));
 		assertThat(fields.next()).has(new TemplateFieldCondition(FieldType.FLOW_SAMPLER_ID, 1));

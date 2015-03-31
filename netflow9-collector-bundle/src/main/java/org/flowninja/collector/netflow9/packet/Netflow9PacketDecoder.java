@@ -7,7 +7,10 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
 
+import java.net.Inet4Address;
+import java.net.Inet6Address;
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -21,9 +24,15 @@ import org.flowninja.collector.common.netflow9.types.ScopeField;
 import org.flowninja.collector.common.netflow9.types.ScopeType;
 import org.flowninja.collector.common.netflow9.types.Template;
 import org.flowninja.collector.common.netflow9.types.TemplateField;
+import org.flowninja.collector.common.protocol.types.ICMPTypeCode;
+import org.flowninja.collector.common.protocol.types.IPProtocol;
+import org.flowninja.collector.common.protocol.types.IPTypeOfService;
+import org.flowninja.collector.common.protocol.types.TCPFLags;
 import org.flowninja.collector.common.types.CounterFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.sun.javafx.image.impl.IntArgb;
 
 /**
  * Netwflow9 datagram packet decoder implementation. 
@@ -226,7 +235,89 @@ public class Netflow9PacketDecoder extends ByteToMessageDecoder {
 			value = CounterFactory.decode(dst);
 		} else {
 			switch(type) {
-			
+			case PROTOCOL:
+				value = IPProtocol.fromCore(buffer.readUnsignedByte());
+				break;
+			case SRC_TOS:
+			case DST_TOS:
+				value = IPTypeOfService.fromCode(buffer.readUnsignedByte());
+				break;
+			case TCP_FLAGS:
+				if(length == 1)
+					value = TCPFLags.fromCode(buffer.readUnsignedByte());
+				else if(length == 2) 
+					value = TCPFLags.fromCode(buffer.readUnsignedShort());
+				else {
+					buffer.skipBytes(length);
+					logger.warn("recieved type {} field with unsupported length {}", type, length);
+				}
+				break;
+			case L4_SRC_PORT:
+			case L4_DST_PORT:
+			case MIN_PKT_LNGTH:
+			case MAX_PKT_LNGTH:
+				value = new Integer(buffer.readUnsignedShort());
+				break;
+			case IPV4_SRC_ADDR:
+			case IPV4_DST_ADDR: 
+			case BGP_IPV4_NEXT_HOP: {
+					byte[] tmp = new byte[4];
+					
+					buffer.readBytes(tmp);
+					try {
+						value = Inet4Address.getByAddress(tmp);
+					} catch(UnknownHostException e) {
+						logger.warn("cannot handle IP address for type {} field", e);
+					}
+				}
+				break;
+			case SRC_MASK:
+			case DST_MASK:
+			case IPV6_DST_MASK:
+			case IPV6_SRC_MASK:
+				value = new Integer(buffer.readUnsignedByte());				
+				break;
+			case INPUT_SNMP: 
+			case OUTPUT_SNMP: {
+					byte[] dst = new byte[length];
+					
+					buffer.readBytes(dst);
+					value = CounterFactory.decode(dst);
+				}
+				break;
+			case SRC_AS:
+			case DST_AS: 
+				if(length == 2)
+					value = new Integer(buffer.readUnsignedShort());
+				else if(length == 4)
+					value = new Long(buffer.readUnsignedInt());
+				else {
+					buffer.skipBytes(length);
+					logger.warn("recieved type {} field with unsupported length {}", type, length);
+				}
+				break;
+			case LAST_SWITCHED:
+			case FIRST_SWITCHED:
+				value = new Long(buffer.readUnsignedInt());
+			case IPV6_SRC_ADDR:
+			case IPV6_DST_ADDR: 
+			case BGP_IPV6_NEXT_HOP: {
+					byte[] tmp = new byte[16];
+					
+					buffer.readBytes(tmp);
+					try {
+						value = Inet6Address.getByAddress(tmp);
+					} catch(UnknownHostException e) {
+						logger.warn("cannot handle IP address for type {} field", e);
+					}
+				}
+				break;
+			case IPV6_FLOW_LABEL:
+				value = new Integer(buffer.readUnsignedMedium());
+				break;
+			case ICMP_TYPE:
+				value = ICMPTypeCode.fromCodes(buffer.readUnsignedByte(), buffer.readUnsignedByte());
+				break;
 			}
 		}
 		

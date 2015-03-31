@@ -14,7 +14,7 @@ public enum FieldType {
 	IN_PKTS,
 	FLOWS,
 	PROTOCOL,
-	TOS,
+	SRC_TOS,
 	TCP_FLAGS,
 	L4_SRC_PORT,
 	IPV4_SRC_ADDR,
@@ -125,7 +125,7 @@ public enum FieldType {
 		case 4:
 			return PROTOCOL;
 		case 5:
-			return TOS;
+			return SRC_TOS;
 		case 6:
 			return TCP_FLAGS;
 		case 7:
