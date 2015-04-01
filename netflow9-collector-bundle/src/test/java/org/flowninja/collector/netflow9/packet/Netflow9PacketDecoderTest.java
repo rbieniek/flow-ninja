@@ -3,20 +3,30 @@
  */
 package org.flowninja.collector.netflow9.packet;
 
-import static org.fest.assertions.api.Assertions.*;
-
-import java.net.InetAddress;
-import java.util.Iterator;
-
+import static org.fest.assertions.api.Assertions.assertThat;
 import io.netty.channel.embedded.EmbeddedChannel;
 
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.util.Iterator;
+import java.util.Set;
+
+import org.flowninja.collector.common.netflow9.types.DataFlow;
+import org.flowninja.collector.common.netflow9.types.DataFlowRecord;
 import org.flowninja.collector.common.netflow9.types.FieldType;
+import org.flowninja.collector.common.netflow9.types.FlowDirection;
+import org.flowninja.collector.common.netflow9.types.Header;
 import org.flowninja.collector.common.netflow9.types.OptionField;
 import org.flowninja.collector.common.netflow9.types.OptionsTemplate;
 import org.flowninja.collector.common.netflow9.types.ScopeField;
 import org.flowninja.collector.common.netflow9.types.ScopeType;
 import org.flowninja.collector.common.netflow9.types.Template;
 import org.flowninja.collector.common.netflow9.types.TemplateField;
+import org.flowninja.collector.common.protocol.types.IPProtocol;
+import org.flowninja.collector.common.protocol.types.IPTypeOfService;
+import org.flowninja.collector.common.protocol.types.TCPFLags;
+import org.flowninja.collector.common.types.CounterFactory;
+import org.flowninja.collector.common.types.EnumCodeValue;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -73,7 +83,7 @@ public class Netflow9PacketDecoderTest {
 
 	private static final byte[] dataTemplateOneDataFlowDatagram = new byte[] {
 		0x00, 0x09, // Version 9
-		0x00, 0x02, // record count: 1
+		0x00, 0x02, // record count: 2
 		0x00, 0x1e, 0x2a, 0x48, // sys uptime: 1976904
 		0x55, 0x10, 0x6a, (byte)0xb3, // timestamp 1427139251
 		0x00, 0x00, 0x00, 0x1f, // packet sequence: 31
@@ -131,7 +141,7 @@ public class Netflow9PacketDecoderTest {
 
 	private static final byte[] dataTemplateTwoDataFlowDatagram = new byte[] {
 		0x00, 0x09, // Version 9
-		0x00, 0x02, // record count: 1
+		0x00, 0x02, // record count: 3
 		0x00, 0x1e, 0x2a, 0x48, // sys uptime: 1976904
 		0x55, 0x10, 0x6a, (byte)0xb3, // timestamp 1427139251
 		0x00, 0x00, 0x00, 0x1f, // packet sequence: 31
@@ -402,7 +412,6 @@ public class Netflow9PacketDecoderTest {
 	@After
 	public void destroyTest() throws Exception {
 		channel.close().await();
-		
 	}
 	
 	@Test
@@ -468,4 +477,215 @@ public class Netflow9PacketDecoderTest {
 		assertThat(optionFields.next()).has(new OptionFieldCondition(FieldType.TOTAL_PKTS_EXP, 4));
 		assertThat(optionFields.hasNext()).isFalse();
 	}
+	
+	@Test
+	public void decodeDataTemplateOneDataFlowDatagram() throws Exception {
+		channel.writeInbound(channel.alloc().buffer().writeBytes(dataTemplateOneDataFlowDatagram));
+		
+		assertThat(peerRegistry.hasRegistryForPeer(LOCALHOST, 0)).isTrue();
+		
+		FlowRegistry flowRegistry = peerRegistry.registryForPeerAddress(LOCALHOST, 0);
+
+		assertThat(flowRegistry.hasTemplateForFlowsetID(256)).isTrue();
+		
+		Template template = flowRegistry.templateForFlowsetID(256);
+		
+		Iterator<TemplateField> fields = template.getFields().iterator();
+		
+		assertThat(fields.next()).has(new TemplateFieldCondition(FieldType.LAST_SWITCHED, 4));
+		assertThat(fields.next()).has(new TemplateFieldCondition(FieldType.FIRST_SWITCHED, 4));
+		assertThat(fields.next()).has(new TemplateFieldCondition(FieldType.IN_BYTES, 4));
+		assertThat(fields.next()).has(new TemplateFieldCondition(FieldType.IN_PKTS, 4));
+		assertThat(fields.next()).has(new TemplateFieldCondition(FieldType.INPUT_SNMP, 2));
+		assertThat(fields.next()).has(new TemplateFieldCondition(FieldType.OUTPUT_SNMP, 2));
+		assertThat(fields.next()).has(new TemplateFieldCondition(FieldType.IPV4_SRC_ADDR, 4));
+		assertThat(fields.next()).has(new TemplateFieldCondition(FieldType.IPV4_DST_ADDR, 4));
+		assertThat(fields.next()).has(new TemplateFieldCondition(FieldType.PROTOCOL, 1));
+		assertThat(fields.next()).has(new TemplateFieldCondition(FieldType.SRC_TOS, 1));
+		assertThat(fields.next()).has(new TemplateFieldCondition(FieldType.L4_SRC_PORT, 2));
+		assertThat(fields.next()).has(new TemplateFieldCondition(FieldType.L4_DST_PORT, 2));
+		assertThat(fields.next()).has(new TemplateFieldCondition(FieldType.FLOW_SAMPLER_ID, 1));
+		assertThat(fields.next()).has(new TemplateFieldCondition(FieldType.FLOW_CLASS, 1));
+		assertThat(fields.next()).has(new TemplateFieldCondition(FieldType.IPV4_NEXT_HOP, 4));
+		assertThat(fields.next()).has(new TemplateFieldCondition(FieldType.DST_MASK, 1));
+		assertThat(fields.next()).has(new TemplateFieldCondition(FieldType.SRC_MASK, 1));
+		assertThat(fields.next()).has(new TemplateFieldCondition(FieldType.TCP_FLAGS, 1));
+		assertThat(fields.next()).has(new TemplateFieldCondition(FieldType.DIRECTION, 1));
+		assertThat(fields.next()).has(new TemplateFieldCondition(FieldType.DST_AS, 2));
+		assertThat(fields.next()).has(new TemplateFieldCondition(FieldType.SRC_AS, 2));
+		assertThat(fields.hasNext()).isFalse();
+		
+		assertThat(channel.inboundMessages()).hasSize(1);
+		
+		DataFlow flow = (DataFlow)channel.inboundMessages().remove();
+		Header header = flow.getHeader();
+		
+		assertThat(header).isNotNull();
+		assertThat(header.getRecordCount()).isEqualTo(2);
+		assertThat(header.getSysUpTime()).isEqualTo(1976904);
+		assertThat(header.getUnixSeconds()).isEqualTo(1427139251);
+		assertThat(header.getSequenceNumber()).isEqualTo(31);
+		assertThat(header.getSourceId()).isEqualTo(0);
+		
+		Iterator<DataFlowRecord> it = flow.getRecords().iterator();
+		
+		assertDataFlowRecord(it, FieldType.LAST_SWITCHED, new Long(0x001ded18));
+		assertDataFlowRecord(it, FieldType.FIRST_SWITCHED, new Long(0x001ded18));
+		assertDataFlowRecord(it, FieldType.IN_BYTES, CounterFactory.decode(new byte[] { 0x00, 0x00, 0x00, 0x43 }));
+		assertDataFlowRecord(it, FieldType.IN_PKTS, CounterFactory.decode(new byte[] { 0x00, 0x00, 0x00, 0x01 }));
+		assertDataFlowRecord(it, FieldType.INPUT_SNMP, CounterFactory.decode(new byte[] { 0x00, 0x04 }));
+		assertDataFlowRecord(it, FieldType.OUTPUT_SNMP, CounterFactory.decode(new byte[] { 0x00, 0x05 }));
+		assertDataFlowRecord(it, FieldType.IPV4_SRC_ADDR, Inet4Address.getByAddress(new byte[] { (byte)0xc0, (byte)0xa8, 0x04, 0x0a }));
+		assertDataFlowRecord(it, FieldType.IPV4_DST_ADDR, Inet4Address.getByAddress(new byte[] { (byte)0xc0, 0x2b, (byte)0xac, 0x1e }));
+		assertDataFlowRecord(it, FieldType.PROTOCOL, new EnumCodeValue<IPProtocol>(IPProtocol.UDP, 0x11));
+		assertDataFlowRecord(it, FieldType.SRC_TOS, new EnumCodeValue<IPTypeOfService>(IPTypeOfService.CS0, 0x00));
+		assertDataFlowRecord(it, FieldType.L4_SRC_PORT, new Integer(0xb3d5));
+		assertDataFlowRecord(it, FieldType.L4_DST_PORT, new Integer(53));
+		assertDataFlowRecord(it, FieldType.FLOW_SAMPLER_ID, new Integer(0));
+		assertDataFlowRecord(it, FieldType.FLOW_CLASS, new Integer(0));
+		assertDataFlowRecord(it, FieldType.IPV4_NEXT_HOP, Inet4Address.getByAddress(new byte[] { (byte)0xc0, (byte)0xa8, 0x04, 0x04 }));
+		assertDataFlowRecord(it, FieldType.DST_MASK, new Integer(0));
+		assertDataFlowRecord(it, FieldType.SRC_MASK, new Integer(29));
+		assertDataFlowRecord(it, FieldType.TCP_FLAGS, TCPFLags.class, TCPFLags.ACK);
+		assertDataFlowRecord(it, FieldType.DIRECTION, new EnumCodeValue<FlowDirection>(FlowDirection.EGRESS, 0x01));
+		assertDataFlowRecord(it, FieldType.DST_AS, new Integer(0));
+		assertDataFlowRecord(it, FieldType.SRC_AS, new Integer(0));
+		
+		assertThat(it.hasNext()).isFalse();
+	}
+
+	
+	@Test
+	public void decodeDataTemplateTwoDataFlowDatagram() throws Exception {
+		channel.writeInbound(channel.alloc().buffer().writeBytes(dataTemplateTwoDataFlowDatagram));
+		
+		assertThat(peerRegistry.hasRegistryForPeer(LOCALHOST, 0)).isTrue();
+		
+		FlowRegistry flowRegistry = peerRegistry.registryForPeerAddress(LOCALHOST, 0);
+
+		assertThat(flowRegistry.hasTemplateForFlowsetID(256)).isTrue();
+		
+		Template template = flowRegistry.templateForFlowsetID(256);
+		
+		Iterator<TemplateField> fields = template.getFields().iterator();
+		
+		assertThat(fields.next()).has(new TemplateFieldCondition(FieldType.LAST_SWITCHED, 4));
+		assertThat(fields.next()).has(new TemplateFieldCondition(FieldType.FIRST_SWITCHED, 4));
+		assertThat(fields.next()).has(new TemplateFieldCondition(FieldType.IN_BYTES, 4));
+		assertThat(fields.next()).has(new TemplateFieldCondition(FieldType.IN_PKTS, 4));
+		assertThat(fields.next()).has(new TemplateFieldCondition(FieldType.INPUT_SNMP, 2));
+		assertThat(fields.next()).has(new TemplateFieldCondition(FieldType.OUTPUT_SNMP, 2));
+		assertThat(fields.next()).has(new TemplateFieldCondition(FieldType.IPV4_SRC_ADDR, 4));
+		assertThat(fields.next()).has(new TemplateFieldCondition(FieldType.IPV4_DST_ADDR, 4));
+		assertThat(fields.next()).has(new TemplateFieldCondition(FieldType.PROTOCOL, 1));
+		assertThat(fields.next()).has(new TemplateFieldCondition(FieldType.SRC_TOS, 1));
+		assertThat(fields.next()).has(new TemplateFieldCondition(FieldType.L4_SRC_PORT, 2));
+		assertThat(fields.next()).has(new TemplateFieldCondition(FieldType.L4_DST_PORT, 2));
+		assertThat(fields.next()).has(new TemplateFieldCondition(FieldType.FLOW_SAMPLER_ID, 1));
+		assertThat(fields.next()).has(new TemplateFieldCondition(FieldType.FLOW_CLASS, 1));
+		assertThat(fields.next()).has(new TemplateFieldCondition(FieldType.IPV4_NEXT_HOP, 4));
+		assertThat(fields.next()).has(new TemplateFieldCondition(FieldType.DST_MASK, 1));
+		assertThat(fields.next()).has(new TemplateFieldCondition(FieldType.SRC_MASK, 1));
+		assertThat(fields.next()).has(new TemplateFieldCondition(FieldType.TCP_FLAGS, 1));
+		assertThat(fields.next()).has(new TemplateFieldCondition(FieldType.DIRECTION, 1));
+		assertThat(fields.next()).has(new TemplateFieldCondition(FieldType.DST_AS, 2));
+		assertThat(fields.next()).has(new TemplateFieldCondition(FieldType.SRC_AS, 2));
+		assertThat(fields.hasNext()).isFalse();
+		
+		assertThat(channel.inboundMessages()).hasSize(2);
+		
+		DataFlow flow = (DataFlow)channel.inboundMessages().remove();
+		Header header = flow.getHeader();
+		
+		assertThat(header).isNotNull();
+		assertThat(header.getRecordCount()).isEqualTo(2);
+		assertThat(header.getSysUpTime()).isEqualTo(1976904);
+		assertThat(header.getUnixSeconds()).isEqualTo(1427139251);
+		assertThat(header.getSequenceNumber()).isEqualTo(31);
+		assertThat(header.getSourceId()).isEqualTo(0);
+		
+		Iterator<DataFlowRecord> it = flow.getRecords().iterator();
+		
+		assertDataFlowRecord(it, FieldType.LAST_SWITCHED, new Long(0x001ded18));
+		assertDataFlowRecord(it, FieldType.FIRST_SWITCHED, new Long(0x001ded18));
+		assertDataFlowRecord(it, FieldType.IN_BYTES, CounterFactory.decode(new byte[] { 0x00, 0x00, 0x00, 0x43 }));
+		assertDataFlowRecord(it, FieldType.IN_PKTS, CounterFactory.decode(new byte[] { 0x00, 0x00, 0x00, 0x01 }));
+		assertDataFlowRecord(it, FieldType.INPUT_SNMP, CounterFactory.decode(new byte[] { 0x00, 0x04 }));
+		assertDataFlowRecord(it, FieldType.OUTPUT_SNMP, CounterFactory.decode(new byte[] { 0x00, 0x05 }));
+		assertDataFlowRecord(it, FieldType.IPV4_SRC_ADDR, Inet4Address.getByAddress(new byte[] { (byte)0xc0, (byte)0xa8, 0x04, 0x0a }));
+		assertDataFlowRecord(it, FieldType.IPV4_DST_ADDR, Inet4Address.getByAddress(new byte[] { (byte)0xc0, 0x2b, (byte)0xac, 0x1e }));
+		assertDataFlowRecord(it, FieldType.PROTOCOL, new EnumCodeValue<IPProtocol>(IPProtocol.UDP, 0x11));
+		assertDataFlowRecord(it, FieldType.SRC_TOS, new EnumCodeValue<IPTypeOfService>(IPTypeOfService.CS0, 0x00));
+		assertDataFlowRecord(it, FieldType.L4_SRC_PORT, new Integer(0xb3d5));
+		assertDataFlowRecord(it, FieldType.L4_DST_PORT, new Integer(53));
+		assertDataFlowRecord(it, FieldType.FLOW_SAMPLER_ID, new Integer(0));
+		assertDataFlowRecord(it, FieldType.FLOW_CLASS, new Integer(0));
+		assertDataFlowRecord(it, FieldType.IPV4_NEXT_HOP, Inet4Address.getByAddress(new byte[] { (byte)0xc0, (byte)0xa8, 0x04, 0x04 }));
+		assertDataFlowRecord(it, FieldType.DST_MASK, new Integer(0));
+		assertDataFlowRecord(it, FieldType.SRC_MASK, new Integer(29));
+		assertDataFlowRecord(it, FieldType.TCP_FLAGS, TCPFLags.class, TCPFLags.ACK);
+		assertDataFlowRecord(it, FieldType.DIRECTION, new EnumCodeValue<FlowDirection>(FlowDirection.EGRESS, 0x01));
+		assertDataFlowRecord(it, FieldType.DST_AS, new Integer(0));
+		assertDataFlowRecord(it, FieldType.SRC_AS, new Integer(0));
+		
+		assertThat(it.hasNext()).isFalse();
+
+		flow = (DataFlow)channel.inboundMessages().remove();
+		header = flow.getHeader();
+		
+		assertThat(header).isNotNull();
+		assertThat(header.getRecordCount()).isEqualTo(2);
+		assertThat(header.getSysUpTime()).isEqualTo(1976904);
+		assertThat(header.getUnixSeconds()).isEqualTo(1427139251);
+		assertThat(header.getSequenceNumber()).isEqualTo(31);
+		assertThat(header.getSourceId()).isEqualTo(0);
+		
+		it = flow.getRecords().iterator();
+		
+		assertDataFlowRecord(it, FieldType.LAST_SWITCHED, new Long(0x001ded1c));
+		assertDataFlowRecord(it, FieldType.FIRST_SWITCHED, new Long(0x001ded1c));
+		assertDataFlowRecord(it, FieldType.IN_BYTES, CounterFactory.decode(new byte[] { 0x00, 0x00, 0x02, (byte)0xfa }));
+		assertDataFlowRecord(it, FieldType.IN_PKTS, CounterFactory.decode(new byte[] { 0x00, 0x00, 0x00, 0x01 }));
+		assertDataFlowRecord(it, FieldType.INPUT_SNMP, CounterFactory.decode(new byte[] { 0x00, 0x04 }));
+		assertDataFlowRecord(it, FieldType.OUTPUT_SNMP, CounterFactory.decode(new byte[] { 0x00, 0x05 }));
+		assertDataFlowRecord(it, FieldType.IPV4_SRC_ADDR, Inet4Address.getByAddress(new byte[] { (byte)0xc6, 0x29, 0x00, 0x04 }));
+		assertDataFlowRecord(it, FieldType.IPV4_DST_ADDR, Inet4Address.getByAddress(new byte[] { (byte)0xc0, (byte)0xa8, 0x04, 0x0a }));
+		assertDataFlowRecord(it, FieldType.PROTOCOL, new EnumCodeValue<IPProtocol>(IPProtocol.UDP, 0x11));
+		assertDataFlowRecord(it, FieldType.SRC_TOS, new EnumCodeValue<IPTypeOfService>(IPTypeOfService.CS0, 0x00));
+		assertDataFlowRecord(it, FieldType.L4_SRC_PORT, new Integer(53));
+		assertDataFlowRecord(it, FieldType.L4_DST_PORT, new Integer(0x20bf));
+		assertDataFlowRecord(it, FieldType.FLOW_SAMPLER_ID, new Integer(0));
+		assertDataFlowRecord(it, FieldType.FLOW_CLASS, new Integer(0));
+		assertDataFlowRecord(it, FieldType.IPV4_NEXT_HOP, Inet4Address.getByAddress(new byte[] { (byte)0xc0, (byte)0xa8, 0x04, 0x0a }));
+		assertDataFlowRecord(it, FieldType.DST_MASK, new Integer(29));
+		assertDataFlowRecord(it, FieldType.SRC_MASK, new Integer(0));
+		assertDataFlowRecord(it, FieldType.TCP_FLAGS, TCPFLags.class, TCPFLags.ACK);
+		assertDataFlowRecord(it, FieldType.DIRECTION, new EnumCodeValue<FlowDirection>(FlowDirection.INGRESS, 0x00));
+		assertDataFlowRecord(it, FieldType.DST_AS, new Integer(0));
+		assertDataFlowRecord(it, FieldType.SRC_AS, new Integer(0));
+		
+		assertThat(it.hasNext()).isFalse();
+	}
+
+	private void assertDataFlowRecord(Iterator<DataFlowRecord> it, FieldType type, Object value) {
+		DataFlowRecord dfr;
+		
+		assertThat(it.hasNext()).isTrue();
+		dfr = it.next();
+		assertThat(dfr.getType()).isEqualTo(type);
+		assertThat(dfr.getValue()).isEqualTo(value);
+		
+	}
+	
+	@SuppressWarnings("unchecked")
+	private <T> void assertDataFlowRecord(Iterator<DataFlowRecord> it, FieldType type, Class<T> clazz, T... values) {
+		DataFlowRecord dfr;
+		
+		assertThat(it.hasNext()).isTrue();
+		dfr = it.next();
+		assertThat(dfr.getType()).isEqualTo(type);
+		assertThat((Set<T>)dfr.getValue()).containsOnly(values);
+		
+	}
+
 }

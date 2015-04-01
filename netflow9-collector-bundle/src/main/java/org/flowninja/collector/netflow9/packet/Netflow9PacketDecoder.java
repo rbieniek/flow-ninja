@@ -385,6 +385,7 @@ public class Netflow9PacketDecoder extends ByteToMessageDecoder {
 		case DST_TRAFFIC_INDEX:
 		case REPLICATION_FACTOR:
 			value = new Long(buffer.readUnsignedInt());
+			break;
 		case IPV6_SRC_ADDR:
 		case IPV6_DST_ADDR: 
 		case IPV6_NEXT_HOP:

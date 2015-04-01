@@ -71,7 +71,7 @@ public class FlowRegistry {
 	 * @return
 	 */
 	public Collection<? extends FlowBuffer> backlogFlows() {
-		return backlogFlows();
+		return backlogFlows;
 	}
 
 	/**

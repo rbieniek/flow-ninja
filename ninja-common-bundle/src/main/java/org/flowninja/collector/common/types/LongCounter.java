@@ -3,6 +3,8 @@
  */
 package org.flowninja.collector.common.types;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+
 /**
  * @author rainer
  *
@@ -30,6 +32,21 @@ public class LongCounter extends PrimitveCounter<Long> {
 	@Override
 	public Number value() {
 		return value;
+	}
+
+	@Override
+	public String toString() {
+		return printableValue();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if(!(obj instanceof LongCounter))
+			return false;
+		
+		LongCounter o = (LongCounter)obj;
+		
+		return (new EqualsBuilder()).append(this.value, o.value).isEquals();
 	}
 
 }
