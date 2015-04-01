@@ -186,6 +186,7 @@
   <modules>
     <module>ninja-common-bundle</module>
     <module>netflow9-collector-bundle</module>
+    <module>netflow9-file-storer-bundle</module>
   </modules>
 
   <dependencyManagement>
