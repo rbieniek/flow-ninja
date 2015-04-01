@@ -3,15 +3,17 @@
  */
 package org.flowninja.collector.common.netflow9.types;
 
+import org.flowninja.collector.common.types.Counter;
+
 /**
  * @author rainer
  *
  */
-public class OptionsFlowRecord {
-	FieldType type;
-	private Object value;
+public class ScopeFlowRecord {
+	ScopeType type;
+	private Counter value;
 	
-	public OptionsFlowRecord(FieldType type, Object value) {
+	public ScopeFlowRecord(ScopeType type, Counter value) {
 		this.type = type;
 		this.value = value;
 	}
@@ -19,14 +21,14 @@ public class OptionsFlowRecord {
 	/**
 	 * @return the type
 	 */
-	public FieldType getType() {
+	public ScopeType getType() {
 		return type;
 	}
 
 	/**
 	 * @return the value
 	 */
-	public Object getValue() {
+	public Counter getValue() {
 		return value;
 	}
 }

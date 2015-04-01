@@ -24,9 +24,12 @@ import org.flowninja.collector.common.netflow9.types.FlowDirection;
 import org.flowninja.collector.common.netflow9.types.Header;
 import org.flowninja.collector.common.netflow9.types.IPv6OptionHeaders;
 import org.flowninja.collector.common.netflow9.types.OptionField;
+import org.flowninja.collector.common.netflow9.types.OptionsFlow;
+import org.flowninja.collector.common.netflow9.types.OptionsFlowRecord;
 import org.flowninja.collector.common.netflow9.types.OptionsTemplate;
 import org.flowninja.collector.common.netflow9.types.SamplingAlgorithm;
 import org.flowninja.collector.common.netflow9.types.ScopeField;
+import org.flowninja.collector.common.netflow9.types.ScopeFlowRecord;
 import org.flowninja.collector.common.netflow9.types.ScopeType;
 import org.flowninja.collector.common.netflow9.types.Template;
 import org.flowninja.collector.common.netflow9.types.TemplateField;
@@ -38,13 +41,12 @@ import org.flowninja.collector.common.protocol.types.IPProtocolVersion;
 import org.flowninja.collector.common.protocol.types.IPTypeOfService;
 import org.flowninja.collector.common.protocol.types.MPLSTopLabelType;
 import org.flowninja.collector.common.protocol.types.TCPFLags;
+import org.flowninja.collector.common.types.Counter;
 import org.flowninja.collector.common.types.CounterFactory;
 import org.flowninja.collector.common.types.EncodedData;
 import org.flowninja.collector.common.types.EnumCodeValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.sun.javafx.image.impl.IntArgb;
 
 /**
  * Netwflow9 datagram packet decoder implementation. 
@@ -198,7 +200,7 @@ public class Netflow9PacketDecoder extends ByteToMessageDecoder {
 					if((template = flowRegistry.templateForFlowsetID(flowBuffer.getFlowSetId())) != null) {
 						out.add(decodeDataTemplate(header, flowBuffer, template));
 					} else if((optionsTemplate = flowRegistry.optionTemplateForFlowsetID(flowBuffer.getFlowSetId())) != null) {
-						
+						out.add(decodeOptionsTemplate(header, flowBuffer, optionsTemplate));						
 					} else {
 						backlogFlows.add(flowBuffer);
 					}
@@ -229,6 +231,40 @@ public class Netflow9PacketDecoder extends ByteToMessageDecoder {
 		}
 		
 		return new DataFlow(header, flowRecords);
+	}
+
+	/**
+	 * Decode a data flow from a data buffer and a given template
+	 * 
+	 * @param header
+	 * @param flowBuffer
+	 * @param template
+	 * @return
+	 */
+	private OptionsFlow decodeOptionsTemplate(Header header, FlowBuffer flowBuffer, OptionsTemplate template) {
+		List<OptionsFlowRecord> flowRecords = new LinkedList<OptionsFlowRecord>();
+		List<ScopeFlowRecord> scopeRecords = new LinkedList<ScopeFlowRecord>();		
+		ByteBuf buffer = flowBuffer.getBuffer();
+		
+		for(ScopeField field : template.getScopeFields()) {
+			Counter value = null;
+			
+			if(field.getLength() > 0) {
+				byte data[] = new byte[field.getLength()];
+				
+				buffer.readBytes(data);
+				
+				value = CounterFactory.decode(data);
+			}
+			
+			scopeRecords.add(new ScopeFlowRecord(field.getType(), value));
+		}
+		
+		for(OptionField field : template.getOptionFields()) {
+			flowRecords.add(new OptionsFlowRecord(field.getType(), decodeValue(field.getType(), field.getLength(), buffer)));
+		}
+		
+		return new OptionsFlow(header, scopeRecords, flowRecords);
 	}
 
 	/**
