@@ -153,7 +153,7 @@
 
     <version.commons.lang>3.3.2</version.commons.lang>
     <version.commons.io>2.4</version.commons.io>
-    <version.commons.codec>1.9</version.commons.codec>
+    <version.commons.codec>1.10</version.commons.codec>
 
     <version.org.slf4j>1.7.7</version.org.slf4j>
 

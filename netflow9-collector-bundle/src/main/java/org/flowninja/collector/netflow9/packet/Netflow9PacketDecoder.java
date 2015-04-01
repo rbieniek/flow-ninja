@@ -11,24 +11,31 @@ import java.net.Inet4Address;
 import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.nio.charset.Charset;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.flowninja.collector.common.netflow9.types.DataFlow;
 import org.flowninja.collector.common.netflow9.types.DataFlowRecord;
+import org.flowninja.collector.common.netflow9.types.EngineType;
 import org.flowninja.collector.common.netflow9.types.FieldType;
+import org.flowninja.collector.common.netflow9.types.FlowDirection;
 import org.flowninja.collector.common.netflow9.types.Header;
 import org.flowninja.collector.common.netflow9.types.OptionField;
 import org.flowninja.collector.common.netflow9.types.OptionsTemplate;
+import org.flowninja.collector.common.netflow9.types.SamplingAlgorithm;
 import org.flowninja.collector.common.netflow9.types.ScopeField;
 import org.flowninja.collector.common.netflow9.types.ScopeType;
 import org.flowninja.collector.common.netflow9.types.Template;
 import org.flowninja.collector.common.netflow9.types.TemplateField;
 import org.flowninja.collector.common.protocol.types.ICMPTypeCode;
+import org.flowninja.collector.common.protocol.types.IGMPType;
 import org.flowninja.collector.common.protocol.types.IPProtocol;
+import org.flowninja.collector.common.protocol.types.IPProtocolVersion;
 import org.flowninja.collector.common.protocol.types.IPTypeOfService;
 import org.flowninja.collector.common.protocol.types.TCPFLags;
 import org.flowninja.collector.common.types.CounterFactory;
+import org.flowninja.collector.common.types.EnumCodeValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -235,12 +242,43 @@ public class Netflow9PacketDecoder extends ByteToMessageDecoder {
 			value = CounterFactory.decode(dst);
 		} else {
 			switch(type) {
+			case IN_BYTES:
+			case IN_PKTS:
+			case FLOWS:
+			case MUL_DST_BYTES:
+			case MUL_DST_PKTS:
+			case OUT_BYTES:
+			case OUT_PKTS:
+			case TOTAL_BYTES_EXP:
+			case TOTAL_PKTS_EXP:
+			case TOTAL_FLOWS_EXP:
+			case IN_PERMANENT_BYTES:
+			case IN_PERMANENT_PKTS:
+			case INPUT_SNMP: 
+			case OUTPUT_SNMP:
+			case L2_PKT_SECT_OFFSET:
+			case L2_PKT_SECT_SIZE:
+			    {
+					byte[] dst = new byte[length];
+					
+					buffer.readBytes(dst);
+					value = CounterFactory.decode(dst);
+				}
+				break;
 			case PROTOCOL:
-				value = IPProtocol.fromCore(buffer.readUnsignedByte());
+				{
+					int code = buffer.readUnsignedByte();
+					value = new EnumCodeValue<IPProtocol>(IPProtocol.fromCore(code), code);
+				}
 				break;
 			case SRC_TOS:
 			case DST_TOS:
-				value = IPTypeOfService.fromCode(buffer.readUnsignedByte());
+			case POST_IP_DIFF_SERV_CODE_POINT:
+				{
+					int code = buffer.readUnsignedByte();
+					
+					value = new EnumCodeValue<IPTypeOfService>(IPTypeOfService.fromCode(code), code);
+				}
 				break;
 			case TCP_FLAGS:
 				if(length == 1)
@@ -256,10 +294,20 @@ public class Netflow9PacketDecoder extends ByteToMessageDecoder {
 			case L4_DST_PORT:
 			case MIN_PKT_LNGTH:
 			case MAX_PKT_LNGTH:
+			case FLOW_ACTIVE_TIMEOUT:
+			case FLOW_INACTIVE_TIMEOUT:
+			case IPV4_IDENT:
+			case SRC_VLAN:
+			case DST_VLAN:
+			case FRAGMENT_OFFSET:
 				value = new Integer(buffer.readUnsignedShort());
 				break;
 			case IPV4_SRC_ADDR:
 			case IPV4_DST_ADDR: 
+			case IPV4_DST_PREFIX:
+			case IPV4_SRC_PREFIX:
+			case IPV4_NEXT_HOP:
+			case MPLS_TOP_LABEL_IP_ADDR:
 			case BGP_IPV4_NEXT_HOP: {
 					byte[] tmp = new byte[4];
 					
@@ -275,15 +323,13 @@ public class Netflow9PacketDecoder extends ByteToMessageDecoder {
 			case DST_MASK:
 			case IPV6_DST_MASK:
 			case IPV6_SRC_MASK:
+			case ENGINE_ID:
+			case FLOW_SAMPLER_ID:
+			case MIN_TTL:
+			case MAX_TTL:
+			case MPLS_PREFIX_LEN:
+			case FLOW_CLASS:
 				value = new Integer(buffer.readUnsignedByte());				
-				break;
-			case INPUT_SNMP: 
-			case OUTPUT_SNMP: {
-					byte[] dst = new byte[length];
-					
-					buffer.readBytes(dst);
-					value = CounterFactory.decode(dst);
-				}
 				break;
 			case SRC_AS:
 			case DST_AS: 
@@ -298,9 +344,15 @@ public class Netflow9PacketDecoder extends ByteToMessageDecoder {
 				break;
 			case LAST_SWITCHED:
 			case FIRST_SWITCHED:
+			case SAMPLING_INTERVAL:
+			case FLOW_SAMPLER_RANDOM_INTERVAL:
+			case SRC_TRAFFIC_INDEX:
+			case DST_TRAFFIC_INDEX:
+			case REPLICATION_FACTOR:
 				value = new Long(buffer.readUnsignedInt());
 			case IPV6_SRC_ADDR:
 			case IPV6_DST_ADDR: 
+			case IPV6_NEXT_HOP:
 			case BGP_IPV6_NEXT_HOP: {
 					byte[] tmp = new byte[16];
 					
@@ -313,10 +365,102 @@ public class Netflow9PacketDecoder extends ByteToMessageDecoder {
 				}
 				break;
 			case IPV6_FLOW_LABEL:
+			case MPLS_LABEL_1:
+			case MPLS_LABEL_2:
+			case MPLS_LABEL_3:
+			case MPLS_LABEL_4:
+			case MPLS_LABEL_5:
+			case MPLS_LABEL_6:
+			case MPLS_LABEL_7:
+			case MPLS_LABEL_8:
+			case MPLS_LABEL_9:
+			case MPLS_LABEL_10:
 				value = new Integer(buffer.readUnsignedMedium());
 				break;
 			case ICMP_TYPE:
 				value = ICMPTypeCode.fromCodes(buffer.readUnsignedByte(), buffer.readUnsignedByte());
+				break;
+			case MUL_IGMP_TYPE: 
+				{
+					int code = buffer.readUnsignedByte();
+					
+					value = new EnumCodeValue<IGMPType>(IGMPType.fromCode(code), code);
+				}
+				break;
+			case SAMPLING_ALGORITHM:
+			case FLOW_SAMPLER_MODE:
+				{
+					int code = buffer.readUnsignedByte();
+					
+					value = new EnumCodeValue<SamplingAlgorithm>(SamplingAlgorithm.fromCode(code), code);
+				}
+				break;
+			case ENGINE_TYPE:
+				{
+					int code = buffer.readUnsignedByte();
+					
+					value = new EnumCodeValue<EngineType>(EngineType.fromCode(code), code);
+				}
+				break;
+			case MPLS_TOP_LABEL_TYPE:
+				// TODO
+				break;
+			case IN_DST_MAC:
+			case OUT_SRC_MAC:
+			case SRC_MAC:
+			case DST_MAC:
+				{
+					byte[] mac = new byte[6];
+					
+					buffer.readBytes(mac);
+					
+					value = mac;
+				}
+				break;
+			case IP_PROTOCOL_VERSION:
+				{
+					int code = buffer.readUnsignedByte();
+					
+					value = new EnumCodeValue<IPProtocolVersion>(IPProtocolVersion.fromCode(code), code);
+				}
+				break;
+			case DIRECTION:
+				{
+					int code = buffer.readUnsignedByte();
+					
+					value = new EnumCodeValue<FlowDirection>(FlowDirection.fromCode(code), code);
+				}
+				break;
+			case IPV6_OPTION_HEADERS:
+				// TODO
+				break;
+			case IF_NAME:
+			case IF_DESC:
+			case SAMPLER_NAME:
+			case APPLICATION_DESCRIPTION:
+			case APPLICATION_NAME:
+				{
+					byte[] tmp = new byte[length];
+					
+					buffer.readBytes(tmp);
+					
+					try {
+						value = new String(tmp, Charset.forName("UTF-8"));
+					} catch(Exception e) {
+						logger.warn("Cannot string of length {} for type {}", length, type, e);
+					}
+				}
+				break;
+			case FORWARDING_STATUS:
+				// TODO
+				break;
+			case MPLS_PAL_RD:
+			case APPLICATION_TAG:
+			case DEPRECATED:
+			case EXTENSION:
+			case PROPRIETARY:
+			case L2_PKT_SECT_DATA:
+				// TODO
 				break;
 			}
 		}

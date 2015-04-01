@@ -48,7 +48,7 @@ public enum FieldType {
 	FLOW_ACTIVE_TIMEOUT,
 	FLOW_INACTIVE_TIMEOUT,
 	ENGINE_TYPE,
-	ENINGE_ID,
+	ENGINE_ID,
 	TOTAL_BYTES_EXP,
 	TOTAL_PKTS_EXP,
 	TOTAL_FLOWS_EXP,
@@ -193,7 +193,7 @@ public enum FieldType {
 		case 38:
 			return ENGINE_TYPE;
 		case 39:
-			return ENINGE_ID;
+			return ENGINE_ID;
 		case 40:
 			return TOTAL_BYTES_EXP;
 		case 41:
