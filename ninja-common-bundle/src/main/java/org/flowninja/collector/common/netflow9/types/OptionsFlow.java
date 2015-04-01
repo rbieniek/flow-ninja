@@ -41,4 +41,11 @@ public class OptionsFlow {
 		return Collections.unmodifiableList(records);
 	}
 
+	/**
+	 * @return the scopes
+	 */
+	public List<ScopeFlowRecord> getScopes() {
+		return scopes;
+	}
+
 }

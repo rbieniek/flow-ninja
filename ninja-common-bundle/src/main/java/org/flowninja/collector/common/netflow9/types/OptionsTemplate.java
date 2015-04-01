@@ -46,4 +46,15 @@ public class OptionsTemplate {
 		return Collections.unmodifiableList(scopeFields);
 	}
 	
+	public int getTemplateLength() {
+		int length = 0;
+
+		for(ScopeField field : scopeFields)
+			length += field.getLength();
+		
+		for(OptionField field : optionFields)
+			length += field.getLength();
+		
+		return length;
+	}
 }

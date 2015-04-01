@@ -200,7 +200,7 @@ public class Netflow9PacketDecoder extends ByteToMessageDecoder {
 					if((template = flowRegistry.templateForFlowsetID(flowBuffer.getFlowSetId())) != null) {
 						out.addAll(decodeDataTemplate(header, flowBuffer, template));
 					} else if((optionsTemplate = flowRegistry.optionTemplateForFlowsetID(flowBuffer.getFlowSetId())) != null) {
-						out.add(decodeOptionsTemplate(header, flowBuffer, optionsTemplate));						
+						out.addAll(decodeOptionsTemplate(header, flowBuffer, optionsTemplate));						
 					} else {
 						backlogFlows.add(flowBuffer);
 					}
@@ -248,30 +248,37 @@ public class Netflow9PacketDecoder extends ByteToMessageDecoder {
 	 * @param template
 	 * @return
 	 */
-	private OptionsFlow decodeOptionsTemplate(Header header, FlowBuffer flowBuffer, OptionsTemplate template) {
-		List<OptionsFlowRecord> flowRecords = new LinkedList<OptionsFlowRecord>();
-		List<ScopeFlowRecord> scopeRecords = new LinkedList<ScopeFlowRecord>();		
+	private List<OptionsFlow> decodeOptionsTemplate(Header header, FlowBuffer flowBuffer, OptionsTemplate template) {
 		ByteBuf buffer = flowBuffer.getBuffer();
+		int dataLength = template.getTemplateLength();
+		List<OptionsFlow> optionsFlows = new LinkedList<OptionsFlow>();
 		
-		for(ScopeField field : template.getScopeFields()) {
-			Counter value = null;
-			
-			if(field.getLength() > 0) {
-				byte data[] = new byte[field.getLength()];
+		while(buffer.readableBytes() >= dataLength) {
+			List<OptionsFlowRecord> flowRecords = new LinkedList<OptionsFlowRecord>();
+			List<ScopeFlowRecord> scopeRecords = new LinkedList<ScopeFlowRecord>();		
+
+			for(ScopeField field : template.getScopeFields()) {
+				Counter value = null;
 				
-				buffer.readBytes(data);
+				if(field.getLength() > 0) {
+					byte data[] = new byte[field.getLength()];
+					
+					buffer.readBytes(data);
+					
+					value = CounterFactory.decode(data);
+				}
 				
-				value = CounterFactory.decode(data);
+				scopeRecords.add(new ScopeFlowRecord(field.getType(), value));
 			}
 			
-			scopeRecords.add(new ScopeFlowRecord(field.getType(), value));
+			for(OptionField field : template.getOptionFields()) {
+				flowRecords.add(new OptionsFlowRecord(field.getType(), decodeValue(field.getType(), field.getLength(), buffer)));
+			}
+			
+		 optionsFlows.add(new OptionsFlow(header, scopeRecords, flowRecords));
 		}
 		
-		for(OptionField field : template.getOptionFields()) {
-			flowRecords.add(new OptionsFlowRecord(field.getType(), decodeValue(field.getType(), field.getLength(), buffer)));
-		}
-		
-		return new OptionsFlow(header, scopeRecords, flowRecords);
+		return optionsFlows;
 	}
 
 	/**
