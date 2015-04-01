@@ -646,8 +646,8 @@ public class Netflow9PacketDecoderTest {
 		assertDataFlowRecord(it, FieldType.FIRST_SWITCHED, new Long(0x001ded1c));
 		assertDataFlowRecord(it, FieldType.IN_BYTES, CounterFactory.decode(new byte[] { 0x00, 0x00, 0x02, (byte)0xfa }));
 		assertDataFlowRecord(it, FieldType.IN_PKTS, CounterFactory.decode(new byte[] { 0x00, 0x00, 0x00, 0x01 }));
-		assertDataFlowRecord(it, FieldType.INPUT_SNMP, CounterFactory.decode(new byte[] { 0x00, 0x04 }));
-		assertDataFlowRecord(it, FieldType.OUTPUT_SNMP, CounterFactory.decode(new byte[] { 0x00, 0x05 }));
+		assertDataFlowRecord(it, FieldType.INPUT_SNMP, CounterFactory.decode(new byte[] { 0x00, 0x05 }));
+		assertDataFlowRecord(it, FieldType.OUTPUT_SNMP, CounterFactory.decode(new byte[] { 0x00, 0x04 }));
 		assertDataFlowRecord(it, FieldType.IPV4_SRC_ADDR, Inet4Address.getByAddress(new byte[] { (byte)0xc6, 0x29, 0x00, 0x04 }));
 		assertDataFlowRecord(it, FieldType.IPV4_DST_ADDR, Inet4Address.getByAddress(new byte[] { (byte)0xc0, (byte)0xa8, 0x04, 0x0a }));
 		assertDataFlowRecord(it, FieldType.PROTOCOL, new EnumCodeValue<IPProtocol>(IPProtocol.UDP, 0x11));

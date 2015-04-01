@@ -35,4 +35,13 @@ public class Template {
 		return Collections.unmodifiableList(fields);
 	}
 	
+	public int getTemplateLength() {
+		int length = 0;
+
+		for(TemplateField field : fields)
+			length += field.getLength();
+		
+		return length;
+	}
+	
 }

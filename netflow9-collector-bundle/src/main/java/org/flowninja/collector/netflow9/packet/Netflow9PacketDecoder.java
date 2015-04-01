@@ -198,7 +198,7 @@ public class Netflow9PacketDecoder extends ByteToMessageDecoder {
 					OptionsTemplate optionsTemplate = null;
 					
 					if((template = flowRegistry.templateForFlowsetID(flowBuffer.getFlowSetId())) != null) {
-						out.add(decodeDataTemplate(header, flowBuffer, template));
+						out.addAll(decodeDataTemplate(header, flowBuffer, template));
 					} else if((optionsTemplate = flowRegistry.optionTemplateForFlowsetID(flowBuffer.getFlowSetId())) != null) {
 						out.add(decodeOptionsTemplate(header, flowBuffer, optionsTemplate));						
 					} else {
@@ -222,15 +222,22 @@ public class Netflow9PacketDecoder extends ByteToMessageDecoder {
 	 * @param template
 	 * @return
 	 */
-	private DataFlow decodeDataTemplate(Header header, FlowBuffer flowBuffer, Template template) {
-		List<DataFlowRecord> flowRecords = new LinkedList<DataFlowRecord>();
+	private List<DataFlow> decodeDataTemplate(Header header, FlowBuffer flowBuffer, Template template) {
 		ByteBuf buffer = flowBuffer.getBuffer();
-		
-		for(TemplateField field : template.getFields()) {
-			flowRecords.add(new DataFlowRecord(field.getType(), decodeValue(field.getType(), field.getLength(), buffer)));
+		List<DataFlow> flows = new LinkedList<DataFlow>();
+		int dataLength = template.getTemplateLength();
+
+		while(buffer.readableBytes() >= dataLength) {
+			List<DataFlowRecord> flowRecords = new LinkedList<DataFlowRecord>();
+
+			for(TemplateField field : template.getFields()) {
+				flowRecords.add(new DataFlowRecord(field.getType(), decodeValue(field.getType(), field.getLength(), buffer)));
+			}
+			
+			flows.add(new DataFlow(header, flowRecords));
 		}
 		
-		return new DataFlow(header, flowRecords);
+		return flows;
 	}
 
 	/**
