@@ -13,7 +13,7 @@
 
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.flow-ninja</groupId>
-  <artifactId>netflow9-file-storer</artifactId>
+  <artifactId>netflow9-file-storer-bundle</artifactId>
   <packaging>bundle</packaging>
   <version>${version.flow-ninja}</version>
   <name>OSGi IP netflow v9 flat file storer</name>
