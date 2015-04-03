@@ -5,6 +5,8 @@ package org.flowninja.collector.netflow9.packet;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.channel.socket.DatagramPacket;
 import io.netty.handler.codec.ByteToMessageDecoder;
 
 import java.net.Inet4Address;
@@ -59,8 +61,8 @@ import org.slf4j.LoggerFactory;
  * @author rainer
  *
  */
-public class Netflow9PacketDecoder extends ByteToMessageDecoder {
-	private static final Logger logger = LoggerFactory.getLogger(Netflow9PacketDecoder.class);
+public class Netflow9DatagramDecoder extends SimpleChannelInboundHandler<DatagramPacket> {
+	private static final Logger logger = LoggerFactory.getLogger(Netflow9DatagramDecoder.class);
 	
 	private static final int PACKET_HEADER_LENGTH = 20;
 	private static final int VERSION_NUMBER = 9;
@@ -93,12 +95,10 @@ public class Netflow9PacketDecoder extends ByteToMessageDecoder {
 		logger.info("netflow 9 collector server channel is inactive");
 	}
 
-	/**
-	 * main packet decoder routine. 
-	 */
 	@Override
-	protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
-		InetAddress peerAddress = peerAddressMapper.mapRemoteAddress(ctx.channel().remoteAddress());
+	protected void channelRead0(ChannelHandlerContext ctx, DatagramPacket msg) throws Exception {
+		InetAddress peerAddress = peerAddressMapper.mapRemoteAddress(msg.sender());
+		ByteBuf in = msg.content();
 		
 		logger.info("received flow packet from peer {}", peerAddress);
 		
@@ -209,11 +209,13 @@ public class Netflow9PacketDecoder extends ByteToMessageDecoder {
 					if((template = flowRegistry.templateForFlowsetID(flowBuffer.getFlowSetId())) != null) {
 						logger.info("decoding flow buffer using data template for flowset ID {}", flowBuffer.getFlowSetId());
 						
-						out.addAll(decodeDataTemplate(peerAddress, header, flowBuffer, template));
+						for(DataFlow flow : decodeDataTemplate(peerAddress, header, flowBuffer, template))
+							ctx.channel().write(flow);
 					} else if((optionsTemplate = flowRegistry.optionTemplateForFlowsetID(flowBuffer.getFlowSetId())) != null) {
 						logger.info("decoding flow buffer using options template for flowset ID {}", flowBuffer.getFlowSetId());
 
-						out.addAll(decodeOptionsTemplate(peerAddress, header, flowBuffer, optionsTemplate));						
+						for(OptionsFlow flow: decodeOptionsTemplate(peerAddress, header, flowBuffer, optionsTemplate))
+							ctx.channel().write(flow);	
 					} else {
 						logger.info("no template found for flowset ID {}, putting flowset to backlog", flowBuffer.getFlowSetId());
 
@@ -222,6 +224,7 @@ public class Netflow9PacketDecoder extends ByteToMessageDecoder {
 				}
 				
 				flowRegistry.backlogFlows(backlogFlows);
+				ctx.channel().flush();
 			} 
 		} else {
 			logger.error("dropping received packet with {} bytes size but expected at least {} bytes", 
@@ -231,6 +234,7 @@ public class Netflow9PacketDecoder extends ByteToMessageDecoder {
 
 	/**
 	 * Decode a data flow from a data buffer and a given template
+	 * @param peerAddress 
 	 * 
 	 * @param header
 	 * @param flowBuffer
@@ -257,6 +261,7 @@ public class Netflow9PacketDecoder extends ByteToMessageDecoder {
 
 	/**
 	 * Decode a data flow from a data buffer and a given template
+	 * @param peerAddress 
 	 * 
 	 * @param header
 	 * @param flowBuffer
@@ -552,4 +557,5 @@ public class Netflow9PacketDecoder extends ByteToMessageDecoder {
 	public void setPeerAddressMapper(PeerAddressMapper peerAddressMapper) {
 		this.peerAddressMapper = peerAddressMapper;
 	}
+
 }

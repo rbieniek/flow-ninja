@@ -32,6 +32,10 @@
 	<bean id="netflowDecoder" class="org.flowninja.collector.netflow9.packet.Netflow9PacketDecoder">
 		<property name="peerRegistry" ref="peerRegistry"/>
 	</bean>
+
+	<bean id="netflowDatagramDecoder" class="org.flowninja.collector.netflow9.packet.Netflow9DatagramDecoder">
+		<property name="peerRegistry" ref="peerRegistry"/>
+	</bean>
 	
 	<bean id="peerRegistry" class="org.flowninja.collector.netflow9.packet.PeerRegistry" init-method="init" destroy-method="destroy">
 		<property name="peerTtl" value="${peerTtl}"/>
@@ -41,6 +45,7 @@
 		<property name="bindAddress" ref="bindAddress"/>
 		<property name="bindPort" value="${bindPort}"/>
 		<property name="netflowDecoder" ref="netflowDecoder"/>
+		<property name="netflowDatagramDecoder" ref="netflowDatagramDecoder"/>
 		<property name="netflowCollector" ref="netflowCollector"/>
 	</bean>
 

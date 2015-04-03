@@ -7,6 +7,7 @@ import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
+import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -20,6 +21,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.flowninja.collector.netflow9.Netflow9CollectorService;
+import org.flowninja.collector.netflow9.packet.Netflow9DatagramDecoder;
 import org.flowninja.collector.netflow9.packet.Netflow9PacketDecoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +38,7 @@ public class Netflow9CollectorServiceImpl implements Netflow9CollectorService {
 	private AtomicInteger bindPort = new AtomicInteger(-1);
 	private Netflow9CollectorHandler netflowCollector;
 	private Netflow9PacketDecoder netflowDecoder;
+	private Netflow9DatagramDecoder netflowDatagramDecoder;
 	private AtomicBoolean canRun = new AtomicBoolean(false);
 	private AtomicBoolean serverRunning = new AtomicBoolean(false);
 	private EventLoopGroup group = null;
@@ -161,8 +164,13 @@ public class Netflow9CollectorServiceImpl implements Netflow9CollectorService {
 				.channel(NioDatagramChannel.class)
 				.option(ChannelOption.SO_BROADCAST, true)
 				.option(ChannelOption.SO_REUSEADDR, true)
-				.handler(netflowDecoder)
-				.handler(netflowCollector);
+				.handler(new ChannelInitializer<Channel>() {
+
+					@Override
+					protected void initChannel(Channel ch) throws Exception {
+						ch.pipeline().addLast(netflowDatagramDecoder).addLast(netflowCollector);
+					}
+				});
 			
 			b.bind(this.bindAddress.get(), this.bindPort.get()).addListener(new ChannelFutureListener() {
 				
@@ -173,6 +181,14 @@ public class Netflow9CollectorServiceImpl implements Netflow9CollectorService {
 				}
 			});
 		}
+	}
+
+	/**
+	 * @param netflowDatagramDecoder the netflowDatagramDecoder to set
+	 */
+	public void setNetflowDatagramDecoder(
+			Netflow9DatagramDecoder netflowDatagramDecoder) {
+		this.netflowDatagramDecoder = netflowDatagramDecoder;
 	}
 
 }

@@ -3,6 +3,7 @@
  */
 package org.flowninja.collector.common.netflow9.types;
 
+import java.net.InetAddress;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -14,9 +15,11 @@ import java.util.List;
 public class DataFlow {
 
 	private Header header;
+	private InetAddress peerAddress;
 	private List<DataFlowRecord> records = new LinkedList<DataFlowRecord>();
 	
-	public DataFlow(Header header, List<DataFlowRecord> records) {
+	public DataFlow(InetAddress peerAddress, Header header, List<DataFlowRecord> records) {
+		this.peerAddress = peerAddress;
 		this.header = header;
 		
 		if(records != null) 
@@ -35,5 +38,12 @@ public class DataFlow {
 	 */
 	public List<DataFlowRecord> getRecords() {
 		return Collections.unmodifiableList(records);
+	}
+
+	/**
+	 * @return the peerAddress
+	 */
+	public InetAddress getPeerAddress() {
+		return peerAddress;
 	}
 }

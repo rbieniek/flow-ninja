@@ -9,14 +9,20 @@
 	
 	<cm:property-placeholder persistent-id="ninja.netflow9.file.storer">
 		<cm:default-properties>
-			<cm:property name="baseDirectory" value="$[karaf.base]/data/netflow9"/>
+			<cm:property name="baseDirectory" value="data/netflow9"/>
+			<cm:property name="dataFileNameTemplate" value="data-flow-${yyyy}${mm}${dd}-${HH}${MM}.json"/>
+			<cm:property name="optionsFileNameTemplate" value="options-flow-${yyyy}${mm}${dd}-${HH}${MM}.json"/>
 		</cm:default-properties>
 	</cm:property-placeholder>
 
 	<service interface="org.flowninja.collector.common.netflow9.services.FlowStoreService" ref="flatFileStorerService"/>
 	
+	<bean id="fileHandler" class="org.flowninja.netflow9.storer.flat.FileSystemHandler" init-method="init" destroy-method="destroy">
+		<property name="baseDirectoryPath" value="${baseDirectory}"/>		
+	</bean>
+	
 	<bean id="flatFileStorerService" class="org.flowninja.netflow9.storer.flat.FlatFileStorerService">
-		
+		<property name="fileHandler" ref="fileHandler"/>
 	</bean>
 	
 </blueprint>

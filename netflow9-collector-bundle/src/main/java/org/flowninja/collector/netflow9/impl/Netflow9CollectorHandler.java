@@ -78,20 +78,29 @@ public class Netflow9CollectorHandler extends ChannelInboundHandlerAdapter {
 	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
 		InetAddress peerAddress = peerAddressMapper.mapRemoteAddress(ctx.channel().remoteAddress());
 		
-		logger.info("received decoded flow packet from peer {}", peerAddress);
+		logger.info("received decoded flow packet from peer {}, msg type {}", peerAddress, 
+				(msg != null ? msg.getClass().toString() : "<unknown>"));
 
 		if(msg instanceof DataFlow) {
+			DataFlow flow = (DataFlow)msg;
+			
+			logger.info("received data flow packet from peer {}", flow.getPeerAddress());
+			
 			for(FlowStoreService service : flowStorers) {
 				try {
-					service.storeDataFlow(peerAddress, (DataFlow)msg);
+					service.storeDataFlow(flow);
 				} catch(ServiceUnavailableException e) {
 					logger.error("falied to store data flow", e);
 				}
 			}			
 		} else if(msg instanceof OptionsFlow) {
+			OptionsFlow flow = (OptionsFlow)msg;
+
+			logger.info("received options flow packet from peer {}", flow.getPeerAddress());
+
 			for(FlowStoreService service : flowStorers) {
 				try {
-					service.storeOptionsFlow(peerAddress, (OptionsFlow)msg);
+					service.storeOptionsFlow(flow);
 				} catch(ServiceUnavailableException e) {
 					logger.error("falied to store options flow", e);
 				}

@@ -3,6 +3,7 @@
  */
 package org.flowninja.collector.common.netflow9.types;
 
+import java.net.InetAddress;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -13,11 +14,13 @@ import java.util.List;
  */
 public class OptionsFlow {
 
+	private InetAddress peerAddress;
 	private Header header;
 	private List<ScopeFlowRecord> scopes = new LinkedList<ScopeFlowRecord>();
 	private List<OptionsFlowRecord> records = new LinkedList<OptionsFlowRecord>();
 	
-	public OptionsFlow(Header header, List<ScopeFlowRecord> scopes, List<OptionsFlowRecord> records) {
+	public OptionsFlow(InetAddress peerAddress, Header header, List<ScopeFlowRecord> scopes, List<OptionsFlowRecord> records) {
+		this.peerAddress = peerAddress;
 		this.header = header;
 		
 		if(scopes != null)
@@ -46,6 +49,13 @@ public class OptionsFlow {
 	 */
 	public List<ScopeFlowRecord> getScopes() {
 		return scopes;
+	}
+
+	/**
+	 * @return the peerAddress
+	 */
+	public InetAddress getPeerAddress() {
+		return peerAddress;
 	}
 
 }
