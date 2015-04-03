@@ -164,7 +164,7 @@
     <version.org.springframework.data.mongodb>1.6.1.RELEASE</version.org.springframework.data.mongodb>
     <version.org.springframework.data.commons>1.9.1.RELEASE</version.org.springframework.data.commons>
 
-    <version.com.fasterxml.jackson>2.4.4</version.com.fasterxml.jackson>
+    <version.com.fasterxml.jackson>2.5.2</version.com.fasterxml.jackson>
     <version.com.mysema.querydsl>3.4.3</version.com.mysema.querydsl>
     <version.com.mysema.maven>1.1.2</version.com.mysema.maven>
     <version.com.google.code.morphia>0.104</version.com.google.code.morphia>

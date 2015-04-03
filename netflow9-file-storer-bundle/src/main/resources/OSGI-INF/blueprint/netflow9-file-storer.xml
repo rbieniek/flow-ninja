@@ -18,7 +18,9 @@
 	<service interface="org.flowninja.collector.common.netflow9.services.FlowStoreService" ref="flatFileStorerService"/>
 	
 	<bean id="fileHandler" class="org.flowninja.netflow9.storer.flat.FileSystemHandler" init-method="init" destroy-method="destroy">
-		<property name="baseDirectoryPath" value="${baseDirectory}"/>		
+		<property name="baseDirectoryPath" value="${baseDirectory}"/>
+		<property name="dataFileNameTemplate" value="${dataFileNameTemplate}"/>
+		<property name="optionsFileNameTemplate" value="${optionsFileNameTemplate}"/>
 	</bean>
 	
 	<bean id="flatFileStorerService" class="org.flowninja.netflow9.storer.flat.FlatFileStorerService">

@@ -58,7 +58,7 @@ public class FlatFileStorerService implements FlowStoreService {
 	 */
 	@Override
 	public void storeDataFlow(DataFlow msg) {
-		logger.info("storing data flow for peer address {}", msg.getPeerAddress());
+		logger.info("storing data flow with uuid {} for peer address {}", msg.getUuid(), msg.getPeerAddress());
 		
 		try {
 			PrintWriter pw = fileHandler.getDataFlowWriter();
@@ -67,6 +67,7 @@ public class FlatFileStorerService implements FlowStoreService {
 			jg.writeStartObject();
 
 			jg.writeStringField("peer", msg.getPeerAddress().getHostAddress());
+			jg.writeStringField("uuid", msg.getUuid().toString());
 			
 			jg.writeFieldName("header");
 			writeHeader(jg, msg.getHeader());
@@ -83,8 +84,8 @@ public class FlatFileStorerService implements FlowStoreService {
 			jg.writeEndObject();
 			jg.close();
 			
-			pw.println();
-		} catch(IOException e) {
+			fileHandler.getDataFlowWriter().println();
+		} catch(Exception e) {
 			logger.warn("failed to write data flow record for peer {}", msg.getPeerAddress(), e);
 		}
 	}
@@ -128,7 +129,7 @@ public class FlatFileStorerService implements FlowStoreService {
 	 */
 	@Override
 	public void storeOptionsFlow(OptionsFlow msg) {
-		logger.info("storing options flow for peer address {}", msg.getPeerAddress());
+		logger.info("storing options flow with UUID {} for peer address {}", msg.getUuid(), msg.getPeerAddress());
 
 		try {
 			PrintWriter pw = fileHandler.getOptionsFlowWriter();
@@ -137,6 +138,7 @@ public class FlatFileStorerService implements FlowStoreService {
 			jg.writeStartObject();
 
 			jg.writeStringField("peer", msg.getPeerAddress().getHostAddress());
+			jg.writeStringField("uuid", msg.getUuid().toString());
 
 			jg.writeFieldName("header");
 			writeHeader(jg, msg.getHeader());
@@ -144,7 +146,10 @@ public class FlatFileStorerService implements FlowStoreService {
 			jg.writeFieldName("scope");
 			jg.writeStartObject();
 			for(ScopeFlowRecord record : msg.getScopes()) {
-				jg.writeStringField(record.getType().toString(), record.getValue().printableValue());
+				if(record.getValue() != null)
+					jg.writeStringField(record.getType().toString(), record.getValue().printableValue());
+				else
+					jg.writeNullField(record.getType().toString());
 			}
 			jg.writeEndObject();
 			
@@ -159,9 +164,9 @@ public class FlatFileStorerService implements FlowStoreService {
 			jg.writeEndObject();
 			jg.close();
 			
-			pw.println();
-		} catch(IOException e) {
-			logger.warn("failed to write data flow record for peer {}", msg.getPeerAddress(), e);
+			fileHandler.getOptionsFlowWriter().println();
+		} catch(Exception e) {
+			logger.warn("failed to write options flow record for peer {}", msg.getPeerAddress(), e);
 		}
 	}
 

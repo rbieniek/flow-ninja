@@ -5,9 +5,8 @@ package org.flowninja.collector.netflow9.packet;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.socket.DatagramPacket;
-import io.netty.handler.codec.ByteToMessageDecoder;
 
 import java.net.Inet4Address;
 import java.net.Inet6Address;
@@ -61,7 +60,7 @@ import org.slf4j.LoggerFactory;
  * @author rainer
  *
  */
-public class Netflow9DatagramDecoder extends SimpleChannelInboundHandler<DatagramPacket> {
+public class Netflow9DatagramDecoder extends ChannelInboundHandlerAdapter {
 	private static final Logger logger = LoggerFactory.getLogger(Netflow9DatagramDecoder.class);
 	
 	private static final int PACKET_HEADER_LENGTH = 20;
@@ -96,139 +95,143 @@ public class Netflow9DatagramDecoder extends SimpleChannelInboundHandler<Datagra
 	}
 
 	@Override
-	protected void channelRead0(ChannelHandlerContext ctx, DatagramPacket msg) throws Exception {
-		InetAddress peerAddress = peerAddressMapper.mapRemoteAddress(msg.sender());
-		ByteBuf in = msg.content();
-		
-		logger.info("received flow packet from peer {}", peerAddress);
-		
-		if(in.readableBytes() > PACKET_HEADER_LENGTH) {
-			int versionNumber = in.readUnsignedShort();
+	public void channelRead(ChannelHandlerContext ctx, Object o) throws Exception {
+		if(o instanceof DatagramPacket) {
+			DatagramPacket msg = (DatagramPacket)o;
+			InetAddress peerAddress = peerAddressMapper.mapRemoteAddress(msg.sender());
+			ByteBuf in = msg.content();
 			
-			if(versionNumber == VERSION_NUMBER) {
-				Header header = new Header(in.readUnsignedShort(), 
-						in.readUnsignedInt(), 
-						in.readUnsignedInt(), 
-						in.readUnsignedInt(), 
-						in.readUnsignedInt());
-
-				List<Template> templates = new LinkedList<Template>();
-				List<OptionsTemplate> optionsTemplates = new LinkedList<OptionsTemplate>();
-				List<FlowBuffer> flows = new LinkedList<FlowBuffer>();
+			logger.info("received flow packet from peer {}", peerAddress);
+			
+			if(in.readableBytes() > PACKET_HEADER_LENGTH) {
+				int versionNumber = in.readUnsignedShort();
 				
-				int recordNumber = 0;
-				while(in.readableBytes() > 4) {					
-					int flowSetId = in.readUnsignedShort();
-					int length = in.readUnsignedShort();
-					int remainingOctets = length - 4; // subtract length of flowset ID and flowset length 
+				if(versionNumber == VERSION_NUMBER) {
+					Header header = new Header(in.readUnsignedShort(), 
+							in.readUnsignedInt(), 
+							in.readUnsignedInt(), 
+							in.readUnsignedInt(), 
+							in.readUnsignedInt());
+	
+					List<Template> templates = new LinkedList<Template>();
+					List<OptionsTemplate> optionsTemplates = new LinkedList<OptionsTemplate>();
+					List<FlowBuffer> flows = new LinkedList<FlowBuffer>();
 					
-					if(in.readableBytes() < remainingOctets) {
-						logger.error("packet short to {} bytes when {} bytes required in record {}", 
-								in.readableBytes(), remainingOctets, recordNumber);
-
-						return;
-					}
-
-					ByteBuf workBuf = in.readSlice(remainingOctets);
-					
-					switch(flowSetId) {
-					case TEMPLATE_FLOWSET_ID:
-						logger.info("received data template flowset from peer", peerAddress);
+					int recordNumber = 0;
+					while(in.readableBytes() > 4) {					
+						int flowSetId = in.readUnsignedShort();
+						int length = in.readUnsignedShort();
+						int remainingOctets = length - 4; // subtract length of flowset ID and flowset length 
 						
-						while(workBuf.readableBytes() > 4) {
-							int flowSetID = workBuf.readUnsignedShort();
-							int fieldCount = workBuf.readUnsignedShort();
-							List<TemplateField> fields = new LinkedList<TemplateField>();
+						if(in.readableBytes() < remainingOctets) {
+							logger.error("packet short to {} bytes when {} bytes required in record {}", 
+									in.readableBytes(), remainingOctets, recordNumber);
+	
+							return;
+						}
+	
+						ByteBuf workBuf = in.readSlice(remainingOctets);
+						
+						switch(flowSetId) {
+						case TEMPLATE_FLOWSET_ID:
+							logger.info("received data template flowset from peer", peerAddress);
 							
-							if(workBuf.readableBytes() < fieldCount * 4) {
-								logger.error("packet short to {} bytes when {} bytes required in record {}",
-										workBuf.readableBytes(), fieldCount * 4, recordNumber);
+							while(workBuf.readableBytes() > 4) {
+								int flowSetID = workBuf.readUnsignedShort();
+								int fieldCount = workBuf.readUnsignedShort();
+								List<TemplateField> fields = new LinkedList<TemplateField>();
 								
-								return;
+								if(workBuf.readableBytes() < fieldCount * 4) {
+									logger.error("packet short to {} bytes when {} bytes required in record {}",
+											workBuf.readableBytes(), fieldCount * 4, recordNumber);
+									
+									return;
+								}
+								
+								for(int fieldNumber=0; fieldNumber < fieldCount; fieldNumber++) {
+									fields.add(new TemplateField(FieldType.fromCode(workBuf.readUnsignedShort()), 
+											workBuf.readUnsignedShort()));
+								}
+								
+								templates.add(new Template(flowSetID, fields));								
+								recordNumber++;
 							}
+							break;
+						case OPTIONS_TEMPLATE_FLOWSET_ID: 
+							logger.info("received options template flowset from peer", peerAddress);
 							
-							for(int fieldNumber=0; fieldNumber < fieldCount; fieldNumber++) {
-								fields.add(new TemplateField(FieldType.fromCode(workBuf.readUnsignedShort()), 
-										workBuf.readUnsignedShort()));
+							{
+								int flowSetID = workBuf.readUnsignedShort();
+								int scopeLength = workBuf.readUnsignedShort();
+								int optionsLength = workBuf.readUnsignedShort();
+								List<ScopeField> scopeFields = new LinkedList<ScopeField>();
+								List<OptionField> optionFields = new LinkedList<OptionField>();
+								
+								while(scopeLength >= 4) {
+									scopeFields.add(new ScopeField(ScopeType.fromCode(workBuf.readUnsignedShort()), 
+											workBuf.readUnsignedShort()));
+									scopeLength -= 4;
+								}
+								
+								while(optionsLength >= 4) {
+									optionFields.add(new OptionField(FieldType.fromCode(workBuf.readUnsignedShort()), 
+											workBuf.readUnsignedShort()));
+									optionsLength -= 4;
+								}
+								
+								optionsTemplates.add(new OptionsTemplate(flowSetID, scopeFields, optionFields));
+								
+								recordNumber++;
 							}
-							
-							templates.add(new Template(flowSetID, fields));								
-							recordNumber++;
+							break;
+						default:
+							logger.info("received flowset with ID {} from peer", flowSetId, peerAddress);
+	
+							flows.add(new FlowBuffer(flowSetId, workBuf));
 						}
-						break;
-					case OPTIONS_TEMPLATE_FLOWSET_ID: 
-						logger.info("received options template flowset from peer", peerAddress);
+					}
+					
+					FlowRegistry flowRegistry = peerRegistry.registryForPeerAddress(peerAddress, header.getSourceId());				
+	
+					flowRegistry.addFlowTemplates(templates);
+					flowRegistry.addOptionTemplates(optionsTemplates);
+					
+					flows.addAll(flowRegistry.backlogFlows());
+					
+					
+					List<FlowBuffer> backlogFlows = new LinkedList<FlowBuffer>();
+					
+					for(FlowBuffer flowBuffer : flows) {
+						Template template = null;
+						OptionsTemplate optionsTemplate = null;
 						
-						{
-							int flowSetID = workBuf.readUnsignedShort();
-							int scopeLength = workBuf.readUnsignedShort();
-							int optionsLength = workBuf.readUnsignedShort();
-							List<ScopeField> scopeFields = new LinkedList<ScopeField>();
-							List<OptionField> optionFields = new LinkedList<OptionField>();
+						logger.info("decoding flow buffer for flowset ID {}", flowBuffer.getFlowSetId());
+						
+						if((template = flowRegistry.templateForFlowsetID(flowBuffer.getFlowSetId())) != null) {
+							logger.info("decoding flow buffer using data template for flowset ID {}", flowBuffer.getFlowSetId());
 							
-							while(scopeLength >= 4) {
-								scopeFields.add(new ScopeField(ScopeType.fromCode(workBuf.readUnsignedShort()), 
-										workBuf.readUnsignedShort()));
-								scopeLength -= 4;
-							}
-							
-							while(optionsLength >= 4) {
-								optionFields.add(new OptionField(FieldType.fromCode(workBuf.readUnsignedShort()), 
-										workBuf.readUnsignedShort()));
-								optionsLength -= 4;
-							}
-							
-							optionsTemplates.add(new OptionsTemplate(flowSetID, scopeFields, optionFields));
-							
-							recordNumber++;
+							for(DataFlow flow : decodeDataTemplate(peerAddress, header, flowBuffer, template))
+								ctx.fireChannelRead(flow);
+						} else if((optionsTemplate = flowRegistry.optionTemplateForFlowsetID(flowBuffer.getFlowSetId())) != null) {
+							logger.info("decoding flow buffer using options template for flowset ID {}", flowBuffer.getFlowSetId());
+	
+							for(OptionsFlow flow: decodeOptionsTemplate(peerAddress, header, flowBuffer, optionsTemplate))
+								ctx.fireChannelRead(flow);	
+						} else {
+							logger.info("no template found for flowset ID {}, putting flowset to backlog", flowBuffer.getFlowSetId());
+	
+							backlogFlows.add(flowBuffer);
 						}
-						break;
-					default:
-						logger.info("received flowset with ID {} from peer", flowSetId, peerAddress);
-
-						flows.add(new FlowBuffer(flowSetId, workBuf));
 					}
-				}
-				
-				FlowRegistry flowRegistry = peerRegistry.registryForPeerAddress(peerAddress, header.getSourceId());				
-
-				flowRegistry.addFlowTemplates(templates);
-				flowRegistry.addOptionTemplates(optionsTemplates);
-				
-				flows.addAll(flowRegistry.backlogFlows());
-				
-				
-				List<FlowBuffer> backlogFlows = new LinkedList<FlowBuffer>();
-				
-				for(FlowBuffer flowBuffer : flows) {
-					Template template = null;
-					OptionsTemplate optionsTemplate = null;
 					
-					logger.info("decoding flow buffer for flowset ID {}", flowBuffer.getFlowSetId());
+					ctx.fireChannelReadComplete();
 					
-					if((template = flowRegistry.templateForFlowsetID(flowBuffer.getFlowSetId())) != null) {
-						logger.info("decoding flow buffer using data template for flowset ID {}", flowBuffer.getFlowSetId());
-						
-						for(DataFlow flow : decodeDataTemplate(peerAddress, header, flowBuffer, template))
-							ctx.channel().write(flow);
-					} else if((optionsTemplate = flowRegistry.optionTemplateForFlowsetID(flowBuffer.getFlowSetId())) != null) {
-						logger.info("decoding flow buffer using options template for flowset ID {}", flowBuffer.getFlowSetId());
-
-						for(OptionsFlow flow: decodeOptionsTemplate(peerAddress, header, flowBuffer, optionsTemplate))
-							ctx.channel().write(flow);	
-					} else {
-						logger.info("no template found for flowset ID {}, putting flowset to backlog", flowBuffer.getFlowSetId());
-
-						backlogFlows.add(flowBuffer);
-					}
-				}
-				
-				flowRegistry.backlogFlows(backlogFlows);
-				ctx.channel().flush();
-			} 
-		} else {
-			logger.error("dropping received packet with {} bytes size but expected at least {} bytes", 
-					in.readableBytes(), PACKET_HEADER_LENGTH);
+					flowRegistry.backlogFlows(backlogFlows);
+				} 
+			} else {
+				logger.error("dropping received packet with {} bytes size but expected at least {} bytes", 
+						in.readableBytes(), PACKET_HEADER_LENGTH);
+			}
 		}
 	}
 

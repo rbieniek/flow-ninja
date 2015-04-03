@@ -7,6 +7,7 @@ import java.net.InetAddress;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @author rainer
@@ -17,6 +18,7 @@ public class DataFlow {
 	private Header header;
 	private InetAddress peerAddress;
 	private List<DataFlowRecord> records = new LinkedList<DataFlowRecord>();
+	private UUID uuid = UUID.randomUUID();
 	
 	public DataFlow(InetAddress peerAddress, Header header, List<DataFlowRecord> records) {
 		this.peerAddress = peerAddress;
@@ -45,5 +47,12 @@ public class DataFlow {
 	 */
 	public InetAddress getPeerAddress() {
 		return peerAddress;
+	}
+
+	/**
+	 * @return the uuid
+	 */
+	public UUID getUuid() {
+		return uuid;
 	}
 }

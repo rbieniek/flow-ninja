@@ -4,7 +4,9 @@
 package org.flowninja.netflow9.storer.flat;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.Date;
 import java.util.HashMap;
@@ -25,7 +27,7 @@ public class TemplateOutputFile {
 	private File baseDirectory;
 	private String template;
 	private String writeFileName;
-	private PrintWriter writer;
+	private OutputStream stream;
 	
 	public TemplateOutputFile(File baseDirectory, String template) {
 		this.baseDirectory = baseDirectory;
@@ -33,28 +35,34 @@ public class TemplateOutputFile {
 	}
 	
 	public void close() {
-		if(writer != null) {
+		if(stream != null) {
 			internalClose();
 		}
 	}
 	
 	public PrintWriter getWriter() throws IOException {
 		try {
-			if(writer != null) {
+			if(stream != null) {
+				logger.info("detected open stream to file name {}", writeFileName);
+				
 				String tmpName = buildWriteFileName();
 				
 				if(!StringUtils.equals(writeFileName, tmpName)) {
+					logger.info("detected changed file name from {} to {}", writeFileName, tmpName);
+					
 					internalClose();
 					
 					writeFileName = tmpName;
-					writer = new PrintWriter(new File(baseDirectory, writeFileName));
+					stream = new FileOutputStream(new File(baseDirectory, writeFileName));
 				}
 			} else {
+				logger.info("opening print writer to file name {}", writeFileName);
+
 				writeFileName = buildWriteFileName();
-				writer = new PrintWriter(new File(baseDirectory, writeFileName));
+				stream = new FileOutputStream(new File(baseDirectory, writeFileName));
 			}
 			
-			return writer;
+			return new PrintWriter(new NonCloseableProxyOutputStream(stream), true);
 		} catch(IOException e) {
 			logger.warn("failed to open output file {}", writeFileName, e);
 			
@@ -69,22 +77,28 @@ public class TemplateOutputFile {
 		Date date = new Date();
 		int year = date.getYear();
 		
-		values.put("yyyy", String.format("%04.4d",year + 1900));
-		values.put("yy", String.format("%02.2d", year > 100 ? year - 100 : year));
-		values.put("mm", String.format("%02.2d", date.getMonth()+1));
-		values.put("dd", String.format("%02.2d", date.getDate()));
-		values.put("HH", String.format("%02.2d", date.getHours()));
-		values.put("MM", String.format("%02.2d", date.getMinutes()));
-		values.put("SS", String.format("%02.2d", date.getSeconds()));
+		values.put("yyyy", String.format("%04d",year + 1900));
+		values.put("yy", String.format("%02d", year > 100 ? year - 100 : year));
+		values.put("mm", String.format("%02d", date.getMonth()+1));
+		values.put("dd", String.format("%02d", date.getDate()));
+		values.put("HH", String.format("%02d", date.getHours()));
+		values.put("MM", String.format("%02d", date.getMinutes()));
+		values.put("SS", String.format("%02d", date.getSeconds()));
 
-		return sub.replace(template);
+		String fileName = sub.replace(template);
+		
+		logger.info("build write file name: {}", fileName);
+		
+		return fileName;
 	}
 	
 	private void internalClose() {
 		try {
-			writer.close();
+			stream.close();
+		} catch(IOException e) {
+			logger.warn("failed to close stream {}", writeFileName, e);
 		} finally {
-			writer = null;
+			stream = null;
 			writeFileName = null;
 		}
 	}

@@ -7,6 +7,7 @@ import java.net.InetAddress;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @author rainer
@@ -16,6 +17,7 @@ public class OptionsFlow {
 
 	private InetAddress peerAddress;
 	private Header header;
+	private UUID uuid = UUID.randomUUID();
 	private List<ScopeFlowRecord> scopes = new LinkedList<ScopeFlowRecord>();
 	private List<OptionsFlowRecord> records = new LinkedList<OptionsFlowRecord>();
 	
@@ -56,6 +58,13 @@ public class OptionsFlow {
 	 */
 	public InetAddress getPeerAddress() {
 		return peerAddress;
+	}
+
+	/**
+	 * @return the uuid
+	 */
+	public UUID getUuid() {
+		return uuid;
 	}
 
 }

@@ -78,4 +78,11 @@ public class FileSystemHandler {
 		optionsFile.close();
 	}
 
+	/**
+	 * @param optionsFileNameTemplate the optionsFileNameTemplate to set
+	 */
+	public void setOptionsFileNameTemplate(String optionsFileNameTemplate) {
+		this.optionsFileNameTemplate = optionsFileNameTemplate;
+	}
+
 }
