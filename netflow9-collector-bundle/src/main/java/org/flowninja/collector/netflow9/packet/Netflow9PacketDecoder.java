@@ -186,7 +186,7 @@ public class Netflow9PacketDecoder extends ByteToMessageDecoder {
 					default:
 						logger.info("received flowset with ID {} from peer", flowSetId, peerAddress);
 
-						flows.add(new FlowBuffer(flowSetId, workBuf));
+						flows.add(new FlowBuffer(header, flowSetId, workBuf));
 					}
 				}
 				
@@ -209,11 +209,11 @@ public class Netflow9PacketDecoder extends ByteToMessageDecoder {
 					if((template = flowRegistry.templateForFlowsetID(flowBuffer.getFlowSetId())) != null) {
 						logger.info("decoding flow buffer using data template for flowset ID {}", flowBuffer.getFlowSetId());
 						
-						out.addAll(decodeDataTemplate(peerAddress, header, flowBuffer, template));
+						out.addAll(decodeDataTemplate(peerAddress, flowBuffer, template));
 					} else if((optionsTemplate = flowRegistry.optionTemplateForFlowsetID(flowBuffer.getFlowSetId())) != null) {
 						logger.info("decoding flow buffer using options template for flowset ID {}", flowBuffer.getFlowSetId());
 
-						out.addAll(decodeOptionsTemplate(peerAddress, header, flowBuffer, optionsTemplate));						
+						out.addAll(decodeOptionsTemplate(peerAddress, flowBuffer, optionsTemplate));						
 					} else {
 						logger.info("no template found for flowset ID {}, putting flowset to backlog", flowBuffer.getFlowSetId());
 
@@ -237,7 +237,7 @@ public class Netflow9PacketDecoder extends ByteToMessageDecoder {
 	 * @param template
 	 * @return
 	 */
-	private List<DataFlow> decodeDataTemplate(InetAddress peerAddress, Header header, FlowBuffer flowBuffer, Template template) {
+	private List<DataFlow> decodeDataTemplate(InetAddress peerAddress, FlowBuffer flowBuffer, Template template) {
 		ByteBuf buffer = flowBuffer.getBuffer();
 		List<DataFlow> flows = new LinkedList<DataFlow>();
 		int dataLength = template.getTemplateLength();
@@ -249,7 +249,7 @@ public class Netflow9PacketDecoder extends ByteToMessageDecoder {
 				flowRecords.add(new DataFlowRecord(field.getType(), decodeValue(field.getType(), field.getLength(), buffer)));
 			}
 			
-			flows.add(new DataFlow(peerAddress, header, flowRecords));
+			flows.add(new DataFlow(peerAddress, flowBuffer.getHeader(), flowRecords));
 		}
 		
 		return flows;
@@ -263,7 +263,7 @@ public class Netflow9PacketDecoder extends ByteToMessageDecoder {
 	 * @param template
 	 * @return
 	 */
-	private List<OptionsFlow> decodeOptionsTemplate(InetAddress peerAddress, Header header, FlowBuffer flowBuffer, OptionsTemplate template) {
+	private List<OptionsFlow> decodeOptionsTemplate(InetAddress peerAddress, FlowBuffer flowBuffer, OptionsTemplate template) {
 		ByteBuf buffer = flowBuffer.getBuffer();
 		int dataLength = template.getTemplateLength();
 		List<OptionsFlow> optionsFlows = new LinkedList<OptionsFlow>();
@@ -290,7 +290,7 @@ public class Netflow9PacketDecoder extends ByteToMessageDecoder {
 				flowRecords.add(new OptionsFlowRecord(field.getType(), decodeValue(field.getType(), field.getLength(), buffer)));
 			}
 			
-		 optionsFlows.add(new OptionsFlow(peerAddress, header, scopeRecords, flowRecords));
+		 optionsFlows.add(new OptionsFlow(peerAddress, flowBuffer.getHeader(), scopeRecords, flowRecords));
 		}
 		
 		return optionsFlows;

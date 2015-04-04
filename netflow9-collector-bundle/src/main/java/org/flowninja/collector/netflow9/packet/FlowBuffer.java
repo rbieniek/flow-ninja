@@ -5,6 +5,8 @@ package org.flowninja.collector.netflow9.packet;
 
 import java.io.Closeable;
 
+import org.flowninja.collector.common.netflow9.types.Header;
+
 import io.netty.buffer.ByteBuf;
 
 /**
@@ -14,8 +16,10 @@ import io.netty.buffer.ByteBuf;
 public class FlowBuffer implements Closeable {
 	private int flowSetId;
 	private ByteBuf buffer;
+	private Header header;
 	
-	public FlowBuffer(int flowSetId, ByteBuf buffer) {
+	public FlowBuffer(Header header, int flowSetId, ByteBuf buffer) {
+		this.header = header;
 		this.flowSetId = flowSetId;
 		this.buffer = buffer;
 		this.buffer.retain();
@@ -38,5 +42,12 @@ public class FlowBuffer implements Closeable {
 	 */
 	public ByteBuf getBuffer() {
 		return buffer;
+	}
+
+	/**
+	 * @return the header
+	 */
+	public Header getHeader() {
+		return header;
 	}
 }

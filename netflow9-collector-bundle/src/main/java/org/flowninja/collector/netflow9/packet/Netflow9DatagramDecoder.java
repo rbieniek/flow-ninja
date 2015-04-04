@@ -187,7 +187,7 @@ public class Netflow9DatagramDecoder extends ChannelInboundHandlerAdapter {
 						default:
 							logger.info("received flowset with ID {} from peer", flowSetId, peerAddress);
 	
-							flows.add(new FlowBuffer(flowSetId, workBuf));
+							flows.add(new FlowBuffer(header, flowSetId, workBuf));
 						}
 					}
 					
@@ -210,12 +210,12 @@ public class Netflow9DatagramDecoder extends ChannelInboundHandlerAdapter {
 						if((template = flowRegistry.templateForFlowsetID(flowBuffer.getFlowSetId())) != null) {
 							logger.info("decoding flow buffer using data template for flowset ID {}", flowBuffer.getFlowSetId());
 							
-							for(DataFlow flow : decodeDataTemplate(peerAddress, header, flowBuffer, template))
+							for(DataFlow flow : decodeDataTemplate(peerAddress, flowBuffer, template))
 								ctx.fireChannelRead(flow);
 						} else if((optionsTemplate = flowRegistry.optionTemplateForFlowsetID(flowBuffer.getFlowSetId())) != null) {
 							logger.info("decoding flow buffer using options template for flowset ID {}", flowBuffer.getFlowSetId());
 	
-							for(OptionsFlow flow: decodeOptionsTemplate(peerAddress, header, flowBuffer, optionsTemplate))
+							for(OptionsFlow flow: decodeOptionsTemplate(peerAddress, flowBuffer, optionsTemplate))
 								ctx.fireChannelRead(flow);	
 						} else {
 							logger.info("no template found for flowset ID {}, putting flowset to backlog", flowBuffer.getFlowSetId());
@@ -244,7 +244,7 @@ public class Netflow9DatagramDecoder extends ChannelInboundHandlerAdapter {
 	 * @param template
 	 * @return
 	 */
-	private List<DataFlow> decodeDataTemplate(InetAddress peerAddress, Header header, FlowBuffer flowBuffer, Template template) {
+	private List<DataFlow> decodeDataTemplate(InetAddress peerAddress, FlowBuffer flowBuffer, Template template) {
 		ByteBuf buffer = flowBuffer.getBuffer();
 		List<DataFlow> flows = new LinkedList<DataFlow>();
 		int dataLength = template.getTemplateLength();
@@ -256,7 +256,7 @@ public class Netflow9DatagramDecoder extends ChannelInboundHandlerAdapter {
 				flowRecords.add(new DataFlowRecord(field.getType(), decodeValue(field.getType(), field.getLength(), buffer)));
 			}
 			
-			flows.add(new DataFlow(peerAddress, header, flowRecords));
+			flows.add(new DataFlow(peerAddress, flowBuffer.getHeader(), flowRecords));
 		}
 		
 		return flows;
@@ -271,7 +271,7 @@ public class Netflow9DatagramDecoder extends ChannelInboundHandlerAdapter {
 	 * @param template
 	 * @return
 	 */
-	private List<OptionsFlow> decodeOptionsTemplate(InetAddress peerAddress, Header header, FlowBuffer flowBuffer, OptionsTemplate template) {
+	private List<OptionsFlow> decodeOptionsTemplate(InetAddress peerAddress, FlowBuffer flowBuffer, OptionsTemplate template) {
 		ByteBuf buffer = flowBuffer.getBuffer();
 		int dataLength = template.getTemplateLength();
 		List<OptionsFlow> optionsFlows = new LinkedList<OptionsFlow>();
@@ -298,7 +298,7 @@ public class Netflow9DatagramDecoder extends ChannelInboundHandlerAdapter {
 				flowRecords.add(new OptionsFlowRecord(field.getType(), decodeValue(field.getType(), field.getLength(), buffer)));
 			}
 			
-		 optionsFlows.add(new OptionsFlow(peerAddress, header, scopeRecords, flowRecords));
+		 optionsFlows.add(new OptionsFlow(peerAddress, flowBuffer.getHeader(), scopeRecords, flowRecords));
 		}
 		
 		return optionsFlows;

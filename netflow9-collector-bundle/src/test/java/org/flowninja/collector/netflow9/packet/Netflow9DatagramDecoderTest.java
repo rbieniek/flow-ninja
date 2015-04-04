@@ -975,7 +975,7 @@ public class Netflow9DatagramDecoderTest {
 		Header header = flow.getHeader();
 		
 		assertThat(header).isNotNull();
-		assertThat(header.getRecordCount()).isEqualTo(1);
+		assertThat(header.getRecordCount()).isEqualTo(2);
 		assertThat(header.getSysUpTime()).isEqualTo(1976904);
 		assertThat(header.getUnixSeconds()).isEqualTo(1427139251);
 		assertThat(header.getSequenceNumber()).isEqualTo(31);
