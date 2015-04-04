@@ -160,9 +160,14 @@
     <version.org.quartz-scheduler>2.2.1</version.org.quartz-scheduler>
     <version.com.mchange.c3p0>0.9.5</version.com.mchange.c3p0>
 
-    <version.org.springframework>4.1.4.RELEASE</version.org.springframework>
+    <version.org.springframework>4.1.6.RELEASE</version.org.springframework>
     <version.org.springframework.data.mongodb>1.6.1.RELEASE</version.org.springframework.data.mongodb>
     <version.org.springframework.data.commons>1.9.1.RELEASE</version.org.springframework.data.commons>
+    <version.org.springframework.data.hadoop>2.1.2.RELEASE</version.org.springframework.data.hadoop>
+    <version.org.springframework.integration>4.1.3.RELEASE</version.org.springframework.integration>
+    <version.org.springframework.batch>3.0.3.RELEASE</version.org.springframework.batch>
+    <version.org.springframework.security>4.0.0.RELEASE</version.org.springframework.security>
+    <version.org.springframework.security.oauth2>2.0.7.RELEASE</version.org.springframework.security.oauth2>
 
     <version.com.fasterxml.jackson>2.5.2</version.com.fasterxml.jackson>
     <version.com.mysema.querydsl>3.4.3</version.com.mysema.querydsl>
@@ -281,6 +286,127 @@
         <groupId>org.springframework.data</groupId>
         <artifactId>spring-data-mongodb</artifactId>
         <version>${version.org.springframework.data.mongodb}</version>
+	<exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+          </exclusion>
+	</exclusions>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.data</groupId>
+        <artifactId>spring-data-hadoop</artifactId>
+        <version>${version.org.springframework.data.hadoop}</version>
+	<exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+          </exclusion>
+	</exclusions>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.integration</groupId>
+        <artifactId>spring-integration-core</artifactId>
+        <version>${version.org.springframework.integration}</version>
+	<exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+          </exclusion>
+	</exclusions>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.integration</groupId>
+        <artifactId>spring-integration-security</artifactId>
+        <version>${version.org.springframework.integration}</version>
+	<exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+          </exclusion>
+	</exclusions>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.integration</groupId>
+        <artifactId>spring-integration-mongodb</artifactId>
+        <version>${version.org.springframework.integration}</version>
+	<exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+          </exclusion>
+	</exclusions>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.integration</groupId>
+        <artifactId>spring-integration-test</artifactId>
+        <version>${version.org.springframework.integration}</version>
+	<exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+          </exclusion>
+	</exclusions>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.batch</groupId>
+        <artifactId>spring-batch-core</artifactId>
+        <version>${version.org.springframework.batch}</version>
+	<exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+          </exclusion>
+	</exclusions>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.batch</groupId>
+        <artifactId>spring-batch-infrastructure</artifactId>
+        <version>${version.org.springframework.batch}</version>
+	<exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+          </exclusion>
+	</exclusions>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.batch</groupId>
+        <artifactId>spring-batch-integration</artifactId>
+        <version>${version.org.springframework.batch}</version>
+	<exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+          </exclusion>
+	</exclusions>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.batch</groupId>
+        <artifactId>spring-batch-test</artifactId>
+        <version>${version.org.springframework.batch}</version>
+	<exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+          </exclusion>
+	</exclusions>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.security</groupId>
+        <artifactId>spring-security-web</artifactId>
+        <version>${version.org.springframework.security}</version>
+	<exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+          </exclusion>
+	</exclusions>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.security.oauth</groupId>
+        <artifactId>spring-security-oauth2</artifactId>
+        <version>${version.org.springframework.security.oauth2}</version>
 	<exclusions>
           <exclusion>
             <groupId>commons-logging</groupId>
