@@ -141,7 +141,7 @@
   </build>
 
   <properties>
-    <version.flow-ninja>0.1-SNAPSHOT</version.flow-ninja>
+    <version.flow-ninja>0.2-SNAPSHOT</version.flow-ninja>
 
     <version.org.apache.maven.plugins.maven_compiler_plugin>3.1</version.org.apache.maven.plugins.maven_compiler_plugin>
     <version.org.apache.maven.plugins.maven_eclipse_plugin>2.9</version.org.apache.maven.plugins.maven_eclipse_plugin>
