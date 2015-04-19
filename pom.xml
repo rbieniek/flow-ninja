@@ -162,7 +162,7 @@
 
     <version.org.springframework>4.1.6.RELEASE</version.org.springframework>
     <version.org.springframework.data.mongodb>1.7.0.RELEASE</version.org.springframework.data.mongodb>
-    <version.org.springframework.data.commons>1.10.1.RELEASE</version.org.springframework.data.commons>
+    <version.org.springframework.data.commons>1.10.0.RELEASE</version.org.springframework.data.commons>
     <version.org.springframework.data.hadoop>2.1.2.RELEASE</version.org.springframework.data.hadoop>
     <version.org.springframework.integration>4.1.3.RELEASE</version.org.springframework.integration>
     <version.org.springframework.batch>3.0.3.RELEASE</version.org.springframework.batch>
@@ -196,6 +196,7 @@
     <module>netflow9-file-storer-bundle</module>
     <module>ninja-persistence-generic</module>
     <module>ninja-persistence-mongodb</module>
+    <module>ninja-security-web</module>
   </modules>
 
   <dependencyManagement>

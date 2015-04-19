@@ -20,7 +20,40 @@
   <name>OSGi IP flow collector mongodb persistence</name>
   <description>MongoDB persistence for JEE-based service</description>
 
+  <build>
+    <plugins>
+      <plugin>
+	<groupId>com.mysema.maven</groupId>
+	<artifactId>apt-maven-plugin</artifactId>
+	<version>${version.com.mysema.maven}</version>
+	<executions>
+	  <execution>
+	    <goals>
+	      <goal>process</goal>
+	    </goals>
+	    <configuration>
+	      <outputDirectory>target/generated-sources/java</outputDirectory>
+	      <processor>org.springframework.data.mongodb.repository.support.MongoAnnotationProcessor</processor>
+	    </configuration>
+	  </execution>
+	</executions>
+      </plugin>
+      <plugin>
+	<artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <argLine>-Xms256m -Xmx1024m -XX:MaxPermSize=512m</argLine>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
   <dependencies>
+
+    <dependency>
+      <groupId>org.flow-ninja</groupId>
+      <artifactId>ninja-persistence-generic</artifactId>
+      <version>${version.flow-ninja}</version>
+    </dependency>
 
     <dependency>
       <groupId>org.apache.commons</groupId>
@@ -32,11 +65,72 @@
       <artifactId>slf4j-api</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>jcl-over-slf4j</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-tx</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>commons-logging</groupId>
+          <artifactId>commons-logging</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-orm</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>commons-logging</groupId>
+          <artifactId>commons-logging</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context-support</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>commons-logging</groupId>
+          <artifactId>commons-logging</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.data</groupId>
+      <artifactId>spring-data-mongodb</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.mysema.querydsl</groupId>
+      <artifactId>querydsl-mongodb</artifactId>
+    </dependency>
+
     <dependency> 
       <groupId>junit</groupId> 
       <artifactId>junit</artifactId> 
       <scope>test</scope> 
     </dependency> 
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-test</artifactId>
+      <scope>test</scope>
+    </dependency> 
+
+    <dependency>
+      <groupId>de.flapdoodle.embed</groupId>
+      <artifactId>de.flapdoodle.embed.mongo</artifactId>
+      <scope>test</scope>
+    </dependency>
 
     <dependency>
       <groupId>org.easytesting</groupId>
