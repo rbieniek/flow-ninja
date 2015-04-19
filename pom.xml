@@ -152,6 +152,7 @@
     <version.org.apache.felix.bundle_maven_plugin>2.5.3</version.org.apache.felix.bundle_maven_plugin>
 
     <version.javax.jee>7.0</version.javax.jee>
+    <version.com.google.guava>18.0</version.com.google.guava>
 
     <version.commons.lang>3.3.2</version.commons.lang>
     <version.commons.io>2.4</version.commons.io>
@@ -191,6 +192,8 @@
 
     <version.de.flapdoodle.embed.mongo>1.46.1</version.de.flapdoodle.embed.mongo>
 
+    <version.org.hibernate.validator>5.1.0.Final</version.org.hibernate.validator>
+
     <version.org.easytesting.core>2.0M10</version.org.easytesting.core>
     <version.junit.junit>4.11</version.junit.junit>
     <version.org.mockito>1.9.5</version.org.mockito>
@@ -205,6 +208,7 @@
     <module>ninja-security-web</module>
     <module>ninja-webapp-admin-generic</module>
     <module>ninja-webapp-admin-mongodb</module>
+    <module>ninja-ear-admin-mongodb</module>
   </modules>
 
   <dependencyManagement>
@@ -277,6 +281,12 @@
       </dependency>
 
       <dependency>
+	<groupId>org.hibernate</groupId>
+	<artifactId>hibernate-validator</artifactId>
+	<version>${version.org.hibernate.validator}</version>
+      </dependency>
+
+      <dependency>
         <groupId>org.springframework</groupId>
         <artifactId>spring-framework-bom</artifactId>
         <version>${version.org.springframework}</version>
@@ -309,6 +319,10 @@
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
           </exclusion>
+	  <exclusion>
+	    <groupId>org.mongodb</groupId>
+	    <artifactId>mongodb-driver</artifactId>
+	  </exclusion>
 	</exclusions>
       </dependency>
       <dependency>
@@ -443,6 +457,12 @@
           </exclusion>
 	</exclusions>
       </dependency>
+
+      <dependency>
+	<groupId>com.google.guava</groupId>
+	<artifactId>guava</artifactId>
+	<version>${version.com.google.guava}</version>
+      </dependency>      
 
       <dependency>
 	<groupId>org.thymeleaf</groupId>
