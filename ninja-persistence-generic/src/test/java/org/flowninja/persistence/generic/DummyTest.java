@@ -1,3 +1,3 @@
 package org.flowninja.persistence.generic;
 
-public Class DummyTest {}
+public class DummyTest {}

@@ -195,6 +195,7 @@
     <module>netflow9-collector-bundle</module>
     <module>netflow9-file-storer-bundle</module>
     <module>ninja-persistence-generic</module>
+    <module>ninja-persistence-mongodb</module>
   </modules>
 
   <dependencyManagement>
@@ -511,13 +512,11 @@
 	<version>${version.org.apache.aries.blueprint.api}</version>
       </dependency>
 
-      <dependencies>
-	<dependency>
-          <groupId>org.mongodb</groupId>
-          <artifactId>mongodb-driver</artifactId>
-          <version>${version.org.mongodb.driver}</version>
-	</dependency>
-      </dependencies>
+      <dependency>
+        <groupId>org.mongodb</groupId>
+        <artifactId>mongodb-driver</artifactId>
+        <version>${version.org.mongodb.driver}</version>
+      </dependency>
 
       <dependency> 
 	<groupId>junit</groupId> 
