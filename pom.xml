@@ -204,6 +204,7 @@
     <module>ninja-persistence-mongodb</module>
     <module>ninja-security-web</module>
     <module>ninja-webapp-admin-generic</module>
+    <module>ninja-webapp-admin-mongodb</module>
   </modules>
 
   <dependencyManagement>
