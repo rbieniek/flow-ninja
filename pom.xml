@@ -151,6 +151,8 @@
     <version.org.apache.servicemix.depends_maven_plugin>1.2</version.org.apache.servicemix.depends_maven_plugin>
     <version.org.apache.felix.bundle_maven_plugin>2.5.3</version.org.apache.felix.bundle_maven_plugin>
 
+    <version.javax.jee>7.0</version.javax.jee>
+
     <version.commons.lang>3.3.2</version.commons.lang>
     <version.commons.io>2.4</version.commons.io>
     <version.commons.codec>1.10</version.commons.codec>
@@ -176,6 +178,10 @@
 
     <version.org.mongodb.driver>3.0.0</version.org.mongodb.driver>
 
+    <version.org.thymeleaf>2.1.4.RELEASE</version.org.thymeleaf>
+    <version.org.thymeleaf.security>2.1.2.RELEASE</version.org.thymeleaf.security>
+    <version.org.thymeleaf.java8time>2.1.0.RELEASE</version.org.thymeleaf.java8time>
+
     <version.org.apache.avro>1.7.7</version.org.apache.avro>
 
     <version.io.netty4>4.0.26.Final</version.io.netty4>
@@ -197,10 +203,16 @@
     <module>ninja-persistence-generic</module>
     <module>ninja-persistence-mongodb</module>
     <module>ninja-security-web</module>
+    <module>ninja-webapp-admin-generic</module>
   </modules>
 
   <dependencyManagement>
     <dependencies>
+      <dependency>
+	<groupId>javax</groupId>
+	<artifactId>javaee-api</artifactId>
+	<version>${version.javax.jee}</version>
+      </dependency>
       <dependency>
 	<groupId>org.slf4j</groupId>
 	<artifactId>slf4j-api</artifactId>
@@ -409,6 +421,17 @@
 	</exclusions>
       </dependency>
       <dependency>
+        <groupId>org.springframework.security</groupId>
+        <artifactId>spring-security-config</artifactId>
+        <version>${version.org.springframework.security}</version>
+	<exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+          </exclusion>
+	</exclusions>
+      </dependency>
+      <dependency>
         <groupId>org.springframework.security.oauth</groupId>
         <artifactId>spring-security-oauth2</artifactId>
         <version>${version.org.springframework.security.oauth2}</version>
@@ -418,6 +441,27 @@
             <artifactId>commons-logging</artifactId>
           </exclusion>
 	</exclusions>
+      </dependency>
+
+      <dependency>
+	<groupId>org.thymeleaf</groupId>
+	<artifactId>thymeleaf</artifactId>
+	<version>${version.org.thymeleaf}</version>
+      </dependency>
+      <dependency>
+	<groupId>org.thymeleaf</groupId>
+	<artifactId>thymeleaf-spring4</artifactId>
+	<version>${version.org.thymeleaf}</version>
+      </dependency>
+      <dependency>
+	<groupId>org.thymeleaf.extras</groupId>
+	<artifactId>thymeleaf-extras-springsecurity4</artifactId>
+	<version>${version.org.thymeleaf.security}</version>
+      </dependency>
+      <dependency>
+	<groupId>org.thymeleaf.extras</groupId>
+	<artifactId>thymeleaf-extras-java8time</artifactId>
+	<version>${version.org.thymeleaf.java8time}</version>
       </dependency>
      
       <dependency>
