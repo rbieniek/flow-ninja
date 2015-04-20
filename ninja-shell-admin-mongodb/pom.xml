@@ -25,6 +25,10 @@
       <plugin>
 	<groupId>org.springframework.boot</groupId>
 	<artifactId>spring-boot-maven-plugin</artifactId>
+	<configuration>
+        <mainClass>org.flowninja.shell.admin.mongodb.Main</mainClass>
+        <layout>ZIP</layout>
+	</configuration>
 	<executions>
           <execution>
             <goals>
