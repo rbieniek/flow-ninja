@@ -113,7 +113,19 @@
 	      </configuration>
 	    </execution>
 	  </executions>
-	</plugin>	
+	</plugin>
+	<plugin>
+	  <groupId>org.springframework.boot</groupId>
+	  <artifactId>spring-boot-maven-plugin</artifactId>
+	  <version>${version.org.springframework.boot}</version>
+	  <executions>
+            <execution>
+              <goals>
+		<goal>repackage</goal>
+              </goals>
+            </execution>
+	  </executions>
+	</plugin>
       </plugins>
     </pluginManagement>
 
@@ -171,6 +183,8 @@
     <version.org.springframework.batch>3.0.3.RELEASE</version.org.springframework.batch>
     <version.org.springframework.security>4.0.0.RELEASE</version.org.springframework.security>
     <version.org.springframework.security.oauth2>2.0.7.RELEASE</version.org.springframework.security.oauth2>
+    <version.org.springframework.boot>1.2.3.RELEASE</version.org.springframework.boot>
+    <version.org.springframework.shell>1.1.0.RELEASE</version.org.springframework.shell>
 
     <version.com.fasterxml.jackson>2.5.2</version.com.fasterxml.jackson>
     <version.com.mysema.querydsl>3.6.3</version.com.mysema.querydsl>
@@ -209,6 +223,8 @@
     <module>ninja-webapp-admin-generic</module>
     <module>ninja-webapp-admin-mongodb</module>
     <module>ninja-ear-admin-mongodb</module>
+    <module>ninja-shell-admin-generic</module>
+    <module>ninja-shell-admin-mongodb</module>
   </modules>
 
   <dependencyManagement>
@@ -457,6 +473,28 @@
           </exclusion>
 	</exclusions>
       </dependency>
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot</artifactId>
+        <version>${version.org.springframework.boot}</version>
+	<exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+          </exclusion>
+	</exclusions>
+      </dependency>
+      <dependency>
+	<groupId>org.springframework.shell</groupId>
+	<artifactId>spring-shell</artifactId>
+        <version>${version.org.springframework.shell}</version>
+	<exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+          </exclusion>
+	</exclusions>
+      </dependency> 
 
       <dependency>
 	<groupId>com.google.guava</groupId>
