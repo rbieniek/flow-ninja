@@ -27,11 +27,11 @@
     </security:http>    
     
     <security:authentication-manager >
-        <security:authentication-provider ref="consoleUserAuthenticationProvider" />
+        <security:authentication-provider ref="adminUserAuthenticationProvider" />
     </security:authentication-manager>
 
-    <bean id="consoleUserServiceRef" class="de.urb.wapi.security.spring.components.DeveloperDetailsService"/>
+    <bean id="adminUserServiceRef" class="org.flowninja.security.web.spring.components.AdminDetailsService"/>
     
-    <bean id="consoleUserAuthenticationProvider" class="de.urb.wapi.security.spring.components.DeveloperAuthenticationProvider" />
+    <bean id="adminUserAuthenticationProvider" class="org.flowninja.security.web.spring.components.AdminDetailsAuthenticationProvider" />
 
 </beans>
