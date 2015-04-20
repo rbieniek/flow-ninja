@@ -6,9 +6,10 @@
         http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
 	http://www.springframework.org/schema/security 
-	http://www.springframework.org/schema/security/spring-security-3.2.xsd">
+	http://www.springframework.org/schema/security/spring-security-4.0.xsd">
 
-    <security:http use-expressions="true" access-denied-page="/auth/denied" >
+    <security:http use-expressions="true" >
+        <security:access-denied-handler error-page="/auth/denied"/>
         <security:intercept-url pattern="/index" access="permitAll"/>
         <security:intercept-url pattern="/error/**" access="permitAll"/>
         <security:intercept-url pattern="/auth/**" access="permitAll"/>

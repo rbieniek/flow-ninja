@@ -11,10 +11,10 @@
     http://www.springframework.org/schema/webflow-config http://www.springframework.org/schema/webflow-config/spring-webflow-config-2.4.xsd
     ">
 
-	<context:property-placeholder location="classpath:de/urb/wapi/console/webmvc.properties" system-properties-mode="OVERRIDE"/>
+    <context:property-placeholder location="classpath:org/flowninja/webapp/admin/generic/webmvc.properties" system-properties-mode="OVERRIDE"/>
     
     <!-- Scans for application @Components to deploy -->
-    <context:component-scan base-package="de.urb.wapi.console" />
+    <context:component-scan base-package="org.flowninja.webapp.admin.generic/" />
 
     <mvc:annotation-driven conversion-service="conversionService"/>
     
@@ -23,66 +23,24 @@
     <mvc:resources location="/images/" mapping="/images/**" />
     <mvc:resources location="/css/" mapping="/css/**" />
     
-    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
-        <property name="maxUploadSize" value="262144"/>
-    </bean>
-    
     <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
 		<property name="basenames">
             <list>
                 <value>messages</value>
-                <value>navbar</value>
             </list>
         </property>
     </bean>
-
-    <!-- WAPI Console beans -->
-    <bean id="sendRegistration" class="de.urb.wapi.console.controllers.register.SendRegistrationAction">
-        <property name="from" value="${mail.from}"/>
-        <property name="baseUrl" value="${mail.baseUrl}"/>
-        <property name="bootstrapCss" value="classpath:/mail-attachments/bootstrap.min.css"/>
-    </bean>
-
-    <bean id="passwordRecovery" class="de.urb.wapi.console.controllers.pwrecovery.PasswordRecoveryAction">
-        <property name="from" value="${mail.from}"/>        
-        <property name="baseUrl" value="${mail.baseUrl}"/>
-        <property name="bootstrapCss" value="classpath:/mail-attachments/bootstrap.min.css"/>
-    </bean>
-
-    <!-- Spring webflow configuration -->
-    <webflow:flow-registry id="flowRegistry" base-path="/WEB-INF/flows" flow-builder-services="flowBuilderServices">
-        <webflow:flow-location-pattern value="/**/*-flow.xml" />
-    </webflow:flow-registry>
-
-    <webflow:flow-executor id="flowExecutor" flow-registry="flowRegistry">
-        <webflow:flow-execution-listeners>
-            <webflow:listener ref="securityFlowExecutionListener"/>
-        </webflow:flow-execution-listeners>
-    </webflow:flow-executor>
-    
-    <bean id="securityFlowExecutionListener" class="org.springframework.webflow.security.SecurityFlowExecutionListener" />    
     
     <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
     
-    <webflow:flow-builder-services id="flowBuilderServices" view-factory-creator="mvcViewFactoryCreator" validator="validator"/>
-    
-    <bean class="org.springframework.webflow.mvc.servlet.FlowHandlerAdapter">
-        <property name="flowExecutor" ref="flowExecutor" />
-    </bean>
-    
-    <bean class="org.springframework.webflow.mvc.servlet.FlowHandlerMapping">
-        <property name="flowRegistry" ref="flowRegistry"/>
-        <property name="order" value="0"/>
-    </bean>
-
     <bean id="mvcViewFactoryCreator" class="org.springframework.webflow.mvc.builder.MvcViewFactoryCreator">
         <property name="viewResolvers" ref="thymeleafFlowViewResolver"/>
     </bean>
     
     <!-- Thymeleaf configuration -->
-
     <bean id="conversionService" 
         class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+        <!--
         <property name="converters">
             <set>
                 <bean class="de.urb.wapi.utils.web.spring.conversions.StringToKeyConverterFactory"/>
@@ -118,15 +76,9 @@
                 <bean class="de.urb.wapi.console.formatters.WapiApiFormatter"/>
             </set>
         </property>
+        -->
     </bean>
     
-    <bean id="emailTemplateResolver" class="org.thymeleaf.templateresolver.ClassLoaderTemplateResolver">
-        <property name="prefix" value="mail-templates/" />
-        <property name="templateMode" value="HTML5" />
-        <property name="characterEncoding" value="UTF-8" />
-        <property name="order" value="1" />
-    </bean>
-
     <bean id="webTemplateResolver"
         class="org.thymeleaf.templateresolver.ServletContextTemplateResolver">
         <property name="prefix" value="/WEB-INF/web-templates/" />
@@ -140,7 +92,6 @@
         class="org.thymeleaf.spring4.SpringTemplateEngine">
         <property name="templateResolvers">
             <set>
-                <ref bean="emailTemplateResolver" />
                 <ref bean="webTemplateResolver" />
             </set>
         </property>
@@ -152,16 +103,11 @@
         </property>
         <property name="additionalDialects">
             <set>
-                <bean class="org.thymeleaf.extras.springsecurity3.dialect.SpringSecurityDialect"/>
+                <bean class="org.thymeleaf.extras.springsecurity4.dialect.SpringSecurityDialect"/>
             </set>
         </property>
     </bean>
         
-    <bean id="thymeleafFlowViewResolver" class="org.thymeleaf.spring4.view.AjaxThymeleafViewResolver">
-        <property name="viewClass" value="org.thymeleaf.spring4.view.FlowAjaxThymeleafView" />
-        <property name="templateEngine" ref="templateEngine" />
-    </bean>
-    
     <bean class="org.thymeleaf.spring4.view.ThymeleafViewResolver">
         <property name="templateEngine" ref="templateEngine" />
         <property name="characterEncoding" value="UTF-8" />
