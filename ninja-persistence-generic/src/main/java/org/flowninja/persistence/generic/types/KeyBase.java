@@ -6,6 +6,10 @@ package org.flowninja.persistence.generic.types;
 import java.io.Serializable;
 import java.util.UUID;
 
+import org.apache.commons.lang3.builder.CompareToBuilder;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
@@ -33,7 +37,7 @@ public class KeyBase implements Serializable, Comparable<KeyBase> {
 
 	@Override
 	public final int hashCode() {
-		return this.uuid.hashCode();
+		return (new HashCodeBuilder()).append(this.uuid).toHashCode();
 	}
 
 	@Override
@@ -41,12 +45,14 @@ public class KeyBase implements Serializable, Comparable<KeyBase> {
 		if(!getClass().equals(o.getClass()))
 			return false;
 		
-		return uuid.equals(((KeyBase)o).uuid);
+		return (new EqualsBuilder())
+				.append(this.uuid, ((KeyBase)o).uuid)
+				.isEquals();
 	}
 	
 	@Override
 	public int compareTo(KeyBase o) {
-		return uuid.compareTo(o.uuid);
+		return (new CompareToBuilder()).append(this.uuid, o.uuid).toComparison();
 	}
 
 	/**
@@ -59,6 +65,6 @@ public class KeyBase implements Serializable, Comparable<KeyBase> {
 	@Override
 	@JsonValue
 	public String toString() {
-		return this.uuid.toString();
+		return this.uuid != null ? this.uuid.toString() : null;
 	}
 }

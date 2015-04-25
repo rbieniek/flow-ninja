@@ -39,7 +39,7 @@ public class AdminUserDetails implements UserDetails {
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		Set<SimpleGrantedAuthority> authorities = new HashSet<SimpleGrantedAuthority>();
 		
-		record.getAuthorities().forEach((n) -> authorities.add(new SimpleGrantedAuthority(n)));
+		record.getAuthorities().forEach((n) -> authorities.add(new SimpleGrantedAuthority(n.getAuthority())));
 		
 		return authorities;
 	}

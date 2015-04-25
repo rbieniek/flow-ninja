@@ -19,17 +19,10 @@
         http://www.springframework.org/schema/data/mongo
         http://www.springframework.org/schema/data/mongo/spring-mongo-1.0.xsd">
 
-	<context:property-placeholder location="classpath:de/urb/wapi/console/mongodb.properties" system-properties-mode="OVERRIDE"/>
+    <context:property-placeholder location="classpath:org/flowninja/webapp/admin/mongodb/mongodb.properties" system-properties-mode="OVERRIDE"/>
 	
     <!-- Instructs Spring to perfrom declarative transaction management on annotated classes -->
     <tx:annotation-driven />
-    
-    <bean id="transactionManager" class="org.springframework.transaction.jta.JtaTransactionManager">
-        <property name="transactionManagerName" value="java:jboss/TransactionManager"/>
-        <property name="userTransactionName" value="java:jboss/UserTransaction"/>
-    </bean>
-    
-    <jee:jndi-lookup id="wapiEmf" jndi-name="java:jboss/wapiEntityManagerFactory"/>
     
     <!-- MongoDB access configuration -->
     <mongo:mongo host="${mongodb.host}" port="${mongodb.port}" id="mongo"/>
@@ -40,12 +33,7 @@
     	<constructor-arg ref="mongoDbFactory"/>
 	</bean>
 	
-	<bean class="org.springframework.data.mongodb.gridfs.GridFsTemplate">
-		<constructor-arg ref="mongoDbFactory" />
-	    <constructor-arg ref="mongoMappingConverter" />
-	</bean>
-	  
-	<mongo:repositories base-package="de.urb.wapi.mongodb" mongo-template-ref="mongoTemplate"/>
-	<mongo:repositories base-package="de.urb.wapi.data.customer.registry" mongo-template-ref="mongoTemplate"/>
+    <mongo:repositories base-package="org.flowninja.webapp.admin.mongodb" mongo-template-ref="mongoTemplate"/>
+    <mongo:repositories base-package="org.flowninja.persistence.mongodb" mongo-template-ref="mongoTemplate"/>
 	
 </beans>
