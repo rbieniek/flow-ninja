@@ -15,7 +15,8 @@ import de.flapdoodle.embed.mongo.tests.MongodForTestsFactory;
 
 @Configuration
 @EnableMongoRepositories(basePackageClasses=MongoConstants.class, mongoTemplateRef="mongoTemplate")
-@ComponentScan(basePackageClasses=MongoConstants.class) class MongoTestConfig {
+@ComponentScan(basePackageClasses=MongoConstants.class) 
+public class MongoTestConfig {
 	private MongodForTestsFactory mongoFactory;
 
 	private MongoDbFactory dbFactory;

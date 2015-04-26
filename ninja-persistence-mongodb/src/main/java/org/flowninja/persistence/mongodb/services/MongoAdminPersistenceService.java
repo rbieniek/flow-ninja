@@ -7,6 +7,9 @@ import org.flowninja.persistence.generic.services.IAdminPersistenceService;
 import org.flowninja.persistence.generic.types.AdminKey;
 import org.flowninja.persistence.generic.types.AdminRecord;
 import org.flowninja.persistence.mongodb.repositories.IMongoAdminRepository;
+import org.flowninja.persistence.mongodb.repositories.IMongoAuthorityRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,25 +19,26 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class MongoAdminPersistenceService implements IAdminPersistenceService {
+	private static final Logger logger = LoggerFactory.getLogger(MongoAdminPersistenceService.class);
 
 	@Autowired
-	private IMongoAdminRepository repository;
-	
+	private IMongoAdminRepository adminRepository;
+
+	@Autowired
+	private IMongoAuthorityRepository authorityRepository;
+
 	@Override
 	public AdminRecord login(String userName, String password) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public AdminRecord findByUserName(String userName) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public AdminRecord findByKey(AdminKey key) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

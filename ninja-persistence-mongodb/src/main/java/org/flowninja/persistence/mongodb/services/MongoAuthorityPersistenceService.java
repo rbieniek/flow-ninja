@@ -9,7 +9,6 @@ import java.util.Set;
 import org.flowninja.persistence.generic.services.IAuthorityPersistenceService;
 import org.flowninja.persistence.generic.types.AuthorityKey;
 import org.flowninja.persistence.generic.types.AuthorityRecord;
-import org.flowninja.persistence.generic.types.QAuthorityKey;
 import org.flowninja.persistence.generic.types.RecordAlreadyExistsException;
 import org.flowninja.persistence.generic.types.RecordNotFoundException;
 import org.flowninja.persistence.mongodb.data.MongoAuthorityRecord;
@@ -37,6 +36,8 @@ public class MongoAuthorityPersistenceService implements IAuthorityPersistenceSe
 	@Override
 	public Set<AuthorityRecord> listAuthorities() {		
 		Set<AuthorityRecord> records = new HashSet<AuthorityRecord>();
+		
+		logger.info("listing authority records");
 		
 		repository.findAll().forEach((n) -> records.add(new AuthorityRecord(n.getAuthority(), n.getKey())));
 		

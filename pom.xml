@@ -538,6 +538,11 @@
 	<artifactId>jackson-databind</artifactId>
         <version>${version.com.fasterxml.jackson}</version>
       </dependency>
+      <dependency>
+	<groupId>com.fasterxml.jackson.datatype</groupId>
+	<artifactId>jackson-datatype-json-org</artifactId>
+        <version>${version.com.fasterxml.jackson}</version>
+      </dependency>
 
       <dependency>
 	<groupId>com.mysema.querydsl</groupId>
