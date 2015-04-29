@@ -5,6 +5,7 @@ package org.flowninja.persistence.generic.types;
 
 import java.io.Serializable;
 
+import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -13,7 +14,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  * @author rainer
  *
  */
-public class AuthorityRecord implements Serializable {
+public class AuthorityRecord implements Serializable, Comparable<AuthorityRecord> {
 
 	/**
 	 * 
@@ -68,5 +69,10 @@ public class AuthorityRecord implements Serializable {
 				.append(this.authority, o.authority)
 				.append(this.key, o.key)
 				.isEquals();
+	}
+
+	@Override
+	public int compareTo(AuthorityRecord o) {
+		return (new CompareToBuilder()).append(this.authority, o.getAuthority()).append(this.key, o.key).toComparison();
 	}
 }

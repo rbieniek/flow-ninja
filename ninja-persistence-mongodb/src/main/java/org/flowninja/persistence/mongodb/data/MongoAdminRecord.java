@@ -4,10 +4,15 @@
 package org.flowninja.persistence.mongodb.data;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
-import org.bson.types.ObjectId;
 import org.flowninja.persistence.generic.types.AdminKey;
+import org.flowninja.persistence.generic.types.AuthorityKey;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -26,9 +31,19 @@ public class MongoAdminRecord implements Serializable {
 	@Id private AdminKey key;
 	@Indexed private String userName;
 	private String passwordHash;
+	private Set<AuthorityKey> authorities = new HashSet<AuthorityKey>();
+	@CreatedDate private LocalDateTime createdWhen;
+	@LastModifiedDate private LocalDateTime lastModifiedAt;
 	
 	public MongoAdminRecord() {}
 		
+	public MongoAdminRecord(AdminKey key, String userName, String passwordHash, Set<AuthorityKey> authorities) {
+		this.userName = userName;
+		this.key = key;
+		this.passwordHash = passwordHash;
+		this.authorities = authorities;
+	}
+	
 	/**
 	 * @return the key
 	 */
@@ -64,6 +79,34 @@ public class MongoAdminRecord implements Serializable {
 	 */
 	public void setPasswordHash(String passwordHash) {
 		this.passwordHash = passwordHash;
+	}
+
+	/**
+	 * @return the authorities
+	 */
+	public Set<AuthorityKey> getAuthorities() {
+		return authorities;
+	}
+
+	/**
+	 * @param authorities the authorities to set
+	 */
+	public void setAuthorities(Set<AuthorityKey> authorities) {
+		this.authorities = authorities;
+	}
+
+	/**
+	 * @return the createdWhen
+	 */
+	public LocalDateTime getCreatedWhen() {
+		return createdWhen;
+	}
+
+	/**
+	 * @return the lastModifiedAt
+	 */
+	public LocalDateTime getLastModifiedAt() {
+		return lastModifiedAt;
 	}
 	
 }

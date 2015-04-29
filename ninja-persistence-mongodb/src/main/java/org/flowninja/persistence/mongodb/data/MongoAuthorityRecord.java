@@ -4,9 +4,12 @@
 package org.flowninja.persistence.mongodb.data;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 import org.flowninja.persistence.generic.types.AuthorityKey;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -24,6 +27,8 @@ public class MongoAuthorityRecord implements Serializable{
 	
 	@Id private AuthorityKey key;
 	@Indexed private String authority;
+	@CreatedDate private LocalDateTime createdWhen;
+	@LastModifiedDate private LocalDateTime lastModifiedAt;
 	
 	public MongoAuthorityRecord() {}
 	
@@ -58,5 +63,19 @@ public class MongoAuthorityRecord implements Serializable{
 	 */
 	public void setKey(AuthorityKey key) {
 		this.key = key;
+	}
+
+	/**
+	 * @return the createdWhen
+	 */
+	public LocalDateTime getCreatedWhen() {
+		return createdWhen;
+	}
+
+	/**
+	 * @return the lastModifiedAt
+	 */
+	public LocalDateTime getLastModifiedAt() {
+		return lastModifiedAt;
 	}
 }
