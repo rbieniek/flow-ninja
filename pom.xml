@@ -167,6 +167,7 @@
     <version.com.google.guava>18.0</version.com.google.guava>
 
     <version.commons.lang>3.3.2</version.commons.lang>
+    <version.commons.collections4>4.0</version.commons.collections4>
     <version.commons.io>2.4</version.commons.io>
     <version.commons.codec>1.10</version.commons.codec>
 
@@ -284,6 +285,11 @@
 	<groupId>org.apache.commons</groupId>
 	<artifactId>commons-lang3</artifactId>
 	<version>${version.commons.lang}</version>
+      </dependency>
+      <dependency>
+	<groupId>org.apache.commons</groupId>
+	<artifactId>commons-collections4</artifactId>
+	<version>${version.commons.collections4}</version>
       </dependency>
       <dependency>
 	<groupId>commons-io</groupId>
