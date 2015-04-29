@@ -15,6 +15,9 @@
         http://www.springframework.org/schema/data/mongo/spring-mongo-1.0.xsd">
 
     <context:property-placeholder location="classpath:org/flowninja/webapp/admin/mongodb/mongodb.properties" system-properties-mode="OVERRIDE"/>
+    <context:component-scan base-package="org.flowninja.webapp.admin.mongodb"/>
+    <context:component-scan base-package="org.flowninja.persistence.mongodb"/>
+    
 	
     <!-- Instructs Spring to perfrom declarative transaction management on annotated classes -->
     <tx:annotation-driven />
@@ -28,7 +31,6 @@
     	<constructor-arg ref="mongoDbFactory"/>
 	</bean>
 	
-    <mongo:repositories base-package="org.flowninja.webapp.admin.mongodb" mongo-template-ref="mongoTemplate"/>
     <mongo:repositories base-package="org.flowninja.persistence.mongodb" mongo-template-ref="mongoTemplate"/>
 	
 </beans>

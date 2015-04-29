@@ -33,10 +33,6 @@
     
     <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
     
-    <bean id="mvcViewFactoryCreator" class="org.springframework.webflow.mvc.builder.MvcViewFactoryCreator">
-        <property name="viewResolvers" ref="thymeleafFlowViewResolver"/>
-    </bean>
-    
     <!-- Thymeleaf configuration -->
     <bean id="conversionService" 
         class="org.springframework.format.support.FormattingConversionServiceFactoryBean">

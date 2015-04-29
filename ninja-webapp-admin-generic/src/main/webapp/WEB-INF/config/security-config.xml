@@ -13,9 +13,11 @@
         <security:intercept-url pattern="/index" access="permitAll"/>
         <security:intercept-url pattern="/error/**" access="permitAll"/>
         <security:intercept-url pattern="/auth/**" access="permitAll"/>
+        <!--
         <security:intercept-url pattern="/apis/**" access="hasRole('user')"/>
         <security:intercept-url pattern="/applications/**" access="hasRole('user')"/>
         <security:intercept-url pattern="/admin/**" access="hasRole('admin')"/>
+        -->
         <security:form-login 
             authentication-failure-url="/auth/login"
             default-target-url="/applications/overview"

@@ -204,7 +204,7 @@
     <version.org.osgi.core>5.0.0</version.org.osgi.core>
     <version.org.apache.aries.blueprint.api>1.0.1</version.org.apache.aries.blueprint.api>
 
-    <version.de.flapdoodle.embed.mongo>1.46.1</version.de.flapdoodle.embed.mongo>
+    <version.de.flapdoodle.embed.mongo>1.47.3</version.de.flapdoodle.embed.mongo>
 
     <version.org.hibernate.validator>5.1.0.Final</version.org.hibernate.validator>
 
@@ -338,6 +338,10 @@
 	  <exclusion>
 	    <groupId>org.mongodb</groupId>
 	    <artifactId>mongodb-driver</artifactId>
+	  </exclusion>
+	  <exclusion>
+	    <groupId>org.mongodb</groupId>
+	    <artifactId>mongo-java-driver</artifactId>
 	  </exclusion>
 	</exclusions>
       </dependency>
@@ -623,7 +627,7 @@
 
       <dependency>
         <groupId>org.mongodb</groupId>
-        <artifactId>mongodb-driver</artifactId>
+        <artifactId>mongo-java-driver</artifactId>
         <version>${version.org.mongodb.driver}</version>
       </dependency>
 
