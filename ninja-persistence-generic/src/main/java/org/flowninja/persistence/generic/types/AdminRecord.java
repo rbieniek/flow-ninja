@@ -7,6 +7,8 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.Set;
 
+import org.apache.commons.collections4.SetUtils;
+import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
@@ -56,5 +58,17 @@ public class AdminRecord implements Serializable {
 	@Override
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this);
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(!(obj instanceof AdminRecord))
+			return false;
+		
+		AdminRecord o = (AdminRecord)obj;
+		
+		return (new EqualsBuilder()).append(o.userName, this.userName)
+				.append(o.key, this.key)
+				.appendSuper(SetUtils.isEqualSet(o.authorities, this.authorities)).build();
 	}
 }
