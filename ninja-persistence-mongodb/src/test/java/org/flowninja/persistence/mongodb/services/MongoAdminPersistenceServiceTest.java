@@ -7,12 +7,15 @@ import static org.fest.assertions.api.Assertions.*;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Set;
 
 import org.flowninja.persistence.generic.PasswordHasher;
 import org.flowninja.persistence.generic.types.AdminKey;
 import org.flowninja.persistence.generic.types.AdminRecord;
 import org.flowninja.persistence.generic.types.AuthorityKey;
 import org.flowninja.persistence.generic.types.AuthorityRecord;
+import org.flowninja.persistence.generic.types.RecordAlreadyExistsException;
+import org.flowninja.persistence.generic.types.RecordNotFoundException;
 import org.flowninja.persistence.mongodb.data.MongoAdminRecord;
 import org.flowninja.persistence.mongodb.data.MongoAuthorityRecord;
 import org.flowninja.persistence.mongodb.repositories.IMongoAdminRepository;
@@ -104,4 +107,196 @@ public class MongoAdminPersistenceServiceTest {
 		
 		assertThat(record).isNull();
 	}
+	
+	@Test
+	public void findExistingUserByName() {
+		AdminRecord record = service.findByUserName("user@foo.org");
+		
+		assertThat(record).isNotNull();
+		assertThat(record.getKey()).isEqualTo(userRecord.getKey());
+		assertThat(record.getUserName()).isEqualTo(userRecord.getUserName());
+		assertThat(record.getAuthorities()).isNotEmpty();
+		assertThat(record.getAuthorities()).containsOnly(new AuthorityRecord(authUserRec.getAuthority(), authUserRec.getKey()));
+	}
+	
+	@Test
+	public void findNonexistingAdminByName() {
+		AdminRecord record = service.findByUserName("admin2@foo.org");
+		
+		assertThat(record).isNull();
+	}
+	
+	@Test
+	public void findExistingUserByKey() {
+		AdminRecord record = service.findByKey(userRecord.getKey());
+		
+		assertThat(record).isNotNull();
+		assertThat(record.getKey()).isEqualTo(userRecord.getKey());
+		assertThat(record.getUserName()).isEqualTo(userRecord.getUserName());
+		assertThat(record.getAuthorities()).isNotEmpty();
+		assertThat(record.getAuthorities()).containsOnly(new AuthorityRecord(authUserRec.getAuthority(), authUserRec.getKey()));
+	}
+	
+	@Test
+	public void findNonexistingAdminByKey() {
+		AdminRecord record = service.findByKey(new AdminKey());
+		
+		assertThat(record).isNull();
+	}
+	
+	@Test
+	public void listAdmins() {
+		Set<AdminRecord> admins = service.listAdmins();
+
+		assertThat(admins).containsOnly(new AdminRecord(adminRecord.getUserName(), adminRecord.getKey(), 
+					new HashSet<AuthorityRecord>(Arrays.asList(new AuthorityRecord(authAdminRec.getAuthority(), authAdminRec.getKey()), 
+							new AuthorityRecord(authUserRec.getAuthority(), authUserRec.getKey())))),
+				new AdminRecord(userRecord.getUserName(), userRecord.getKey(), 
+					new HashSet<AuthorityRecord>(Arrays.asList(new AuthorityRecord(authUserRec.getAuthority(), authUserRec.getKey())))));
+	}
+	
+	@Test(expected=RecordAlreadyExistsException.class)
+	public void createAdminWithExistingName() {
+		service.createAdmin(adminRecord.getUserName(),"blah", new HashSet<AuthorityKey>());
+	}
+	
+	@Test
+	public void createAdmin() {
+		AdminRecord record = service.createAdmin("zoo@foo","blah-blah", new HashSet<AuthorityKey>(Arrays.asList(authAdminRec.getKey(), 
+				authUserRec.getKey())));
+
+		assertThat(record).isNotNull();
+		assertThat(record.getUserName()).isEqualTo("zoo@foo");
+		assertThat(record.getKey()).isNotNull();
+		assertThat(record.getAuthorities()).containsOnly(new AuthorityRecord(authAdminRec.getAuthority(), authAdminRec.getKey()), 
+				new AuthorityRecord(authUserRec.getAuthority(), authUserRec.getKey()));
+		
+		assertThat(service.login("zoo@foo", "blah-blah")).isEqualTo(record);
+	}
+	
+	@Test
+	public void createAdminWithUnknownAuthority() {
+		AdminRecord record = service.createAdmin("zoo2@foo","blah-blah", new HashSet<AuthorityKey>(Arrays.asList(authAdminRec.getKey(), 
+				authUserRec.getKey(),
+				new AuthorityKey())));
+
+		assertThat(record).isNotNull();
+		assertThat(record.getUserName()).isEqualTo("zoo2@foo");
+		assertThat(record.getKey()).isNotNull();
+		assertThat(record.getAuthorities()).containsOnly(new AuthorityRecord(authAdminRec.getAuthority(), authAdminRec.getKey()), 
+				new AuthorityRecord(authUserRec.getAuthority(), authUserRec.getKey()));
+		
+		assertThat(service.login("zoo2@foo", "blah-blah")).isEqualTo(record);
+	}
+	
+	@Test
+	public void assignAuthority() {
+		AdminRecord record = service.createAdmin("zoo3@foo","blah-blah", new HashSet<AuthorityKey>(Arrays.asList(authAdminRec.getKey())));
+
+		assertThat(record).isNotNull();
+		assertThat(record.getUserName()).isEqualTo("zoo3@foo");
+		assertThat(record.getKey()).isNotNull();
+		assertThat(record.getAuthorities()).containsOnly(new AuthorityRecord(authAdminRec.getAuthority(), authAdminRec.getKey()));
+		
+		assertThat(service.login("zoo3@foo", "blah-blah")).isEqualTo(record);
+
+		record = service.assignAuthorities(record.getKey(), new HashSet<AuthorityKey>(Arrays.asList(authAdminRec.getKey(), 
+				authUserRec.getKey())));
+		
+		assertThat(record).isNotNull();
+		assertThat(record.getUserName()).isEqualTo("zoo3@foo");
+		assertThat(record.getKey()).isNotNull();
+		assertThat(record.getAuthorities()).containsOnly(new AuthorityRecord(authAdminRec.getAuthority(), authAdminRec.getKey()), 
+				new AuthorityRecord(authUserRec.getAuthority(), authUserRec.getKey()));
+		
+		assertThat(service.login("zoo3@foo", "blah-blah")).isEqualTo(record);
+	}
+		
+	@Test
+	public void assignNonExistingAuthority() {
+		AdminRecord record = service.createAdmin("zoo4@foo","blah-blah", new HashSet<AuthorityKey>(Arrays.asList(authAdminRec.getKey())));
+
+		assertThat(record).isNotNull();
+		assertThat(record.getUserName()).isEqualTo("zoo4@foo");
+		assertThat(record.getKey()).isNotNull();
+		assertThat(record.getAuthorities()).containsOnly(new AuthorityRecord(authAdminRec.getAuthority(), authAdminRec.getKey()));
+		
+		assertThat(service.login("zoo4@foo", "blah-blah")).isEqualTo(record);
+
+		record = service.assignAuthorities(record.getKey(), new HashSet<AuthorityKey>(Arrays.asList(authAdminRec.getKey(), 
+				new AuthorityKey())));
+		
+		assertThat(record).isNotNull();
+		assertThat(record.getUserName()).isEqualTo("zoo4@foo");
+		assertThat(record.getKey()).isNotNull();
+		assertThat(record.getAuthorities()).containsOnly(new AuthorityRecord(authAdminRec.getAuthority(), authAdminRec.getKey()));
+		
+		assertThat(service.login("zoo4@foo", "blah-blah")).isEqualTo(record);
+	}
+	
+	@Test
+	public void assignNullAuthorities() {
+		AdminRecord record = service.createAdmin("zoo5@foo","blah-blah", new HashSet<AuthorityKey>(Arrays.asList(authAdminRec.getKey())));
+	
+		assertThat(record).isNotNull();
+		assertThat(record.getUserName()).isEqualTo("zoo5@foo");
+		assertThat(record.getKey()).isNotNull();
+		assertThat(record.getAuthorities()).containsOnly(new AuthorityRecord(authAdminRec.getAuthority(), authAdminRec.getKey()));
+		
+		assertThat(service.login("zoo5@foo", "blah-blah")).isEqualTo(record);
+	
+		record = service.assignAuthorities(record.getKey(), null);
+		
+		assertThat(record).isNotNull();
+		assertThat(record.getUserName()).isEqualTo("zoo5@foo");
+		assertThat(record.getKey()).isNotNull();
+		assertThat(record.getAuthorities()).isEmpty();
+		
+		assertThat(service.login("zoo5@foo", "blah-blah")).isEqualTo(record);
+	}
+	
+	@Test
+	public void assignEmptyAuthorities() {
+		AdminRecord record = service.createAdmin("zoo6@foo","blah-blah", new HashSet<AuthorityKey>(Arrays.asList(authAdminRec.getKey())));
+	
+		assertThat(record).isNotNull();
+		assertThat(record.getUserName()).isEqualTo("zoo6@foo");
+		assertThat(record.getKey()).isNotNull();
+		assertThat(record.getAuthorities()).containsOnly(new AuthorityRecord(authAdminRec.getAuthority(), authAdminRec.getKey()));
+		
+		assertThat(service.login("zoo6@foo", "blah-blah")).isEqualTo(record);
+	
+		record = service.assignAuthorities(record.getKey(), new HashSet<AuthorityKey>());
+		
+		assertThat(record).isNotNull();
+		assertThat(record.getUserName()).isEqualTo("zoo6@foo");
+		assertThat(record.getKey()).isNotNull();
+		assertThat(record.getAuthorities()).isEmpty();
+		
+		assertThat(service.login("zoo6@foo", "blah-blah")).isEqualTo(record);
+	}
+	
+	@Test(expected=RecordNotFoundException.class)
+	public void deleteUnknownAdmin() {
+		service.deleteAdmin(new AdminKey());
+	}
+	
+	@Test
+	public void deleteAdmin() {
+		AdminRecord record = service.createAdmin("zoo7@foo","blah-blah", new HashSet<AuthorityKey>(Arrays.asList(authAdminRec.getKey())));
+	
+		assertThat(record).isNotNull();
+		assertThat(record.getUserName()).isEqualTo("zoo7@foo");
+		assertThat(record.getKey()).isNotNull();
+		assertThat(record.getAuthorities()).containsOnly(new AuthorityRecord(authAdminRec.getAuthority(), authAdminRec.getKey()));
+		
+		assertThat(service.login("zoo7@foo", "blah-blah")).isEqualTo(record);
+
+		assertThat(service.findByKey(record.getKey())).isNotNull();
+
+		service.deleteAdmin(record.getKey());
+		
+		assertThat(service.findByKey(record.getKey())).isNull();
+	}
+	
 }

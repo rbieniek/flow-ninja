@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.flowninja.persistence.generic.PasswordHasher;
 import org.flowninja.persistence.generic.services.IAdminPersistenceService;
 import org.flowninja.persistence.generic.types.AdminKey;
@@ -25,7 +26,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 import com.mysema.query.BooleanBuilder;
 
@@ -135,7 +135,7 @@ public class MongoAdminPersistenceService implements IAdminPersistenceService {
 		}
 		
 		dbRecord.setAuthorities(findAuthorityRecords(authorities).stream().map((n) -> n.getKey()).collect(Collectors.toSet()));
-
+		
 		return convertDbRecord(adminRepository.save(dbRecord));
 	}
 
@@ -170,14 +170,15 @@ public class MongoAdminPersistenceService implements IAdminPersistenceService {
 	
 	private AdminRecord convertDbRecord(MongoAdminRecord dbRecord) {
 		Set<AuthorityRecord> authorities = new HashSet<AuthorityRecord>();
-		BooleanBuilder builder = new BooleanBuilder();
 		
-		dbRecord.getAuthorities().forEach((n) -> builder.or(QMongoAuthorityRecord.mongoAuthorityRecord.key.eq(n)));
-		
-		authorityRepository.findAll(builder).forEach((n) -> authorities.add(new AuthorityRecord(n.getAuthority(), n.getKey())));
+		if(!CollectionUtils.isEmpty(dbRecord.getAuthorities())) {
+			BooleanBuilder builder = new BooleanBuilder();
+			
+			dbRecord.getAuthorities().forEach((n) -> builder.or(QMongoAuthorityRecord.mongoAuthorityRecord.key.eq(n)));
+			
+			authorityRepository.findAll(builder).forEach((n) -> authorities.add(new AuthorityRecord(n.getAuthority(), n.getKey())));
+		}
 		
 		return new AdminRecord(dbRecord.getUserName(), dbRecord.getKey(), authorities);
 	}
-
-
 }
