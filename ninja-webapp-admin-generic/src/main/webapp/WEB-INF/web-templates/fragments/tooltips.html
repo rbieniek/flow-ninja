@@ -1,0 +1,26 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    </head>
+    <body>
+        <div class="container" >
+            <div class="header" th:fragment="tooltips">
+				<script th:src="@{/scripts/tooltips.js}"></script>
+				<script th:inline="javascript" type="text/javascript">
+				    /*<![CDATA[*/
+				   	angular.module('de.urb.wapi.console.tooltips').factory('TooltipRestangular', function(Restangular) {
+				   		return Restangular.withConfig(function(RestangularConfigurer) {
+				   		    RestangularConfigurer.setBaseUrl([[@{/rest/tooltips}]]);
+					   		RestangularConfigurer.withCredentials = true;
+				   		  });
+					 });
+				   	/*]]>*/
+				</script>
+            </div>
+        </div>
+    </body>
+</html>
