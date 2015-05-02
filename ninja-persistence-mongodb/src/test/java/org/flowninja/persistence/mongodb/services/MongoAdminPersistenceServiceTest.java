@@ -84,6 +84,18 @@ public class MongoAdminPersistenceServiceTest {
 	}
 
 	@Test
+	public void loginExistingAdminCamelCase() {
+		AdminRecord record = service.login("Admin@Foo.Org", "blah");
+		
+		assertThat(record).isNotNull();
+		assertThat(record.getKey()).isEqualTo(adminRecord.getKey());
+		assertThat(record.getUserName()).isEqualTo(adminRecord.getUserName());
+		assertThat(record.getAuthorities()).isNotEmpty();
+		assertThat(record.getAuthorities()).containsOnly(new AuthorityRecord(authAdminRec.getAuthority(), authAdminRec.getKey()),
+				new AuthorityRecord(authUserRec.getAuthority(), authUserRec.getKey()));
+	}
+
+	@Test
 	public void loginExistingUser() {
 		AdminRecord record = service.login("user@foo.org", "blah");
 		
@@ -97,6 +109,13 @@ public class MongoAdminPersistenceServiceTest {
 	@Test
 	public void loginNonexistingAdmin() {
 		AdminRecord record = service.login("admin2@foo.org", "blah");
+		
+		assertThat(record).isNull();
+	}
+
+	@Test
+	public void loginNonexistingAdminCamelCase() {
+		AdminRecord record = service.login("Admin2@Foo.Org", "blah");
 		
 		assertThat(record).isNull();
 	}
@@ -118,6 +137,17 @@ public class MongoAdminPersistenceServiceTest {
 		assertThat(record.getAuthorities()).isNotEmpty();
 		assertThat(record.getAuthorities()).containsOnly(new AuthorityRecord(authUserRec.getAuthority(), authUserRec.getKey()));
 	}
+
+	@Test
+	public void findExistingUserByNameCamelCase() {
+		AdminRecord record = service.findByUserName("User@Foo.Org");
+		
+		assertThat(record).isNotNull();
+		assertThat(record.getKey()).isEqualTo(userRecord.getKey());
+		assertThat(record.getUserName()).isEqualTo(userRecord.getUserName());
+		assertThat(record.getAuthorities()).isNotEmpty();
+		assertThat(record.getAuthorities()).containsOnly(new AuthorityRecord(authUserRec.getAuthority(), authUserRec.getKey()));
+	}
 	
 	@Test
 	public void findNonexistingAdminByName() {
@@ -126,6 +156,13 @@ public class MongoAdminPersistenceServiceTest {
 		assertThat(record).isNull();
 	}
 	
+	@Test
+	public void findNonexistingAdminByNameCamelCase() {
+		AdminRecord record = service.findByUserName("Admin2@Foo.Org");
+		
+		assertThat(record).isNull();
+	}
+
 	@Test
 	public void findExistingUserByKey() {
 		AdminRecord record = service.findByKey(userRecord.getKey());
@@ -159,7 +196,12 @@ public class MongoAdminPersistenceServiceTest {
 	public void createAdminWithExistingName() {
 		service.createAdmin(adminRecord.getUserName(),"blah", new HashSet<AuthorityKey>());
 	}
-	
+
+	@Test(expected=RecordAlreadyExistsException.class)
+	public void createAdminWithExistingNameCamelCase() {
+		service.createAdmin("Admin@Foo.Org","blah", new HashSet<AuthorityKey>());
+	}
+
 	@Test
 	public void createAdmin() {
 		AdminRecord record = service.createAdmin("zoo@foo","blah-blah", new HashSet<AuthorityKey>(Arrays.asList(authAdminRec.getKey(), 

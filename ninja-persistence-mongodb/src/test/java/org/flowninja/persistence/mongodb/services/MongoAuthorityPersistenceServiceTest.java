@@ -67,7 +67,12 @@ public class MongoAuthorityPersistenceServiceTest {
 	public void findExistingRecordByAuthority() {
 		assertThat(service.findAuthorityByAuthority("dummy")).isEqualTo(new AuthorityRecord("dummy", key));
 	}
-	
+
+	@Test
+	public void findExistingRecordByAuthorityCamelCase() {
+		assertThat(service.findAuthorityByAuthority("Dummy")).isEqualTo(new AuthorityRecord("dummy", key));
+	}
+
 	@Test
 	public void findNonExistingRecordByAuthority() {
 		assertThat(service.findAuthorityByAuthority("")).isNull();
@@ -76,6 +81,11 @@ public class MongoAuthorityPersistenceServiceTest {
 	@Test(expected=RecordAlreadyExistsException.class)
 	public void insertExistingAuthority() {
 		service.insertAuhority("dummy");
+	}
+	
+	@Test(expected=RecordAlreadyExistsException.class)
+	public void insertExistingAuthorityCamelCase() {
+		service.insertAuhority("Dummy");
 	}
 	
 	@Test

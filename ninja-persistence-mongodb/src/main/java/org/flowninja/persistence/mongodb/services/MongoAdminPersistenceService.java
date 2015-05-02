@@ -8,6 +8,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.flowninja.persistence.generic.PasswordHasher;
 import org.flowninja.persistence.generic.services.IAdminPersistenceService;
 import org.flowninja.persistence.generic.types.AdminKey;
@@ -48,7 +49,9 @@ public class MongoAdminPersistenceService implements IAdminPersistenceService {
 		AdminRecord record = null;
 		
 		logger.info("login for user: {}", userName);
-		
+
+		userName = StringUtils.lowerCase(userName);
+
 		MongoAdminRecord dbRecord = adminRepository.findOne((new BooleanBuilder())
 				.and(QMongoAdminRecord.mongoAdminRecord.userName.eq(userName))
 				.and(QMongoAdminRecord.mongoAdminRecord.passwordHash.eq(PasswordHasher.hash(userName, password))));
@@ -67,7 +70,7 @@ public class MongoAdminPersistenceService implements IAdminPersistenceService {
 		
 		logger.info("find user by name: {}", userName);
 		
-		MongoAdminRecord dbRecord = adminRepository.findOne(QMongoAdminRecord.mongoAdminRecord.userName.eq(userName));
+		MongoAdminRecord dbRecord = adminRepository.findOne(QMongoAdminRecord.mongoAdminRecord.userName.eq(StringUtils.lowerCase(userName)));
 		
 		if(dbRecord != null) 
 			record = convertDbRecord(dbRecord);
@@ -105,7 +108,9 @@ public class MongoAdminPersistenceService implements IAdminPersistenceService {
 	@Override
 	public AdminRecord createAdmin(String userName, String password, Set<AuthorityKey> authorities) throws RecordAlreadyExistsException {
 		logger.info("creating user with name: {}", userName);
-		
+
+		userName = StringUtils.lowerCase(userName);
+
 		if(adminRepository.findOne(QMongoAdminRecord.mongoAdminRecord.userName.eq(userName)) != null) {
 			logger.warn("admin already exists, name={}", userName);
 			

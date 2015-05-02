@@ -6,6 +6,7 @@ package org.flowninja.persistence.mongodb.services;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.flowninja.persistence.generic.services.IAuthorityPersistenceService;
 import org.flowninja.persistence.generic.types.AuthorityKey;
 import org.flowninja.persistence.generic.types.AuthorityRecord;
@@ -71,6 +72,8 @@ public class MongoAuthorityPersistenceService implements IAuthorityPersistenceSe
 		AuthorityRecord record = null;
 		
 		logger.info("looking up authority record, authority={}", authority);
+		
+		authority = StringUtils.lowerCase(authority);		
 
 		MongoAuthorityRecord dbRecord = repository.findOne(QMongoAuthorityRecord.mongoAuthorityRecord.authority.eq(authority));
 
@@ -88,7 +91,9 @@ public class MongoAuthorityPersistenceService implements IAuthorityPersistenceSe
 	@Override
 	public AuthorityRecord insertAuhority(String authority) throws RecordAlreadyExistsException {
 		logger.info("creating new authority, authority={}", authority);
-		
+
+		authority = StringUtils.lowerCase(authority);		
+
 		if(repository.findOne(QMongoAuthorityRecord.mongoAuthorityRecord.authority.eq(authority)) != null) {
 			logger.warn("authority already exists, authority={}", authority);
 			
