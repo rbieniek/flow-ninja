@@ -341,4 +341,25 @@ public class MongoAdminPersistenceServiceTest {
 		assertThat(service.findByKey(record.getKey())).isNull();
 	}
 	
+	@Test(expected=RecordNotFoundException.class)
+	public void assignPasswordUnknownAdmin() {
+		service.assignPassword(new AdminKey(), "fgoo");
+	}
+	
+	@Test
+	public void assignPassword() {
+		AdminRecord record = service.createAdmin("zoo8@foo","blah-blah", new HashSet<AuthorityKey>(Arrays.asList(authAdminRec.getKey())));
+	
+		assertThat(record).isNotNull();
+		assertThat(record.getUserName()).isEqualTo("zoo8@foo");
+		assertThat(record.getKey()).isNotNull();
+		assertThat(record.getAuthorities()).containsOnly(new AuthorityRecord(authAdminRec.getAuthority(), authAdminRec.getKey()));
+		
+		assertThat(service.login("zoo8@foo", "blah-blah")).isEqualTo(record);
+
+		service.assignPassword(record.getKey(), "blah");
+
+		assertThat(service.login("zoo8@foo", "blah")).isEqualTo(record);
+	}
+	
 }

@@ -145,6 +145,23 @@ public class MongoAdminPersistenceService implements IAdminPersistenceService {
 	}
 
 	@Override
+	public AdminRecord assignPassword(AdminKey key, String password) throws RecordNotFoundException {
+		logger.info("updating password for ", key);
+
+		MongoAdminRecord dbRecord = adminRepository.findOne(QMongoAdminRecord.mongoAdminRecord.key.eq(key));
+
+		if(dbRecord == null) {
+			logger.warn("No admin record found for key {}", key);
+			
+			throw new RecordNotFoundException();
+		}
+		
+		dbRecord.setPasswordHash(PasswordHasher.hash(dbRecord.getUserName(), password));
+		
+		return convertDbRecord(adminRepository.save(dbRecord));
+	}
+
+	@Override
 	public void deleteAdmin(AdminKey key) throws RecordNotFoundException {
 		logger.info("deleting admin with key {}", key);
 		

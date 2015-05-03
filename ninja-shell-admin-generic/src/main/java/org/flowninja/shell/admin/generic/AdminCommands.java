@@ -4,7 +4,6 @@
 package org.flowninja.shell.admin.generic;
 
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -75,6 +74,8 @@ public class AdminCommands implements CommandMarker {
 		if(!mailAddrPattern.matcher(userName).matches()) {
 			throw new IllegalArgumentException("Illegal username passed: " + userName);
 		}
+		if(StringUtils.isBlank(password))
+			throw new IllegalArgumentException("Blank password disallowed");
 				
 		return convertAdmin(adminService.createAdmin(userName, password, parseAuthorityArguments(authorityNames, authorityKeys)));
 	}
@@ -89,6 +90,20 @@ public class AdminCommands implements CommandMarker {
 			throw new IllegalArgumentException("Unknown admin key passed: " + adminKey);
 		
 		return convertAdmin(adminService.assignAuthorities(admin.getKey(), parseAuthorityArguments(authorityNames, authorityKeys)));
+	}
+
+	@CliCommand(value="administrator assign password", help="assign password to administrator account")
+	public JSONObject assignAdminPassword(@CliOption(key="administrator-key", mandatory=true, help="administrator key") String adminKey,
+			@CliOption(key="password", mandatory=true, help="administrator password") String password) {
+		AdminRecord admin = adminService.findByKey(new AdminKey(UUID.fromString(adminKey)));
+		
+		if(admin == null)
+			throw new IllegalArgumentException("Unknown admin key passed: " + adminKey);
+
+		if(StringUtils.isBlank(password))
+			throw new IllegalArgumentException("Blank password disallowed");
+
+		return convertAdmin(adminService.assignPassword(admin.getKey(), password));
 	}
 
 	@CliCommand(value="administrator delete", help="delete administrator account")

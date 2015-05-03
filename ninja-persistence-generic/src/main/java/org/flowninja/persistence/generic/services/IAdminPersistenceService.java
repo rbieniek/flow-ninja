@@ -73,6 +73,16 @@ public interface IAdminPersistenceService {
 	 * @throws RecordNotFoundException admin not found 
 	 */
 	public AdminRecord assignAuthorities(AdminKey key, Set<AuthorityKey> authorities) throws RecordNotFoundException;
+
+	/**
+	 * Assign a new password to an administrator
+	 * 
+	 * @param key adminstator key
+	 * @param password new password
+	 * @return the administator record
+	 * @throws RecordNotFoundException administrator key not found in database 
+	 */
+	public AdminRecord assignPassword(AdminKey key, String password) throws RecordNotFoundException;
 	
 	/**
 	 * delete an admin record
