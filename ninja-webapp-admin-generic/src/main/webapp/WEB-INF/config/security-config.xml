@@ -13,8 +13,8 @@
         <security:intercept-url pattern="/index" access="permitAll"/>
         <security:intercept-url pattern="/error/**" access="permitAll"/>
         <security:intercept-url pattern="/auth/**" access="permitAll"/>
-        <security:intercept-url pattern="/console/**" access="hasRole('admin')"/>
-        <security:intercept-url pattern="/rest/**" access="hasRole('admin')"/>
+        <security:intercept-url pattern="/console/**" access="isAuthenticated()"/>
+        <security:intercept-url pattern="/rest/**" access="isAuthenticated()"/>
         <security:form-login 
             authentication-failure-url="/auth/login"
             default-target-url="/console/main"
