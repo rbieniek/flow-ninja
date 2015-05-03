@@ -1,33 +1,17 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-	<head th:replace="fragments/preamble::header(title=#{page.title})"/>
+	<head th:replace="fragments/preamble::header(title=#{page.title},stylesheet='auth/login.css')"/>
 	
 	<body>
         <div class="container">
-        	<div th:replace="fragments/navbar::navbar" />
-
-            <div class="row">
-                <div class="col-md-offset-3 col-md-6">
-                    <form role="form" action="/login" th:action="@{/login}" method="post">
-                        <div class="form-group">
-                            <label for="email" th:text="#{form.mail}">Email address</label>
-                            <input type="email" class="form-control" id="email" name="email" placeholder="Enter email"/>
-                        </div>
-                        <div class="form-group">
-                            <label for="password" th:text="#{form.password}">Password</label>
-                            <input type="password" class="form-control" id="password" name="password" placeholder="Password"/>
-                        </div>
-                        <button type="submit" class="btn btn-default" th:text="#{form.submit}">Login</button>
-                    </form>
-                </div>
-         	</div>
-            <div class="row">         	
-                <div class="col-md-offset-3 col-md-6">
-                	<span th:text="#{text.recover}">You cannot login?</span>
-                	<span> </span>
-                	<a href="/recover" th:text="#{link.recover}" th:href="@{/password-recovery}">Click here to recover your password</a>
-				</div>                
-            </div>
+			<form class="form-signin" action="/login" th:action="@{/login}" method="post">
+	        	<h2 class="form-signin-heading" th:text="#{form.signin}">Please sign in</h2>
+	        	<label for="email" class="sr-only" th:text="#{form.mail}">Email address</label>
+	        	<input type="email" id="email" name="email" class="form-control" placeholder="Email address" th:placeholder="#{form.mail}" required="required" autofocus="autofocus"/>
+	        	<label for="password" class="sr-only" th:text="#{form.password}">Password</label>
+	        	<input type="password" id="password" name="password" class="form-control" placeholder="Password" th:placeholder="#{form.password}" required="required"/>
+		        <button class="btn btn-lg btn-primary btn-block" type="submit" th:text="#{form.submit}">Sign in</button>
+		 	</form>
         </div>
 	</body>
 	

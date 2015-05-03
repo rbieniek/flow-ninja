@@ -4,12 +4,10 @@
 	
 	<body>
         <div class="container">
-        	<div th:replace="fragments/navbar::navbar" />
-        	
             <div class="jumbotron">
                 <h1 th:text="#{jumbotron.heading}">Welcome to WebAPI Console</h1>
                 <p class="lead" th:text="#{jumbotron.lead}">Console access to control and configure WebAPI applications</p>
-                <p><a class="btn btn-lg btn-success" href="/register" th:href="@{/register}" role="button" th:text="#{link.login}">Sign up today</a></p>
+                <p><a class="btn btn-lg btn-success" href="/console/main" th:href="@{/console/main}" role="button" th:text="#{link.login}">Access console</a></p>
             </div>
 
             <div class="row">
