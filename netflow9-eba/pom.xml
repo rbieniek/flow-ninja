@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <parent>
+    <groupId>org.flow-ninja</groupId>
+    <artifactId>flow-ninja-project</artifactId>
+    <version>${version.flow-ninja}</version>
+    <relativePath>../pom.xml</relativePath>
+  </parent>
+
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.flow-ninja</groupId>
+  <artifactId>netflow9-eba</artifactId>
+  <packaging>eba</packaging>
+  <version>${version.flow-ninja}</version>
+  <name>Netflow 9 Enterprese Bundle Archive</name>
+  <description>Netflow 9 Enterprese Bundle Archive</description>
+  <inceptionYear>2015</inceptionYear>
+
+  <build>
+    <plugins>
+	<plugin>
+	  <groupId>org.apache.aries</groupId>
+	  <artifactId>eba-maven-plugin</artifactId>
+	  <extensions>true</extensions>
+	  <configuration>
+            <generateManifest>true</generateManifest>
+	    <archiveContent>all</archiveContent>
+	    <useTransitiveDependencies>true</useTransitiveDependencies>
+	    <includeJar>true</includeJar>
+          </configuration>
+	</plugin>
+    </plugins>
+  </build>
+
+  <dependencies>
+
+    <dependency>
+      <groupId>org.flow-ninja</groupId>
+      <artifactId>netflow9-collector-bundle</artifactId>
+      <version>${version.flow-ninja}</version>
+      <exclusions>
+	<exclusion>
+	  <groupId>org.osgi</groupId>
+	  <artifactId>org.osgi.core</artifactId>
+	</exclusion>
+	<exclusion>
+	  <groupId>org.apache.aries.blueprint</groupId>
+	  <artifactId>org.apache.aries.blueprint.api</artifactId>
+	</exclusion>
+	<exclusion>
+	  <groupId>org.slf4j</groupId>
+	  <artifactId>slf4j-api</artifactId>
+	</exclusion>
+      </exclusions>
+    </dependency>
+
+    <dependency>
+      <groupId>org.flow-ninja</groupId>
+      <artifactId>netflow9-file-storer-bundle</artifactId>
+      <version>${version.flow-ninja}</version>
+      <exclusions>
+	<exclusion>
+	  <groupId>org.osgi</groupId>
+	  <artifactId>org.osgi.core</artifactId>
+	</exclusion>
+	<exclusion>
+	  <groupId>org.apache.aries.blueprint</groupId>
+	  <artifactId>org.apache.aries.blueprint.api</artifactId>
+	</exclusion>
+	<exclusion>
+	  <groupId>org.slf4j</groupId>
+	  <artifactId>slf4j-api</artifactId>
+	</exclusion>
+      </exclusions>
+    </dependency>
+
+    <dependency>
+      <groupId>org.flow-ninja</groupId>
+      <artifactId>ninja-common-bundle</artifactId>
+      <version>${version.flow-ninja}</version>
+      <exclusions>
+	<exclusion>
+	  <groupId>org.osgi</groupId>
+	  <artifactId>org.osgi.core</artifactId>
+	</exclusion>
+	<exclusion>
+	  <groupId>org.apache.aries.blueprint</groupId>
+	  <artifactId>org.apache.aries.blueprint.api</artifactId>
+	</exclusion>
+	<exclusion>
+	  <groupId>org.slf4j</groupId>
+	  <artifactId>slf4j-api</artifactId>
+	</exclusion>
+      </exclusions>
+    </dependency>
+
+  </dependencies>
+</project>
+<!-- Keep this comment at the end of the file
+Local variables:
+mode: xml
+sgml-omittag:nil
+sgml-shorttag:nil
+sgml-namecase-general:nil
+sgml-general-insert-case:lower
+sgml-minimize-attributes:nil
+sgml-always-quote-attributes:t
+sgml-indent-step:2
+sgml-indent-data:t
+sgml-parent-document:nil
+sgml-exposed-tags:nil
+sgml-local-catalogs:nil
+sgml-local-ecat-files:nil
+End:
+-->

@@ -126,6 +126,16 @@
             </execution>
 	  </executions>
 	</plugin>
+	<plugin>
+	  <groupId>org.apache.aries</groupId>
+	  <artifactId>eba-maven-plugin</artifactId>
+	  <version>${version.org.apache.aries.eba_maven_plugin}</version>
+	  <extensions>true</extensions>
+	  <configuration>
+            <generateManifest>true</generateManifest>
+	    <archiveContent>all</archiveContent>
+          </configuration>
+	</plugin>
       </plugins>
     </pluginManagement>
 
@@ -162,6 +172,7 @@
     <version.org.apache.maven.plugins.maven_dependency_plugin>2.4</version.org.apache.maven.plugins.maven_dependency_plugin>
     <version.org.apache.servicemix.depends_maven_plugin>1.2</version.org.apache.servicemix.depends_maven_plugin>
     <version.org.apache.felix.bundle_maven_plugin>2.5.3</version.org.apache.felix.bundle_maven_plugin>
+    <version.org.apache.aries.eba_maven_plugin>1.0.0</version.org.apache.aries.eba_maven_plugin>
 
     <version.javax.jee>7.0</version.javax.jee>
     <version.com.google.guava>18.0</version.com.google.guava>
@@ -218,6 +229,7 @@
     <module>ninja-common-bundle</module>
     <module>netflow9-collector-bundle</module>
     <module>netflow9-file-storer-bundle</module>
+    <module>netflow9-eba</module>
     <module>ninja-persistence-generic</module>
     <module>ninja-persistence-mongodb</module>
     <module>ninja-security-web</module>
