@@ -14,8 +14,9 @@
     <context:property-placeholder location="classpath:org/flowninja/webapp/admin/generic/webmvc.properties" system-properties-mode="OVERRIDE"/>
     
     <!-- Scans for application @Components to deploy -->
-    <context:component-scan base-package="org.flowninja.webapp.admin.generic/" />
-
+    <context:component-scan base-package="org.flowninja.webapp.admin.generic" />
+    <context:component-scan base-package="org.flowninja.security.web.spring" />
+    
     <mvc:annotation-driven conversion-service="conversionService"/>
     
     <mvc:default-servlet-handler/>

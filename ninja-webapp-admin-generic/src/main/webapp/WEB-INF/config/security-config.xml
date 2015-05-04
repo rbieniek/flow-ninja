@@ -17,7 +17,7 @@
         <security:intercept-url pattern="/rest/**" access="isAuthenticated()"/>
         <security:form-login 
             authentication-failure-url="/auth/login"
-            default-target-url="/console/main"
+            default-target-url="/console/dashboard"
             login-page="/auth/login" 
             login-processing-url="/login" 
             password-parameter="password" 

@@ -16,5 +16,7 @@
 	    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"/>
 	    <link rel="stylesheet" th:href="@{/css/angularjs-bootstrap-fix.css}"/>
 	    <link rel="stylesheet" th:href="@{'/css/' + ${stylesheet}}" th:if="${not #strings.isEmpty(stylesheet)}" />
-    </head>
+    	<script src="@{'/scripts/' + ${pageScript}}" th:if="${not #strings.isEmpty(pageScript)}"></script>
+    	<script src="@{${externalScript}}" th:if="${not #strings.isEmpty(externalScript)}"></script>
+    </head>  
 </html>

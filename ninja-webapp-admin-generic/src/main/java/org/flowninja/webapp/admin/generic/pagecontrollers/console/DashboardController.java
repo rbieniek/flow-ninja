@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
  *
  */
 @Controller
-public class MainController {
+public class DashboardController {
 
-	@RequestMapping(value={"/console/main"}, method=RequestMethod.GET)
+	@RequestMapping(value={"/console/dashboard"}, method=RequestMethod.GET)
 	public String consoleMain() {
-		return "console/main";
+		return "console/dashboard";
 	}
 }

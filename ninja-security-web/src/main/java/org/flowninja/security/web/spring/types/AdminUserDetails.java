@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.flowninja.persistence.generic.types.AdminKey;
 import org.flowninja.persistence.generic.types.AdminRecord;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -97,6 +98,10 @@ public class AdminUserDetails implements UserDetails {
 	 */
 	public AdminRecord getRecord() {
 		return record;
+	}
+
+	public AdminKey getKey() {
+		return record.getKey();
 	}
 
 }
