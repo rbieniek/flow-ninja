@@ -28,6 +28,7 @@
 		<property name="basenames">
             <list>
                 <value>messages</value>
+                <value>navbar</value>
             </list>
         </property>
     </bean>
