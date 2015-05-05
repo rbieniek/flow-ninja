@@ -41,6 +41,12 @@
     </dependency>
 
     <dependency>
+      <groupId>org.flow-ninja</groupId>
+      <artifactId>ninja-hadoop</artifactId>
+      <version>${version.flow-ninja}</version>
+    </dependency>
+
+    <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
       <scope>provided</scope>

@@ -233,6 +233,7 @@
     <module>ninja-types-generic</module>
     <module>ninja-persistence-generic</module>
     <module>ninja-persistence-mongodb</module>
+    <module>ninja-hadoop</module>
     <module>ninja-security-web</module>
     <module>ninja-webapp-admin-generic</module>
     <module>ninja-webapp-admin-mongodb</module>
@@ -372,6 +373,10 @@
           <exclusion>
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>io.netty</groupId>
+            <artifactId>netty</artifactId>
           </exclusion>
 	</exclusions>
       </dependency>
