@@ -14,34 +14,17 @@
 
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.flow-ninja</groupId>
-  <artifactId>ninja-persistence-generic</artifactId>
+  <artifactId>ninja-types-generic</artifactId>
   <packaging>jar</packaging>
   <version>${version.flow-ninja}</version>
-  <name>OSGi IP flow collector generic persistence</name>
-  <description>Generic persistence for JEE-based service</description>
+  <name>OSGi IP flow collector generic types</name>
+  <description>Generic types for JEE-based service</description>
 
   <dependencies>
-    <dependency>
-      <groupId>org.flow-ninja</groupId>
-      <artifactId>ninja-types-generic</artifactId>
-      <version>${version.flow-ninja}</version>
-    </dependency>
 
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
-      <scope>provided</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-collections4</artifactId>
-      <scope>provided</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>commons-codec</groupId>
-      <artifactId>commons-codec</artifactId>
       <scope>provided</scope>
     </dependency>
 

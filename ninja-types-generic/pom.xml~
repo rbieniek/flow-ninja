@@ -21,11 +21,6 @@
   <description>Generic persistence for JEE-based service</description>
 
   <dependencies>
-    <dependency>
-      <groupId>org.flow-ninja</groupId>
-      <artifactId>ninja-types-generic</artifactId>
-      <version>${version.flow-ninja}</version>
-    </dependency>
 
     <dependency>
       <groupId>org.apache.commons</groupId>
