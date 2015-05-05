@@ -5,10 +5,10 @@ package org.flowninja.persistence.generic.services;
 
 import java.util.Set;
 
-import org.flowninja.persistence.generic.types.AuthorityKey;
 import org.flowninja.persistence.generic.types.AuthorityRecord;
 import org.flowninja.persistence.generic.types.RecordAlreadyExistsException;
 import org.flowninja.persistence.generic.types.RecordNotFoundException;
+import org.flowninja.types.generic.AuthorityKey;
 
 /**
  * @author rainer

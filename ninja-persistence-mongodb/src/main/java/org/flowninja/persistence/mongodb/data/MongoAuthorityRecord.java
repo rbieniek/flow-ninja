@@ -6,7 +6,7 @@ package org.flowninja.persistence.mongodb.data;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-import org.flowninja.persistence.generic.types.AuthorityKey;
+import org.flowninja.types.generic.AuthorityKey;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;

@@ -8,8 +8,8 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.flowninja.persistence.generic.services.IAuthorityPersistenceService;
-import org.flowninja.persistence.generic.types.AuthorityKey;
 import org.flowninja.persistence.generic.types.AuthorityRecord;
+import org.flowninja.types.generic.AuthorityKey;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;

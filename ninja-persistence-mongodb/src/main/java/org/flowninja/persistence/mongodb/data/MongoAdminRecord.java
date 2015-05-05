@@ -8,8 +8,8 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.flowninja.persistence.generic.types.AdminKey;
-import org.flowninja.persistence.generic.types.AuthorityKey;
+import org.flowninja.types.generic.AdminKey;
+import org.flowninja.types.generic.AuthorityKey;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;

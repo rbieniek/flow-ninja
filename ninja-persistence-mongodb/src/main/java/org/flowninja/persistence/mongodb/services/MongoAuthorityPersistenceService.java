@@ -8,13 +8,13 @@ import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.flowninja.persistence.generic.services.IAuthorityPersistenceService;
-import org.flowninja.persistence.generic.types.AuthorityKey;
 import org.flowninja.persistence.generic.types.AuthorityRecord;
 import org.flowninja.persistence.generic.types.RecordAlreadyExistsException;
 import org.flowninja.persistence.generic.types.RecordNotFoundException;
 import org.flowninja.persistence.mongodb.data.MongoAuthorityRecord;
 import org.flowninja.persistence.mongodb.data.QMongoAuthorityRecord;
 import org.flowninja.persistence.mongodb.repositories.IMongoAuthorityRepository;
+import org.flowninja.types.generic.AuthorityKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

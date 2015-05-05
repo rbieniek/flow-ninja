@@ -7,8 +7,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.flowninja.persistence.generic.types.AdminKey;
 import org.flowninja.persistence.generic.types.AdminRecord;
+import org.flowninja.types.generic.AdminKey;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

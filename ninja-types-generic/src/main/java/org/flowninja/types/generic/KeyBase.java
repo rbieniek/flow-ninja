@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.flowninja.persistence.generic.types;
+package org.flowninja.types.generic;
 
 import java.io.Serializable;
 import java.util.UUID;

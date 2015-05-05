@@ -14,5 +14,16 @@ angular.module('org.flowninja.admin.console.dashboard', ['restangular', 'ui.boot
 	$scope.reload = function() {
 	};
 	
+	$scope.accountingGroups = function() {
+		
+	}
+
+	$scope.endpoints = function() {
+		
+	}
+	$scope.users = function() {
+		
+	}
+
 	$scope.reload();
 });

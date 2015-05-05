@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.flowninja.persistence.generic.types;
+package org.flowninja.types.generic;
 
 import java.util.UUID;
 
@@ -9,18 +9,18 @@ import java.util.UUID;
  * @author rainer
  *
  */
-public class AdminKey extends KeyBase {
+public class AuthorityKey extends KeyBase {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 690987643369915002L; 
 
-	public AdminKey() {
+	public AuthorityKey() {
 		super(UUID.randomUUID());
 	}
 	
-	public AdminKey(UUID uuid) {
+	public AuthorityKey(UUID uuid) {
 		super(uuid);
 	}
 	

@@ -10,6 +10,7 @@ import java.util.Set;
 import org.apache.commons.collections4.SetUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.flowninja.types.generic.AdminKey;
 
 /**
  * @author rainer

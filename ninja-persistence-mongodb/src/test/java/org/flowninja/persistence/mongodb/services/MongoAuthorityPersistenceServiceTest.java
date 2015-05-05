@@ -7,12 +7,12 @@ import static org.fest.assertions.api.Assertions.*;
 
 import java.util.Set;
 
-import org.flowninja.persistence.generic.types.AuthorityKey;
 import org.flowninja.persistence.generic.types.AuthorityRecord;
 import org.flowninja.persistence.generic.types.RecordAlreadyExistsException;
 import org.flowninja.persistence.generic.types.RecordNotFoundException;
 import org.flowninja.persistence.mongodb.data.MongoAuthorityRecord;
 import org.flowninja.persistence.mongodb.repositories.IMongoAuthorityRepository;
+import org.flowninja.types.generic.AuthorityKey;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

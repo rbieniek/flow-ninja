@@ -33,12 +33,12 @@
                                 </li>
                                 <li class="dropdown" dropdown="dropdown" sec:authorize="hasAuthority('endpoint-admin')">
                                 	<a href="" class="dropdown-toggle" dropdown-toggle="dropdown-toggle">
-                                		<span th:text="#{navbar.endpoints}">Endpoints</span>
+                                		<span th:text="#{navbar.accounting-groups}">Accounting groups</span>
                                 		<span class="caret"></span>
                                 	</a>
                                 	<ul class="dropdown-menu" role="menu">
+                                		<li><a href="#" th:href="@{/accounting-groups/manage}" th:text="#{navbar.accounting-groups.manage}">Manage accounting groups</a></li>
                                 		<li><a href="#" th:href="@{/endpoints/manage}" th:text="#{navbar.endpoints.manage}">Manage endpoints</a></li>
-                                		<li><a href="#" th:href="@{/endpoints/statistics}" th:text="#{navbar.endpoints.statistics}">Endpoint usage statistics</a></li>
                                 	</ul>
                                 </li>
                                 <li class="dropdown" dropdown="dropdown" sec:authorize="hasAuthority('user-admin')">
@@ -48,7 +48,6 @@
                                 	</a>
                                 	<ul class="dropdown-menu" role="menu">
                                 		<li><a href="#" th:href="@{/users/manage}" th:text="#{navbar.users.manage}">Manage users</a></li>
-                                		<li><a href="#" th:href="@{/users/statistics}" th:text="#{navbar.users.statistics}">User statistics</a></li>
                                 	</ul>
                                 </li>
                             </ul>

@@ -5,11 +5,11 @@ package org.flowninja.persistence.generic.services;
 
 import java.util.Set;
 
-import org.flowninja.persistence.generic.types.AdminKey;
 import org.flowninja.persistence.generic.types.AdminRecord;
-import org.flowninja.persistence.generic.types.AuthorityKey;
 import org.flowninja.persistence.generic.types.RecordAlreadyExistsException;
 import org.flowninja.persistence.generic.types.RecordNotFoundException;
+import org.flowninja.types.generic.AdminKey;
+import org.flowninja.types.generic.AuthorityKey;
 
 /**
  * Service interface to be implemented by persistence providers for admin records
