@@ -41,7 +41,7 @@ public class MongoAuthorityPersistenceServiceTest {
 		repository.findAll().forEach((n) -> repository.delete(n));
 		
 		key = new AuthorityKey();
-		record = new MongoAuthorityRecord("dummy", key);
+		record = new MongoAuthorityRecord(key, "dummy");
 		
 		repository.save(record);
 	}

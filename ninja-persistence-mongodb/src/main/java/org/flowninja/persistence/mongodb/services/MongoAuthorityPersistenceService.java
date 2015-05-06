@@ -100,7 +100,7 @@ public class MongoAuthorityPersistenceService implements IAuthorityPersistenceSe
 			throw new RecordAlreadyExistsException();
 		}
 
-		MongoAuthorityRecord dbRecord = repository.save(new MongoAuthorityRecord(authority, new AuthorityKey()));
+		MongoAuthorityRecord dbRecord = repository.save(new MongoAuthorityRecord(new AuthorityKey(), authority));
 
 		logger.info("created new authority, authority={}, key={}", dbRecord.getAuthority(), dbRecord.getKey());
 

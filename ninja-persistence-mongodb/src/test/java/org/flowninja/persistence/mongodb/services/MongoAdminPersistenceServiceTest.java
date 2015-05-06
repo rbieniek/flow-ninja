@@ -57,9 +57,9 @@ public class MongoAdminPersistenceServiceTest {
 		adminRepository.findAll().forEach((n) -> adminRepository.delete(n));
 		authorityRepository.findAll().forEach((n) -> authorityRepository.delete(n));
 
-		authAdminRec = new MongoAuthorityRecord("admin", new AuthorityKey());
+		authAdminRec = new MongoAuthorityRecord(new AuthorityKey(), "admin");
 		authorityRepository.save(authAdminRec);
-		authUserRec = new MongoAuthorityRecord("user", new AuthorityKey());
+		authUserRec = new MongoAuthorityRecord(new AuthorityKey(), "user");
 		authorityRepository.save(authUserRec);
 
 		adminRecord = new MongoAdminRecord(new AdminKey(), "admin@foo.org", PasswordHasher.hash("admin@foo.org", "blah"), 
