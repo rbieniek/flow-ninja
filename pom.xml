@@ -238,6 +238,7 @@
     <module>ninja-persistence-generic</module>
     <module>ninja-persistence-mongodb</module>
     <module>ninja-hadoop</module>
+    <module>ninja-redis</module>
     <module>ninja-security-web</module>
     <module>ninja-webapp-admin-generic</module>
     <module>ninja-webapp-admin-mongodb</module>
