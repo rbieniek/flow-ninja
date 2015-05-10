@@ -11,11 +11,10 @@
     http://www.springframework.org/schema/webflow-config http://www.springframework.org/schema/webflow-config/spring-webflow-config-2.4.xsd
     ">
 
-    <context:property-placeholder location="classpath:org/flowninja/webapp/admin/generic/webmvc.properties" system-properties-mode="OVERRIDE"/>
+    <context:property-placeholder location="classpath:org/flowninja/webapp/rspl/generic/webmvc.properties" system-properties-mode="OVERRIDE"/>
     
     <!-- Scans for application @Components to deploy -->
-    <context:component-scan base-package="org.flowninja.webapp.admin.generic" />
-    <context:component-scan base-package="org.flowninja.security.web.spring" />
+    <context:component-scan base-package="org.flowninja.webapp.rspl.generic" />
     
     <mvc:annotation-driven conversion-service="conversionService"/>
     
