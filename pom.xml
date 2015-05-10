@@ -240,6 +240,8 @@
     <module>ninja-hadoop</module>
     <module>ninja-redis</module>
     <module>ninja-security-web</module>
+    <module>rspl-service-json-definitions</module>
+    <module>rspl-service-json-client</module>
     <module>ninja-webapp-admin-generic</module>
     <module>ninja-webapp-admin-mongodb</module>
     <module>ninja-ear-admin-mongodb</module>
