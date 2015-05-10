@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head th:replace="fragments/preamble::header(title=#{page.title})"/>
+	
+	<body>
+        <div class="container">
+            <div class="jumbotron">
+                <h1 th:text="#{jumbotron.heading}">Welcome to WebAPI Console</h1>
+                <p class="lead" th:text="#{jumbotron.lead}">Console access to control and configure WebAPI applications</p>
+                <p><a class="btn btn-lg btn-success" href="/console/dashboard" th:href="@{/console/dashboard}" role="button" th:text="#{link.login}">Access console</a></p>
+            </div>
+
+            <div class="row">
+
+            </div>
+        </div>
+	</body>
+	
+</html>
