@@ -182,6 +182,7 @@
     <version.commons.io>2.4</version.commons.io>
     <version.commons.codec>1.10</version.commons.codec>
     <version.commons.pool2>2.3</version.commons.pool2>
+    <version.commons.httpclient>4.4.1</version.commons.httpclient>
 
     <version.org.slf4j>1.7.7</version.org.slf4j>
 
@@ -329,6 +330,17 @@
 	<groupId>org.apache.commons</groupId>
 	<artifactId>commons-pool2</artifactId>
 	<version>${version.commons.pool2}</version>
+      </dependency>
+
+      <dependency>
+	<groupId>org.apache.httpcomponents</groupId>
+	<artifactId>httpcore</artifactId>
+	<version>${version.commons.httpclient}</version>
+      </dependency>
+      <dependency>
+	<groupId>org.apache.httpcomponents</groupId>
+	<artifactId>httpclient</artifactId>
+	<version>${version.commons.httpclient}</version>
       </dependency>
 
       <dependency>
