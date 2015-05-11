@@ -243,6 +243,8 @@
     <module>ninja-security-web</module>
     <module>rspl-service-json-definitions</module>
     <module>rspl-service-json-client</module>
+    <module>rspl-service-persistence-generic</module>
+    <module>rspl-service-persistence-redis</module>
     <module>ninja-webapp-admin-generic</module>
     <module>ninja-webapp-admin-mongodb</module>
     <module>ninja-webapp-rspl-generic</module>
