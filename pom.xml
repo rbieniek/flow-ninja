@@ -336,11 +336,23 @@
 	<groupId>org.apache.httpcomponents</groupId>
 	<artifactId>httpcore</artifactId>
 	<version>${version.commons.httpclient}</version>
+	<exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+          </exclusion>
+	</exclusions>   
       </dependency>
       <dependency>
 	<groupId>org.apache.httpcomponents</groupId>
 	<artifactId>httpclient</artifactId>
 	<version>${version.commons.httpclient}</version>
+	<exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+          </exclusion>
+	</exclusions>   
       </dependency>
 
       <dependency>
