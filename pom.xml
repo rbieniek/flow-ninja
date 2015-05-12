@@ -250,6 +250,7 @@
     <module>ninja-ear-rspl-mongodb</module>
     <module>ninja-shell-admin-generic</module>
     <module>ninja-shell-admin-mongodb</module>
+    <module>ninja-shell-transferrer</module>
   </modules>
 
   <dependencyManagement>
@@ -439,6 +440,17 @@
       <dependency>
         <groupId>org.springframework.integration</groupId>
         <artifactId>spring-integration-mongodb</artifactId>
+        <version>${version.org.springframework.integration}</version>
+	<exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+          </exclusion>
+	</exclusions>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.integration</groupId>
+        <artifactId>spring-integration-file</artifactId>
         <version>${version.org.springframework.integration}</version>
 	<exclusions>
           <exclusion>
