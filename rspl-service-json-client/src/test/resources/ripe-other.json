@@ -1,0 +1,98 @@
+{"service" : {
+  "name" : "search"
+},
+"parameters" : {
+  "inverse-lookup" : { },
+  "type-filters" : {
+    "type-filter" : [ {
+      "id" : "inetnum"
+    } ]
+  },
+  "flags" : {
+    "flag" : [ {
+      "value" : "resource"
+    } ]
+  },
+  "query-strings" : {
+    "query-string" : [ {
+      "value" : "173.194.2.3"
+    } ]
+  },
+  "sources" : { }
+},
+"objects" : {
+  "object" : [ {
+    "type" : "inetnum",
+    "link" : {
+      "type" : "locator",
+      "href" : "http://rest.db.ripe.net/arin-grs/inetnum/173.194.0.0 - 173.194.255.255"
+    },
+    "source" : {
+      "id" : "arin-grs"
+    },
+    "primary-key" : {
+      "attribute" : [ {
+        "name" : "inetnum",
+        "value" : "173.194.0.0 - 173.194.255.255"
+      } ]
+    },
+    "attributes" : {
+      "attribute" : [ {
+        "name" : "inetnum",
+        "value" : "173.194.0.0 - 173.194.255.255"
+      }, {
+        "link" : {
+          "type" : "locator",
+          "href" : "http://rest.db.ripe.net/arin-grs/organisation/GOGL"
+        },
+        "name" : "org",
+        "value" : "GOGL",
+        "referenced-type" : "organisation"
+      }, {
+        "name" : "netname",
+        "value" : "GOOGLE"
+      }, {
+        "name" : "status",
+        "value" : "allocation"
+      }, {
+        "name" : "changed",
+        "value" : "unread@ripe.net 20000101"
+      }, {
+        "name" : "source",
+        "value" : "ARIN-GRS"
+      }, {
+        "name" : "remarks",
+        "value" : "****************************"
+      }, {
+        "name" : "remarks",
+        "value" : "* THIS OBJECT IS MODIFIED"
+      }, {
+        "name" : "remarks",
+        "value" : "* Please note that all data that is generally regarded as personal"
+      }, {
+        "name" : "remarks",
+        "value" : "* data has been removed from this object."
+      }, {
+        "name" : "remarks",
+        "value" : "* To view the original object, please query the ARIN Database at:"
+      }, {
+        "name" : "remarks",
+        "value" : "* http://www.arin.net/"
+      }, {
+        "name" : "remarks",
+        "value" : "****************************"
+      } ]
+    },
+    "tags" : {
+      "tag" : [ {
+        "id" : "ARIN-REGISTRY-RESOURCE",
+        "data" : null
+      } ]
+    }
+  } ]
+},
+"terms-and-conditions" : {
+  "type" : "locator",
+  "href" : "http://www.ripe.net/db/support/db-terms-conditions.pdf"
+}
+}

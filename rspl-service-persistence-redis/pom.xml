@@ -14,71 +14,55 @@
 
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.flow-ninja</groupId>
-  <artifactId>ninja-webapp-rspl-mongodb</artifactId>
-  <packaging>war</packaging>
+  <artifactId>rspl-service-persistence-redis</artifactId>
+  <packaging>jar</packaging>
   <version>${version.flow-ninja}</version>
-  <name>RSPL client web application w/ mongodb persistence</name>
-  <description>RSPL client web application w/ mongodb persistence</description>
-
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-war-plugin</artifactId>
-        <configuration>
-          <overlays>
-            <overlay>
-	      <groupId>org.flow-ninja</groupId>
-	      <artifactId>ninja-webapp-rspl-generic</artifactId>
-            </overlay>
-          </overlays>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>  
+  <name>Redis persistence for RSPL service</name>
+  <description>Redis persistence for RSPL service</description>
 
   <dependencies>
-
-    <dependency>
-      <groupId>javax</groupId>
-      <artifactId>javaee-api</artifactId>
-      <scope>provided</scope>
-    </dependency>
-
     <dependency>
       <groupId>org.flow-ninja</groupId>
-      <artifactId>ninja-webapp-rspl-generic</artifactId>
-      <version>${version.flow-ninja}</version>
-      <type>war</type>
-      <scope>runtime</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.flow-ninja</groupId>
-      <artifactId>ninja-persistence-mongodb</artifactId>
+      <artifactId>ninja-types-generic</artifactId>
       <version>${version.flow-ninja}</version>
     </dependency>
 
     <dependency>
       <groupId>org.flow-ninja</groupId>
-      <artifactId>rspl-service-persistence-redis</artifactId>
+      <artifactId>rspl-service-persistence-generic</artifactId>
       <version>${version.flow-ninja}</version>
     </dependency>
 
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-collections4</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-pool2</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.data</groupId>
+      <artifactId>spring-data-redis</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>redis.clients</groupId>
+      <artifactId>jedis</artifactId>
     </dependency>
 
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>jcl-over-slf4j</artifactId>
-      <scope>provided</scope>
     </dependency>
 
     <dependency> 

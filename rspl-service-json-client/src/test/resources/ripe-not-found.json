@@ -1,0 +1,19 @@
+{
+  "link" : {
+    "type" : "locator",
+    "href" : "http://rest.db.ripe.net/search/?query-string=245.2.3.4&type-filter=inetnum&flags=resource"
+  },
+  "errormessages" : {
+    "errormessage" : [ {
+      "severity" : "Error",
+      "text" : "ERROR:101: no entries found\n\nNo entries found in source %s.\n",
+      "args" : [ {
+        "value" : "AFRINIC-GRS,APNIC-GRS,ARIN-GRS,JPIRR-GRS,LACNIC-GRS,RADB-GRS,RIPE-GRS"
+      } ]
+    } ]
+  },
+  "terms-and-conditions" : {
+    "type" : "locator",
+    "href" : "http://www.ripe.net/db/support/db-terms-conditions.pdf"
+  }
+}

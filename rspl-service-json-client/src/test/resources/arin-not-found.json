@@ -1,0 +1,84 @@
+{
+  "net": {
+    "@xmlns": {
+      "ns3": "http:\/\/www.arin.net\/whoisrws\/netref\/v2",
+      "ns2": "http:\/\/www.arin.net\/whoisrws\/rdns\/v1",
+      "$": "http:\/\/www.arin.net\/whoisrws\/core\/v1"
+    },
+    "@termsOfUse": "https:\/\/www.arin.net\/whois_tou.html",
+    "@inaccuracyReportUrl": "http:\/\/www.arin.net\/public\/whoisinaccuracy\/index.xhtml",
+    "ref": {
+      "$": "http:\/\/whois.arin.net\/rest\/net\/NET-240-0-0-0-0"
+    },
+    "endAddress": {
+      "$": "255.255.255.255"
+    },
+    "handle": {
+      "$": "NET-240-0-0-0-0"
+    },
+    "name": {
+      "$": "SPECIAL-IPV4-FUTURE-USE-IANA-RESERVED"
+    },
+    "netBlocks": {
+      "netBlock": {
+        "cidrLength": {
+          "$": "4"
+        },
+        "endAddress": {
+          "$": "255.255.255.255"
+        },
+        "description": {
+          "$": "IANA Special Use"
+        },
+        "type": {
+          "$": "IU"
+        },
+        "startAddress": {
+          "$": "240.0.0.0"
+        }
+      }
+    },
+    "resources": {
+      "@termsOfUse": "https:\/\/www.arin.net\/whois_tou.html",
+      "@inaccuracyReportUrl": "http:\/\/www.arin.net\/public\/whoisinaccuracy\/index.xhtml",
+      "limitExceeded": {
+        "@limit": "256",
+        "$": "false"
+      }
+    },
+    "orgRef": {
+      "@name": "Internet Assigned Numbers Authority",
+      "@handle": "IANA",
+      "$": "http:\/\/whois.arin.net\/rest\/org\/IANA"
+    },
+    "comment": {
+      "line": [
+        {
+          "@number": "0",
+          "$": "Addresses starting with 240 or a higher number have not been allocated and should not be used, apart from 255.255.255.255, which is used for \"limited broadcast\" on a local network.\r"
+        },
+        {
+          "@number": "1",
+          "$": "\r"
+        },
+        {
+          "@number": "2",
+          "$": "This block was reserved by the IETF, the organization that develops Internet protocols, in the Standard document and in RFC 1112.  The documents can be found at:\r"
+        },
+        {
+          "@number": "3",
+          "$": "http:\/\/datatracker.ietf.org\/doc\/rfc1112"
+        }
+      ]
+    },
+    "startAddress": {
+      "$": "240.0.0.0"
+    },
+    "updateDate": {
+      "$": "2013-08-30T14:39:06-04:00"
+    },
+    "version": {
+      "$": "4"
+    }
+  }
+}

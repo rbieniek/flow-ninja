@@ -1,0 +1,77 @@
+{
+  "net": {
+    "@xmlns": {
+      "ns3": "http:\/\/www.arin.net\/whoisrws\/netref\/v2",
+      "ns2": "http:\/\/www.arin.net\/whoisrws\/rdns\/v1",
+      "$": "http:\/\/www.arin.net\/whoisrws\/core\/v1"
+    },
+    "@termsOfUse": "https:\/\/www.arin.net\/whois_tou.html",
+    "@inaccuracyReportUrl": "http:\/\/www.arin.net\/public\/whoisinaccuracy\/index.xhtml",
+    "registrationDate": {
+      "$": "2009-08-17T12:18:22-04:00"
+    },
+    "ref": {
+      "$": "http:\/\/whois.arin.net\/rest\/net\/NET-173-194-0-0-1"
+    },
+    "endAddress": {
+      "$": "173.194.255.255"
+    },
+    "handle": {
+      "$": "NET-173-194-0-0-1"
+    },
+    "name": {
+      "$": "GOOGLE"
+    },
+    "netBlocks": {
+      "netBlock": {
+        "cidrLength": {
+          "$": "16"
+        },
+        "endAddress": {
+          "$": "173.194.255.255"
+        },
+        "description": {
+          "$": "Direct Allocation"
+        },
+        "type": {
+          "$": "DA"
+        },
+        "startAddress": {
+          "$": "173.194.0.0"
+        }
+      }
+    },
+    "originASes": {
+      "originAS": {
+        "$": "AS15169"
+      }
+    },
+    "resources": {
+      "@termsOfUse": "https:\/\/www.arin.net\/whois_tou.html",
+      "@inaccuracyReportUrl": "http:\/\/www.arin.net\/public\/whoisinaccuracy\/index.xhtml",
+      "limitExceeded": {
+        "@limit": "256",
+        "$": "false"
+      }
+    },
+    "orgRef": {
+      "@name": "Google Inc.",
+      "@handle": "GOGL",
+      "$": "http:\/\/whois.arin.net\/rest\/org\/GOGL"
+    },
+    "parentNetRef": {
+      "@name": "NET173",
+      "@handle": "NET-173-0-0-0-0",
+      "$": "http:\/\/whois.arin.net\/rest\/net\/NET-173-0-0-0-0"
+    },
+    "startAddress": {
+      "$": "173.194.0.0"
+    },
+    "updateDate": {
+      "$": "2012-02-24T09:44:34-05:00"
+    },
+    "version": {
+      "$": "4"
+    }
+  }
+}
