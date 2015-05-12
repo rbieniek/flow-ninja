@@ -1,12 +1,13 @@
 /**
  * 
  */
-package org.flowninja.rspl.definitions;
+package org.flowninja.rspl.definitions.types;
 
 import static org.fest.assertions.api.Assertions.*;
 
 import java.net.Inet4Address;
 
+import org.flowninja.rspl.definitions.types.CIDR4Address;
 import org.junit.Before;
 import org.junit.Test;
 

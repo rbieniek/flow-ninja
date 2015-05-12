@@ -1,0 +1,137 @@
+{"service" : {
+  "name" : "search"
+},
+"parameters" : {
+  "inverse-lookup" : { },
+  "type-filters" : {
+    "type-filter" : [ {
+      "id" : "inetnum"
+    } ]
+  },
+  "flags" : {
+    "flag" : [ {
+      "value" : "resource"
+    } ]
+  },
+  "query-strings" : {
+    "query-string" : [ {
+      "value" : "80.239.186.26"
+    } ]
+  },
+  "sources" : { }
+},
+"objects" : {
+  "object" : [ {
+    "type" : "inetnum",
+    "link" : {
+      "type" : "locator",
+      "href" : "http://rest.db.ripe.net/ripe-grs/inetnum/80.239.186.0 - 80.239.186.255"
+    },
+    "source" : {
+      "id" : "ripe-grs"
+    },
+    "primary-key" : {
+      "attribute" : [ {
+        "name" : "inetnum",
+        "value" : "80.239.186.0 - 80.239.186.255"
+      } ]
+    },
+    "attributes" : {
+      "attribute" : [ {
+        "name" : "inetnum",
+        "value" : "80.239.186.0 - 80.239.186.255"
+      }, {
+        "name" : "netname",
+        "value" : "FR-BLIZZARD"
+      }, {
+        "name" : "descr",
+        "value" : "Blizzard Entertainment"
+      }, {
+        "link" : {
+          "type" : "locator",
+          "href" : "http://rest.db.ripe.net/ripe-grs/organisation/ORG-BE1-RIPE"
+        },
+        "name" : "org",
+        "value" : "ORG-BE1-RIPE",
+        "referenced-type" : "organisation"
+      }, {
+        "name" : "country",
+        "value" : "FR"
+      }, {
+        "link" : {
+          "type" : "locator",
+          "href" : "http://rest.db.ripe.net/ripe-grs/person/DUMY-RIPE"
+        },
+        "name" : "admin-c",
+        "value" : "DUMY-RIPE",
+        "referenced-type" : "person"
+      }, {
+        "link" : {
+          "type" : "locator",
+          "href" : "http://rest.db.ripe.net/ripe-grs/person/DUMY-RIPE"
+        },
+        "name" : "tech-c",
+        "value" : "DUMY-RIPE",
+        "referenced-type" : "person"
+      }, {
+        "name" : "status",
+        "value" : "ASSIGNED PA"
+      }, {
+        "name" : "notify",
+        "value" : "mntripe@telia.net"
+      }, {
+        "link" : {
+          "type" : "locator",
+          "href" : "http://rest.db.ripe.net/ripe-grs/mntner/TELIANET-LIR"
+        },
+        "name" : "mnt-by",
+        "value" : "TELIANET-LIR",
+        "referenced-type" : "mntner"
+      }, {
+        "name" : "changed",
+        "value" : "unread@ripe.net 20000101"
+      }, {
+        "name" : "created",
+        "value" : "2007-02-01T15:07:22Z"
+      }, {
+        "name" : "last-modified",
+        "value" : "2007-02-01T15:07:22Z"
+      }, {
+        "name" : "source",
+        "value" : "RIPE-GRS"
+      }, {
+        "name" : "remarks",
+        "value" : "****************************"
+      }, {
+        "name" : "remarks",
+        "value" : "* THIS OBJECT IS MODIFIED"
+      }, {
+        "name" : "remarks",
+        "value" : "* Please note that all data that is generally regarded as personal"
+      }, {
+        "name" : "remarks",
+        "value" : "* data has been removed from this object."
+      }, {
+        "name" : "remarks",
+        "value" : "* To view the original object, please query the RIPE Database at:"
+      }, {
+        "name" : "remarks",
+        "value" : "* http://www.ripe.net/whois"
+      }, {
+        "name" : "remarks",
+        "value" : "****************************"
+      } ]
+    },
+    "tags" : {
+      "tag" : [ {
+        "id" : "RIPE-USER-RESOURCE",
+        "data" : null
+      } ]
+    }
+  } ]
+},
+"terms-and-conditions" : {
+  "type" : "locator",
+  "href" : "http://www.ripe.net/db/support/db-terms-conditions.pdf"
+}
+}

@@ -4,6 +4,7 @@
 package org.flowninja.rspl.definitions;
 
 import org.apache.commons.lang3.StringUtils;
+import org.flowninja.rspl.definitions.types.CIDR4Address;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,8 +29,8 @@ public class CIDR4AddressRangeParser {
 			throw new IllegalArgumentException("invalid address range specification passed");
 		}
 		
-		byte[] rangeFrom = parseAddrSpec(parts[0].trim());
-		byte[] rangeTo = parseAddrSpec(parts[1].trim());
+		byte[] rangeFrom = NetworkAddressHelper.parseAddressSpecification(parts[0].trim());
+		byte[] rangeTo = NetworkAddressHelper.parseAddressSpecification(parts[1].trim());
 		
 		byte[] masked = new byte[rangeFrom.length];
 		
@@ -52,42 +53,5 @@ public class CIDR4AddressRangeParser {
 		}
 		
 		return new CIDR4Address(rangeFrom, mask);
-	}
-	
-	/**
-	 * parse an address in the format 'aaa.bbb.ccc.ddd' into a byte array with the length four
-	 * 
-	 * @param addrSpec
-	 * @return
-	 */
-	private static byte[] parseAddrSpec(String addrSpec) {
-		String[] parts = StringUtils.split(addrSpec, ".");
-		if(parts.length != 4) {
-			logger.warn("invalid address specification: addres specification '{}' has invalid numer of parts: {}", addrSpec, parts.length);
-			
-			throw new IllegalArgumentException("invalid address specification passed");
-		}
-		
-		byte[] addr = new byte[4];
-		
-		for(int i=0; i < parts.length; i++) {
-			try {
-				int v = Integer.parseInt(parts[i]);
-
-				if(v < 0 || v > 255) {
-					logger.warn("invalid address specification: part value '{}' out of range", parts[i]);
-
-					throw new IllegalArgumentException("invalid address specification passed");		
-				}
-				
-				addr[i] = (byte)v;
-			} catch(NumberFormatException e) {
-				logger.warn("invalid address specification: failed to parse part value '{}'", parts[i], e);
-
-				throw new IllegalArgumentException("invalid address specification passed", e);
-			}
-		}
-
-		return addr;
 	}
 }

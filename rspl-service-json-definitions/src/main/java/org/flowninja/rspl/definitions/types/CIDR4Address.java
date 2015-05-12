@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.flowninja.rspl.definitions;
+package org.flowninja.rspl.definitions.types;
 
 import java.io.Serializable;
 import java.net.Inet4Address;
