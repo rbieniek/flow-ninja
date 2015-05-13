@@ -97,4 +97,31 @@ public class CIDR4AddressTest {
 		assertThat(addr.isInRange(IP_ADDR_172_16_192_99)).isTrue();
 		assertThat(addr.isInRange(ipAddress_172_16_192_99)).isTrue();
 	}
+	
+	@Test
+	public void equality() {
+		CIDR4Address addr1 = new CIDR4Address(new byte[] { (byte)0xc0, (byte)0xa8, (byte)0x40, (byte)0x21 }, 24);
+		CIDR4Address addr2 = new CIDR4Address(new byte[] { (byte)0xc0, (byte)0xa8, (byte)0x40, (byte)0x21 }, 24);
+		
+		assertThat(addr1).isEqualTo(addr2);
+		assertThat(addr1.hashCode()).isEqualTo(addr2.hashCode());
+	}
+
+	@Test
+	public void inequalityNet() {
+		CIDR4Address addr1 = new CIDR4Address(new byte[] { (byte)0xc0, (byte)0xa8, (byte)0x40, (byte)0x21 }, 24);
+		CIDR4Address addr2 = new CIDR4Address(new byte[] { (byte)0xc0, (byte)0xa8, (byte)0x60, (byte)0x21 }, 24);
+		
+		assertThat(addr1).isNotEqualTo(addr2);
+		assertThat(addr1.hashCode()).isNotEqualTo(addr2.hashCode());
+	}
+
+	@Test
+	public void inequalityMask() {
+		CIDR4Address addr1 = new CIDR4Address(new byte[] { (byte)0xc0, (byte)0xa8, (byte)0x40, (byte)0x21 }, 24);
+		CIDR4Address addr2 = new CIDR4Address(new byte[] { (byte)0xc0, (byte)0xa8, (byte)0x40, (byte)0x21 }, 26);
+		
+		assertThat(addr1).isNotEqualTo(addr2);
+		assertThat(addr1.hashCode()).isNotEqualTo(addr2.hashCode());
+	}
 }

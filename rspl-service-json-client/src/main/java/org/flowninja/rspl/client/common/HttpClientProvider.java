@@ -48,7 +48,8 @@ public class HttpClientProvider implements InitializingBean, DisposableBean,Fact
 	public CloseableHttpClient getObject() throws Exception {
 		return HttpClientBuilder.create()
 				.setConnectionManager(connectionManager)
-				.setConnectionManagerShared(true).build();
+				.setConnectionManagerShared(true)
+				.build();
 	}
 
 	@Override

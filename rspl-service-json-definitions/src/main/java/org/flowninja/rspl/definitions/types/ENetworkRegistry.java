@@ -9,7 +9,7 @@ package org.flowninja.rspl.definitions.types;
  */
 public enum ENetworkRegistry {
 	ARIN,
-	APIC,
+	APNIC,
 	RIPE,
 	LACNIC,
 	AFRINIC;
