@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.flowninja.rspl.client.json.ripe;
+package org.flowninja.rspl.client.json.arin;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
@@ -21,33 +21,33 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes=TestConfig.class)
-public class RipeNetworkResourceResolverTest {
+public class ARINNetworkResourceResolverTest {
 
 	private static final byte[] IP_ADDR_BLIZZARD_FR = new byte[] { (byte)0x50, (byte)0xef, (byte)0xba, (byte)0x1a };
-	private static final byte[] IP_ADDR_WWW_GOOGLE_COM = new byte[] { (byte)0xd8, (byte)0x4e, (byte)0xd3, (byte)0x04 };
+	private static final byte[] IP_ADDR_WWW_GOOGLE_COM = new byte[] { (byte)0xd8, (byte)0x3a, (byte)0xd3, (byte)0x04 };
 	
 	@Autowired
-	private RipeNetworkResourceResolver resolver;
-
+	private ArinNetworkResourceResolver resolver;
+	
+	@Test
+	public void cannotResolve() {
+		assertThat(resolver.canResolveAddress(IP_ADDR_BLIZZARD_FR)).isFalse();
+	}
+	
 	@Test
 	public void canResolve() {
-		assertThat(resolver.canResolveAddress(IP_ADDR_BLIZZARD_FR)).isTrue();
-	}
-	
-	@Test
-	public void cannetResolve() {
-		assertThat(resolver.canResolveAddress(IP_ADDR_WWW_GOOGLE_COM)).isFalse();
-	}
-	
-	@Test
-	public void resolveBlizzardFR() throws Exception {
-		assertThat(resolver.resolveNetworkAddress(IP_ADDR_BLIZZARD_FR))
-			.isEqualTo(new NetworkResource(new CIDR4Address(IP_ADDR_BLIZZARD_FR, 24), "FR-BLIZZARD", "FR", ENetworkRegistry.RIPE));
+		assertThat(resolver.canResolveAddress(IP_ADDR_WWW_GOOGLE_COM)).isTrue();
 	}
 	
 	@Test
 	public void resolveWwwGoogleCom() throws Exception {
-		assertThat(resolver.resolveNetworkAddress(IP_ADDR_WWW_GOOGLE_COM)).isNull();
+		assertThat(resolver.resolveNetworkAddress(IP_ADDR_WWW_GOOGLE_COM))
+			.isEqualTo(new NetworkResource(new CIDR4Address(IP_ADDR_WWW_GOOGLE_COM, 19), "GOOGLE", null, ENetworkRegistry.ARIN));
+	}
+	
+	@Test
+	public void resolveBlizzardFR() throws Exception {
+		assertThat(resolver.resolveNetworkAddress(IP_ADDR_BLIZZARD_FR)).isNull();
 	}
 
 	@Test

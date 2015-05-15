@@ -3,13 +3,26 @@
  */
 package org.flowninja.rspl.client.json.arin;
 
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.http.HttpHeaders;
+import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.entity.ContentType;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.flowninja.rspl.client.json.common.INetworkResourceResolver;
+import org.flowninja.rspl.client.json.common.RegistryResponseHandler;
+import org.flowninja.rspl.definitions.NetworkAddressHelper;
 import org.flowninja.rspl.definitions.types.CIDR4Address;
 import org.flowninja.rspl.definitions.types.ENetworkRegistry;
 import org.flowninja.rspl.definitions.types.NetworkResource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -22,9 +35,18 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class ArinNetworkResourceResolver implements INetworkResourceResolver {
-
+	private static final Logger logger = LoggerFactory.getLogger(ArinNetworkResourceResolver.class);
 	private Set<CIDR4Address> prefixes = new HashSet<CIDR4Address>();
 
+	@Autowired
+	private CloseableHttpClient httpClient;
+	
+	@Autowired
+	private RegistryResponseHandler responseHandler;
+
+	@Autowired
+	private ARINResultDocumentProcessor processor;
+	
 	public ArinNetworkResourceResolver() {
 		prefixes.add(new CIDR4Address(new byte[] {(byte)3, 0, 0, 0}, 8));
 		prefixes.add(new CIDR4Address(new byte[] {(byte)4, 0, 0, 0}, 8));
@@ -144,8 +166,26 @@ public class ArinNetworkResourceResolver implements INetworkResourceResolver {
 	 * @see org.flowninja.rspl.client.common.INetworkResourceResolver#resolveNetworkAddress(byte[])
 	 */
 	@Override
-	public NetworkResource resolveNetworkAddress(byte[] networkAddress) {
-		return null;
+	public NetworkResource resolveNetworkAddress(byte[] networkAddress)  throws URISyntaxException, IOException {
+		NetworkResource result = null;
+		String ipAddr = NetworkAddressHelper.formatAddressSpecification(networkAddress);
+		URI uri = (new URIBuilder())
+				.setScheme("http")
+				.setHost("whois.arin.net")
+				.setPath(String.format("/rest/ip/%s", ipAddr))
+				.build();
+		
+		logger.info("resolving address {} with URI {}", ipAddr, uri);
+		
+		result = processor.processResultDocument(httpClient.execute(RequestBuilder.get(uri)
+					.setHeader(HttpHeaders.ACCEPT, ContentType.APPLICATION_JSON.getMimeType())
+					.setHeader(HttpHeaders.ACCEPT_CHARSET, ContentType.APPLICATION_JSON.getCharset().name())
+					.build(), 
+				responseHandler));
+
+		logger.info("resolving address {} with URI {} yielded {}", ipAddr, uri, result);
+
+		return result;
 	}
 
 	/* (non-Javadoc)
