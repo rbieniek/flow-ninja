@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.flowninja.rspl.client.ripe;
+package org.flowninja.rspl.client.json.ripe;
 
 import java.io.IOException;
 import java.net.URI;
@@ -16,8 +16,8 @@ import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.ContentType;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.flowninja.rspl.client.common.INetworkResourceResolver;
-import org.flowninja.rspl.client.common.RegistryResponseHandler;
+import org.flowninja.rspl.client.json.common.INetworkResourceResolver;
+import org.flowninja.rspl.client.json.common.RegistryResponseHandler;
 import org.flowninja.rspl.definitions.NetworkAddressHelper;
 import org.flowninja.rspl.definitions.types.CIDR4Address;
 import org.flowninja.rspl.definitions.types.ENetworkRegistry;

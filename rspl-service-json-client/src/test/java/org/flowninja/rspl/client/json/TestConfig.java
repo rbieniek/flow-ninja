@@ -1,8 +1,9 @@
 /**
  * 
  */
-package org.flowninja.rspl.client;
+package org.flowninja.rspl.client.json;
 
+import org.flowninja.rspl.client.json.RSPLServiceJsonClient;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
@@ -11,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
  *
  */
 @Configuration
-@ComponentScan(basePackageClasses=RSPLServiceClient.class)
+@ComponentScan(basePackageClasses=RSPLServiceJsonClient.class)
 public class TestConfig {
 
 }

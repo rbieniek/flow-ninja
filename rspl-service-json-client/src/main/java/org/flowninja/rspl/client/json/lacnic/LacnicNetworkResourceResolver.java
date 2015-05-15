@@ -1,14 +1,14 @@
 /**
  * 
  */
-package org.flowninja.rspl.client.afrinic;
+package org.flowninja.rspl.client.json.lacnic;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.flowninja.rspl.client.common.INetworkResourceResolver;
+import org.flowninja.rspl.client.json.common.INetworkResourceResolver;
 import org.flowninja.rspl.definitions.types.CIDR4Address;
 import org.flowninja.rspl.definitions.types.ENetworkRegistry;
 import org.flowninja.rspl.definitions.types.NetworkResource;
@@ -18,12 +18,12 @@ import org.springframework.stereotype.Component;
  * @author rainer
  *
  */
-@Component
-public class AfrinicNetworkResourceResolver implements INetworkResourceResolver {
+// @Component
+public class LacnicNetworkResourceResolver implements INetworkResourceResolver {
 
 	private Set<CIDR4Address> prefixes = new HashSet<CIDR4Address>();
 
-	public AfrinicNetworkResourceResolver() {
+	public LacnicNetworkResourceResolver() {
 		prefixes.add(new CIDR4Address(new byte[] {(byte)41, 0, 0, 0}, 8));
 		prefixes.add(new CIDR4Address(new byte[] {(byte)102, 0, 0, 0}, 8));
 		prefixes.add(new CIDR4Address(new byte[] {(byte)105, 0, 0, 0}, 8));
@@ -38,8 +38,9 @@ public class AfrinicNetworkResourceResolver implements INetworkResourceResolver 
 	@Override
 	public NetworkResource resolveNetworkAddress(byte[] networkAddress)
 			throws URISyntaxException, IOException {
-		// TODO Auto-generated method stub
-		return null;
+		NetworkResource resource = null;
+		
+		return resource;
 	}
 
 	/* (non-Javadoc)
@@ -47,7 +48,7 @@ public class AfrinicNetworkResourceResolver implements INetworkResourceResolver 
 	 */
 	@Override
 	public ENetworkRegistry resolvingRegistry() {
-		return ENetworkRegistry.AFRINIC;
+		return ENetworkRegistry.LACNIC;
 	}
 
 	/* (non-Javadoc)

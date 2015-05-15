@@ -1,14 +1,14 @@
 /**
  * 
  */
-package org.flowninja.rspl.client.apnic;
+package org.flowninja.rspl.client.json.apnic;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.flowninja.rspl.client.common.INetworkResourceResolver;
+import org.flowninja.rspl.client.json.common.INetworkResourceResolver;
 import org.flowninja.rspl.definitions.types.CIDR4Address;
 import org.flowninja.rspl.definitions.types.ENetworkRegistry;
 import org.flowninja.rspl.definitions.types.NetworkResource;
@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
  * @author rainer
  *
  */
-@Component
+// @Component
 public class ApnicNetworkResourceResolver implements INetworkResourceResolver {
 
 	private Set<CIDR4Address> prefixes = new HashSet<CIDR4Address>();
@@ -83,8 +83,9 @@ public class ApnicNetworkResourceResolver implements INetworkResourceResolver {
 	@Override
 	public NetworkResource resolveNetworkAddress(byte[] networkAddress)
 			throws URISyntaxException, IOException {
-		// TODO Auto-generated method stub
-		return null;
+		NetworkResource resource = null;
+		
+		return resource;
 	}
 
 	/* (non-Javadoc)

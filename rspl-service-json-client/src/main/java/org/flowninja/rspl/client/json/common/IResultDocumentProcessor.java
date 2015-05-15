@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.flowninja.rspl.client.common;
+package org.flowninja.rspl.client.json.common;
 
 import org.flowninja.rspl.definitions.types.NetworkResource;
 import org.json.JSONObject;

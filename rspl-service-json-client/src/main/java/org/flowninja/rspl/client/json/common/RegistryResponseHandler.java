@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.flowninja.rspl.client.common;
+package org.flowninja.rspl.client.json.common;
 
 import java.io.IOException;
 import java.io.InputStreamReader;

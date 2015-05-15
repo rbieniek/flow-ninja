@@ -1,12 +1,12 @@
 /**
  * 
  */
-package org.flowninja.rspl.client.arin;
+package org.flowninja.rspl.client.json.arin;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import org.flowninja.rspl.client.common.INetworkResourceResolver;
+import org.flowninja.rspl.client.json.common.INetworkResourceResolver;
 import org.flowninja.rspl.definitions.types.CIDR4Address;
 import org.flowninja.rspl.definitions.types.ENetworkRegistry;
 import org.flowninja.rspl.definitions.types.NetworkResource;

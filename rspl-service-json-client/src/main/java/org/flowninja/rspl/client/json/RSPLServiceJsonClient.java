@@ -1,13 +1,13 @@
 /**
  * 
  */
-package org.flowninja.rspl.client;
+package org.flowninja.rspl.client.json;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Set;
 
-import org.flowninja.rspl.client.common.INetworkResourceResolver;
+import org.flowninja.rspl.client.json.common.INetworkResourceResolver;
 import org.flowninja.rspl.definitions.types.NetworkResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,8 +19,8 @@ import org.springframework.stereotype.Component;
  *
  */
 @Component
-public class RSPLServiceClient {
-	private static final Logger logger = LoggerFactory.getLogger(RSPLServiceClient.class);
+public class RSPLServiceJsonClient {
+	private static final Logger logger = LoggerFactory.getLogger(RSPLServiceJsonClient.class);
 	
 	@Autowired
 	private Set<INetworkResourceResolver> resolvers;
@@ -50,4 +50,14 @@ public class RSPLServiceClient {
 		return resource;
 	}
 
+	public boolean canResolveAddress(byte[] address) {
+		logger.info("check if network address can be resolved: {}", address);
+
+		boolean resolvable = (resolvers.stream().filter((n) -> n.canResolveAddress(address)).count() > 0);
+
+		logger.info("check if network address {} can be resolved yielded {}", address, resolvable);
+
+		return resolvable;
+	}
+	
 }

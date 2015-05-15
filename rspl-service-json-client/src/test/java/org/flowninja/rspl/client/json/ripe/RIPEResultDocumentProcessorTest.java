@@ -1,11 +1,12 @@
 /**
  * 
  */
-package org.flowninja.rspl.client.ripe;
+package org.flowninja.rspl.client.json.ripe;
 
 import static org.fest.assertions.api.Assertions.*;
 
-import org.flowninja.rspl.client.TestConfig;
+import org.flowninja.rspl.client.json.TestConfig;
+import org.flowninja.rspl.client.json.ripe.RIPEResultDocumentProcessor;
 import org.flowninja.rspl.definitions.types.CIDR4Address;
 import org.flowninja.rspl.definitions.types.ENetworkRegistry;
 import org.flowninja.rspl.definitions.types.NetworkResource;
