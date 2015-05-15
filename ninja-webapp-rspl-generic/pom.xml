@@ -53,6 +53,12 @@
     </dependency>
 
     <dependency>
+      <groupId>org.flow-ninja</groupId>
+      <artifactId>rspl-service-whois-client</artifactId>
+      <version>${version.flow-ninja}</version>
+    </dependency>
+
+    <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
       <scope>provided</scope>

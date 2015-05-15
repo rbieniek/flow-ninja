@@ -180,6 +180,7 @@
     <version.commons.lang>3.3.2</version.commons.lang>
     <version.commons.collections4>4.0</version.commons.collections4>
     <version.commons.io>2.4</version.commons.io>
+    <version.commons.net>3.3</version.commons.net>
     <version.commons.codec>1.10</version.commons.codec>
     <version.commons.pool2>2.3</version.commons.pool2>
     <version.commons.httpclient>4.4.1</version.commons.httpclient>
@@ -243,6 +244,7 @@
     <module>ninja-security-web</module>
     <module>rspl-service-json-definitions</module>
     <module>rspl-service-json-client</module>
+    <module>rspl-service-whois-client</module>
     <module>rspl-service-persistence-generic</module>
     <module>rspl-service-persistence-redis</module>
     <module>ninja-webapp-admin-generic</module>
@@ -323,6 +325,11 @@
 	<groupId>commons-io</groupId>
 	<artifactId>commons-io</artifactId>
 	<version>${version.commons.io}</version>
+      </dependency>
+      <dependency>
+	<groupId>commons-net</groupId>
+	<artifactId>commons-net</artifactId>
+	<version>${version.commons.net}</version>
       </dependency>
       <dependency>
 	<groupId>commons-codec</groupId>
