@@ -24,12 +24,16 @@ public class LacnicNetworkResourceResolver implements INetworkResourceResolver {
 	private Set<CIDR4Address> prefixes = new HashSet<CIDR4Address>();
 
 	public LacnicNetworkResourceResolver() {
-		prefixes.add(new CIDR4Address(new byte[] {(byte)41, 0, 0, 0}, 8));
-		prefixes.add(new CIDR4Address(new byte[] {(byte)102, 0, 0, 0}, 8));
-		prefixes.add(new CIDR4Address(new byte[] {(byte)105, 0, 0, 0}, 8));
-		prefixes.add(new CIDR4Address(new byte[] {(byte)154, 0, 0, 0}, 8));
-		prefixes.add(new CIDR4Address(new byte[] {(byte)196, 0, 0, 0}, 8));
-		prefixes.add(new CIDR4Address(new byte[] {(byte)197, 0, 0, 0}, 8));
+		prefixes.add(new CIDR4Address(new byte[] {(byte)177, 0, 0, 0}, 8));
+		prefixes.add(new CIDR4Address(new byte[] {(byte)179, 0, 0, 0}, 8));
+		prefixes.add(new CIDR4Address(new byte[] {(byte)181, 0, 0, 0}, 8));
+		prefixes.add(new CIDR4Address(new byte[] {(byte)186, 0, 0, 0}, 8));
+		prefixes.add(new CIDR4Address(new byte[] {(byte)187, 0, 0, 0}, 8));
+		prefixes.add(new CIDR4Address(new byte[] {(byte)189, 0, 0, 0}, 8));
+		prefixes.add(new CIDR4Address(new byte[] {(byte)190, 0, 0, 0}, 8));
+		prefixes.add(new CIDR4Address(new byte[] {(byte)191, 0, 0, 0}, 8));
+		prefixes.add(new CIDR4Address(new byte[] {(byte)200, 0, 0, 0}, 8));
+		prefixes.add(new CIDR4Address(new byte[] {(byte)201, 0, 0, 0}, 8));
 	}
 	
 	/* (non-Javadoc)

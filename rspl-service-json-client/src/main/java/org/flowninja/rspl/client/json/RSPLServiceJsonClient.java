@@ -3,8 +3,6 @@
  */
 package org.flowninja.rspl.client.json;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.Set;
 
 import org.flowninja.rspl.definitions.services.INetworkResourceResolver;
@@ -36,11 +34,8 @@ public class RSPLServiceJsonClient {
 				
 				try {
 					resource = resolver.resolveNetworkAddress(address);
-		
-				} catch(URISyntaxException e) {
+				} catch(Exception e) {
 					logger.error("failed to resolve network address with registry {}", resolver.resolvingRegistry(), e);
-				} catch(IOException e) {
-					logger.error("failed to resolve network address with registry {}", resolver.resolvingRegistry(), e);				
 				}				
 			}
 		}
