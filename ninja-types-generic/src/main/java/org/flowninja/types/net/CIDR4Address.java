@@ -117,6 +117,25 @@ public class CIDR4Address implements Serializable {
 		this.netmask = mask;
 	}
 
+	/**
+	 * Constructs a CIDR  host (/32) address from a given network address.
+	 * 
+	 * @param address
+	 */
+	public CIDR4Address(Inet4Address address)  {
+		this(address, 32);
+	}
+
+	/**
+	 * Constructs a CIDR host (/32) address from a given network address.
+	 * 
+	 * @param address
+	 * @param mask
+	 */
+	public CIDR4Address(byte[] address)  {
+		this(address, 32);
+	}
+
 
 	/**
 	 * @return the serialversionuid
