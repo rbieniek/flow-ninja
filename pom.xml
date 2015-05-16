@@ -223,6 +223,7 @@
     <version.org.apache.aries.blueprint.api>1.0.1</version.org.apache.aries.blueprint.api>
 
     <version.de.flapdoodle.embed.mongo>1.47.3</version.de.flapdoodle.embed.mongo>
+    <version.com.github.kstyrc.redis>0.6</version.com.github.kstyrc.redis>
 
     <version.org.hibernate.validator>5.1.0.Final</version.org.hibernate.validator>
 
@@ -775,6 +776,13 @@
 	<groupId>de.flapdoodle.embed</groupId>
 	<artifactId>de.flapdoodle.embed.mongo</artifactId>
 	<version>${version.de.flapdoodle.embed.mongo}</version>
+	<scope>test</scope>
+      </dependency>
+
+      <dependency>
+	<groupId>com.github.kstyrc</groupId>
+	<artifactId>embedded-redis</artifactId>
+	<version>${version.com.github.kstyrc.redis}</version>
 	<scope>test</scope>
       </dependency>
       
