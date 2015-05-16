@@ -5,9 +5,9 @@ package org.flowninja.rspl.client.whois;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
-import org.flowninja.rspl.definitions.types.CIDR4Address;
 import org.flowninja.rspl.definitions.types.ENetworkRegistry;
 import org.flowninja.rspl.definitions.types.NetworkResource;
+import org.flowninja.types.net.CIDR4Address;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -6,10 +6,10 @@ package org.flowninja.rspl.client.whois.lacnic;
 import org.apache.commons.lang3.StringUtils;
 import org.flowninja.rspl.client.whois.common.InetnumRecord;
 import org.flowninja.rspl.client.whois.common.WhoisClientBase;
-import org.flowninja.rspl.definitions.NetworkAddressHelper;
-import org.flowninja.rspl.definitions.types.CIDR4Address;
 import org.flowninja.rspl.definitions.types.ENetworkRegistry;
 import org.flowninja.rspl.definitions.types.NetworkResource;
+import org.flowninja.types.net.CIDR4Address;
+import org.flowninja.types.utils.NetworkAddressHelper;
 import org.springframework.stereotype.Component;
 
 /**

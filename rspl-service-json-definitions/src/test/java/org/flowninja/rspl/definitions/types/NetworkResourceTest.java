@@ -5,6 +5,7 @@ package org.flowninja.rspl.definitions.types;
 
 import static org.fest.assertions.api.Assertions.*;
 
+import org.flowninja.types.net.CIDR4Address;
 import org.junit.Test;
 
 /**

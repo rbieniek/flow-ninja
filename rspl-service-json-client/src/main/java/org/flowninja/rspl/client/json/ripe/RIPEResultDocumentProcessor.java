@@ -5,10 +5,10 @@ package org.flowninja.rspl.client.json.ripe;
 
 import org.apache.commons.lang3.StringUtils;
 import org.flowninja.rspl.client.json.common.IResultDocumentProcessor;
-import org.flowninja.rspl.definitions.CIDR4AddressRangeParser;
-import org.flowninja.rspl.definitions.types.CIDR4Address;
 import org.flowninja.rspl.definitions.types.ENetworkRegistry;
 import org.flowninja.rspl.definitions.types.NetworkResource;
+import org.flowninja.types.net.CIDR4Address;
+import org.flowninja.types.utils.CIDR4AddressRangeParser;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;

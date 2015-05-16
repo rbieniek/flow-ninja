@@ -9,9 +9,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.flowninja.rspl.definitions.services.INetworkResourceResolver;
-import org.flowninja.rspl.definitions.types.CIDR4Address;
 import org.flowninja.rspl.definitions.types.ENetworkRegistry;
 import org.flowninja.rspl.definitions.types.NetworkResource;
+import org.flowninja.types.net.CIDR4Address;
 import org.springframework.stereotype.Component;
 
 /**

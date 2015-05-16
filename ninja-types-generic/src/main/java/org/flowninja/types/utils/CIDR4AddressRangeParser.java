@@ -1,10 +1,10 @@
 /**
  * 
  */
-package org.flowninja.rspl.definitions;
+package org.flowninja.types.utils;
 
 import org.apache.commons.lang3.StringUtils;
-import org.flowninja.rspl.definitions.types.CIDR4Address;
+import org.flowninja.types.net.CIDR4Address;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

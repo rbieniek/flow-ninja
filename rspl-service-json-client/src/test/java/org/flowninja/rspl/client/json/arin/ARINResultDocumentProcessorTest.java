@@ -7,9 +7,9 @@ import static org.fest.assertions.api.Assertions.assertThat;
 
 import org.flowninja.rspl.client.json.TestConfig;
 import org.flowninja.rspl.client.json.ripe.RIPEResultDocumentProcessor;
-import org.flowninja.rspl.definitions.types.CIDR4Address;
 import org.flowninja.rspl.definitions.types.ENetworkRegistry;
 import org.flowninja.rspl.definitions.types.NetworkResource;
+import org.flowninja.types.net.CIDR4Address;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;

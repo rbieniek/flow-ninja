@@ -1,11 +1,12 @@
 /**
  * 
  */
-package org.flowninja.rspl.definitions;
+package org.flowninja.types.generic.utils;
 
 import static org.fest.assertions.api.Assertions.*;
 
-import org.flowninja.rspl.definitions.types.CIDR4Address;
+import org.flowninja.types.net.CIDR4Address;
+import org.flowninja.types.utils.CIDR4AddressRangeParser;
 import org.junit.Before;
 import org.junit.Test;
 

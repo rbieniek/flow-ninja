@@ -10,10 +10,10 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.net.whois.WhoisClient;
-import org.flowninja.rspl.definitions.NetworkAddressHelper;
 import org.flowninja.rspl.definitions.services.INetworkResourceResolver;
-import org.flowninja.rspl.definitions.types.CIDR4Address;
 import org.flowninja.rspl.definitions.types.NetworkResource;
+import org.flowninja.types.net.CIDR4Address;
+import org.flowninja.types.utils.NetworkAddressHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

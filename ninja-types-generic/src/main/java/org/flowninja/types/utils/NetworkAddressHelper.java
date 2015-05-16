@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.flowninja.rspl.definitions;
+package org.flowninja.types.utils;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
