@@ -3,8 +3,6 @@
  */
 package org.flowninja.rspl.client.whois;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.Set;
 
 import org.flowninja.rspl.definitions.services.INetworkResourceResolver;
@@ -36,10 +34,7 @@ public class RSPLServiceWhoisClient {
 				
 				try {
 					resource = resolver.resolveNetworkAddress(address);
-		
-				} catch(URISyntaxException e) {
-					logger.error("failed to resolve network address with registry {}", resolver.resolvingRegistry(), e);
-				} catch(IOException e) {
+				} catch(Exception e) {
 					logger.error("failed to resolve network address with registry {}", resolver.resolvingRegistry(), e);				
 				}				
 			}

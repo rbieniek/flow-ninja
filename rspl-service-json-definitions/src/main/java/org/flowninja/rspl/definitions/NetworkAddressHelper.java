@@ -25,7 +25,7 @@ public class NetworkAddressHelper {
 		if(parts.length != 4) {
 			logger.warn("invalid address specification: addres specification '{}' has invalid numer of parts: {}", addrSpec, parts.length);
 			
-			throw new IllegalArgumentException("invalid address specification passed");
+			throw new IllegalArgumentException("invalid address specification passed: " + addrSpec);
 		}
 		
 		byte[] addr = new byte[4];

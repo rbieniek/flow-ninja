@@ -3,8 +3,10 @@
  */
 package org.flowninja.rspl.client.whois.afrinic;
 
+import org.apache.commons.lang3.StringUtils;
 import org.flowninja.rspl.client.whois.common.InetnumRecord;
 import org.flowninja.rspl.client.whois.common.WhoisClientBase;
+import org.flowninja.rspl.definitions.CIDR4AddressRangeParser;
 import org.flowninja.rspl.definitions.types.CIDR4Address;
 import org.flowninja.rspl.definitions.types.ENetworkRegistry;
 import org.flowninja.rspl.definitions.types.NetworkResource;
@@ -39,6 +41,12 @@ public class AfrinicNetworkResourceResolver extends WhoisClientBase {
 
 	@Override
 	protected NetworkResource mapInetNumRecord(InetnumRecord record) {
-		return null;
+		NetworkResource resource = null;
+		
+		if(StringUtils.isNotBlank(record.getInetnum()) && StringUtils.isNotBlank(record.getNetname()) &&StringUtils.startsWith(record.getSource(), "AFRINIC"))
+			resource = new NetworkResource(CIDR4AddressRangeParser.parse(record.getInetnum()), record.getNetname(), 
+												record.getCountry(), ENetworkRegistry.AFRINIC);
+
+		return resource;
 	}
 }
