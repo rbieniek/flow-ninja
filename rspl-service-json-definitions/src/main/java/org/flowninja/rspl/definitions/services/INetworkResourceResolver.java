@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.flowninja.rspl.client.json.common;
+package org.flowninja.rspl.definitions.services;
 
 import java.io.IOException;
 import java.net.URISyntaxException;

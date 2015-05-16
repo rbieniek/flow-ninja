@@ -1,0 +1,61 @@
+% [whois.apnic.net]
+% Whois data copyright terms    http://www.apnic.net/db/dbcopyright.html
+
+% Information related to '203.119.96.0 - 203.119.111.255'
+
+inetnum:        203.119.96.0 - 203.119.111.255
+netname:        APNIC-SERVICES
+descr:          Asia Pacific Network Information Centre
+descr:          Regional Internet Registry for the Asia-Pacific Region
+descr:          6 Cordelia Street
+descr:          PO Box 3646
+descr:          South Brisbane, QLD 4101
+country:        AU
+admin-c:        AIC1-AP
+tech-c:         AIC1-AP
+mnt-by:         APNIC-HM
+mnt-lower:      MAINT-APNIC-IS-AP
+mnt-routes:     MAINT-APNIC-IS-AP
+mnt-irt:        IRT-APNIC-IS-AP
+status:         ASSIGNED PORTABLE
+changed:        hm-changed@apnic.net
+changed:        hm-changed@apnic.net 20110309
+changed:        hm-changed@apnic.net 20110704
+changed:        hm-changed@apnic.net 20120508
+changed:        hm-changed@apnic.net 20131128
+source:         APNIC
+
+irt:            IRT-APNIC-IS-AP
+address:        South Brisbane, Australia
+e-mail:         helpdesk@apnic.net
+abuse-mailbox:  helpdesk@apnic.net
+admin-c:        AIC1-AP
+tech-c:         AIC1-AP
+auth:           # Filtered
+remarks:        APNIC Infrastructure Services
+mnt-by:         MAINT-APNIC-IS-AP
+changed:        hm-changed@apnic.net 20110704
+source:         APNIC
+
+role:           APNIC Infrastructure Contact
+address:        6 Cordelia Street
+address:        South Brisbane
+address:        QLD 4101
+country:        AU
+phone:          +61 7 3858 3100
+fax-no:         +61 7 3858 3199
+e-mail:         helpdesk@apnic.net
+admin-c:        DNS3-AP
+tech-c:         NO4-AP
+nic-hdl:        AIC1-AP
+remarks:        Infrastructure Contact for APNICs own-use network blocks
+notify:         dbmon@apnic.net
+mnt-by:         MAINT-APNIC-IS-AP
+changed:        hm-changed@apnic.net 20020211
+changed:        hm-changed@apnic.net 20101217
+changed:        hm-changed@apnic.net 20110704
+source:         APNIC
+
+% This query was served by the APNIC Whois Service version 1.69.1-APNICv1r0 (UNDEFINED)
+
+

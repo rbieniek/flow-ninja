@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.flowninja.rspl.client.json;
+package org.flowninja.rspl.client.whois;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -19,12 +19,12 @@ import org.springframework.stereotype.Component;
  *
  */
 @Component
-public class RSPLServiceJsonClient {
-	private static final Logger logger = LoggerFactory.getLogger(RSPLServiceJsonClient.class);
+public class RSPLServiceWhoisClient {
+	private static final Logger logger = LoggerFactory.getLogger(RSPLServiceWhoisClient.class);
 	
 	@Autowired
 	private Set<INetworkResourceResolver> resolvers;
-
+	
 	public NetworkResource resolveAddress(byte[] address) {
 		NetworkResource resource = null;
 		
@@ -59,5 +59,5 @@ public class RSPLServiceJsonClient {
 
 		return resolvable;
 	}
-	
+
 }
