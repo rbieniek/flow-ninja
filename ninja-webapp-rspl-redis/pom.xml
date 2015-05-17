@@ -14,11 +14,11 @@
 
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.flow-ninja</groupId>
-  <artifactId>ninja-webapp-rspl-mongodb</artifactId>
+  <artifactId>ninja-webapp-rspl-redis</artifactId>
   <packaging>war</packaging>
   <version>${version.flow-ninja}</version>
-  <name>RSPL client web application overlay w/ mongodb persistence</name>
-  <description>RSPL client web application overlay w/ mongodb persistence</description>
+  <name>RSPL client web application overlay w/ redis persistence</name>
+  <description>RSPL client web application overlay w/ redis persistence</description>
 
   <build>
     <plugins>
@@ -42,7 +42,7 @@
 
     <dependency>
       <groupId>org.flow-ninja</groupId>
-      <artifactId>ninja-persistence-mongodb</artifactId>
+      <artifactId>rspl-service-persistence-redis</artifactId>
       <version>${version.flow-ninja}</version>
     </dependency>
 

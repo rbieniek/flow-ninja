@@ -9,11 +9,11 @@
 
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.flow-ninja</groupId>
-  <artifactId>ninja-ear-rspl-mongodb</artifactId>
+  <artifactId>ninja-ear-rspl-mongodb-redis</artifactId>
   <packaging>ear</packaging>
   <version>${version.flow-ninja}</version>
-  <name>RSPL client enterprise application w/ MongoDB persistence</name>
-  <description>RSPL client enterprise application w/ MongoDB persistence</description>
+  <name>RSPL client enterprise application w/ MongoDB and Redis persistence</name>
+  <description>RSPL client enterprise application w/ MongoDB and Reds persistence</description>
   <inceptionYear>2015</inceptionYear>
 
   <build>
@@ -82,7 +82,7 @@
 
 	    <webModule>
 	      <groupId>org.flow-ninja</groupId>
-	      <artifactId>ninja-webapp-rspl-mongodb</artifactId>
+	      <artifactId>ninja-webapp-rspl-mongodb-redis</artifactId>
               <contextRoot>/ninja/admin</contextRoot>
             </webModule>
 
@@ -96,7 +96,7 @@
 
     <dependency>
       <groupId>org.flow-ninja</groupId>
-      <artifactId>ninja-webapp-rspl-mongodb</artifactId>
+      <artifactId>ninja-webapp-rspl-mongodb-redis</artifactId>
       <type>war</type>
       <version>${version.flow-ninja}</version>
     </dependency>

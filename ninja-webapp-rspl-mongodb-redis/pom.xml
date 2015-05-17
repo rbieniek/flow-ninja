@@ -14,11 +14,11 @@
 
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.flow-ninja</groupId>
-  <artifactId>ninja-webapp-rspl-mongodb</artifactId>
+  <artifactId>ninja-webapp-rspl-mongodb-redis</artifactId>
   <packaging>war</packaging>
   <version>${version.flow-ninja}</version>
-  <name>RSPL client web application overlay w/ mongodb persistence</name>
-  <description>RSPL client web application overlay w/ mongodb persistence</description>
+  <name>RSPL client web application w/ mongodb and redis persistence</name>
+  <description>RSPL client web application w/ mongodb and redis persistence</description>
 
   <build>
     <plugins>
@@ -26,7 +26,20 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-war-plugin</artifactId>
         <configuration>
-	  <failOnMissingWebXml>false</failOnMissingWebXml>
+          <overlays>
+            <overlay>
+	      <groupId>org.flow-ninja</groupId>
+	      <artifactId>ninja-webapp-rspl-generic</artifactId>
+            </overlay>
+            <overlay>
+	      <groupId>org.flow-ninja</groupId>
+	      <artifactId>ninja-webapp-rspl-mongodb</artifactId>
+            </overlay>
+            <overlay>
+	      <groupId>org.flow-ninja</groupId>
+	      <artifactId>ninja-webapp-rspl-redis</artifactId>
+            </overlay>
+          </overlays>
         </configuration>
       </plugin>
     </plugins>
@@ -35,51 +48,28 @@
   <dependencies>
 
     <dependency>
-      <groupId>javax</groupId>
-      <artifactId>javaee-api</artifactId>
-      <scope>provided</scope>
+      <groupId>org.flow-ninja</groupId>
+      <artifactId>ninja-webapp-rspl-generic</artifactId>
+      <version>${version.flow-ninja}</version>
+      <type>war</type>
+      <scope>runtime</scope>
     </dependency>
 
     <dependency>
       <groupId>org.flow-ninja</groupId>
-      <artifactId>ninja-persistence-mongodb</artifactId>
+      <artifactId>ninja-webapp-rspl-mongodb</artifactId>
       <version>${version.flow-ninja}</version>
+      <type>war</type>
+      <scope>runtime</scope>
     </dependency>
 
     <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-lang3</artifactId>
+      <groupId>org.flow-ninja</groupId>
+      <artifactId>ninja-webapp-rspl-redis</artifactId>
+      <version>${version.flow-ninja}</version>
+      <type>war</type>
+      <scope>runtime</scope>
     </dependency>
-
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>jcl-over-slf4j</artifactId>
-      <scope>provided</scope>
-    </dependency>
-
-    <dependency> 
-      <groupId>junit</groupId> 
-      <artifactId>junit</artifactId> 
-      <scope>test</scope> 
-    </dependency> 
-
-    <dependency>
-      <groupId>org.easytesting</groupId>
-      <artifactId>fest-assert-core</artifactId>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.mockito</groupId>
-      <artifactId>mockito-all</artifactId>
-      <scope>test</scope>
-    </dependency>
-
   </dependencies>
 
 </project>

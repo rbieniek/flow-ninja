@@ -252,8 +252,10 @@
     <module>ninja-webapp-admin-mongodb</module>
     <module>ninja-webapp-rspl-generic</module>
     <module>ninja-webapp-rspl-mongodb</module>
+    <module>ninja-webapp-rspl-redis</module>
+    <module>ninja-webapp-rspl-mongodb-redis</module>
     <module>ninja-ear-admin-mongodb</module>
-    <module>ninja-ear-rspl-mongodb</module>
+    <module>ninja-ear-rspl-mongodb-redis</module>
     <module>ninja-shell-admin-generic</module>
     <module>ninja-shell-admin-mongodb</module>
     <module>ninja-shell-transferrer</module>
