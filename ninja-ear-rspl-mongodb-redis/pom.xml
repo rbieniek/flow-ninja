@@ -83,7 +83,7 @@
 	    <webModule>
 	      <groupId>org.flow-ninja</groupId>
 	      <artifactId>ninja-webapp-rspl-mongodb-redis</artifactId>
-              <contextRoot>/ninja/admin</contextRoot>
+              <contextRoot>/whois</contextRoot>
             </webModule>
 
           </modules>
