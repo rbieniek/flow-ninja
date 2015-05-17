@@ -54,4 +54,18 @@ public class CIDR4AddressRangeParser {
 		
 		return new CIDR4Address(rangeFrom, mask);
 	}
+	
+	public static CIDR4Address parseCIDR(String cidrSpec) {
+		logger.info("parsing CIDR specification '{}'", cidrSpec);
+		
+		String[] parts = StringUtils.split(cidrSpec, "/");
+		
+		if(parts.length != 2) {
+			logger.warn("invalid address specification: range specification '{}' has invalid numer of parts: {}", cidrSpec, parts.length);
+			
+			throw new IllegalArgumentException("invalid address range specification passed");
+		}
+		
+		return new CIDR4Address(NetworkAddressHelper.parseAddressSpecification(parts[0]), Integer.parseInt(parts[1]));
+	}
 }
