@@ -209,7 +209,8 @@
     <version.com.google.code.morphia>0.111</version.com.google.code.morphia>
 
     <version.org.mongodb.driver>3.0.0</version.org.mongodb.driver>
-    <version.redis.clients.jedis>2.7.2</version.redis.clients.jedis>
+    <version.redis.clients.jedis>2.6.2</version.redis.clients.jedis>
+    <version.redis.clients.srp>0.7</version.redis.clients.srp>
 
     <version.org.thymeleaf>2.1.4.RELEASE</version.org.thymeleaf>
     <version.org.thymeleaf.security>2.1.2.RELEASE</version.org.thymeleaf.security>
@@ -752,6 +753,12 @@
         <groupId>redis.clients</groupId>
         <artifactId>jedis</artifactId>
         <version>${version.redis.clients.jedis}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.github.spullara.redis</groupId>
+        <artifactId>client</artifactId>
+        <version>${version.redis.clients.srp}</version>
       </dependency>
 
       <dependency> 

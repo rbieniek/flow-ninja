@@ -46,6 +46,11 @@
     </dependency>
 
     <dependency>
+      <groupId>commons-codec</groupId>
+      <artifactId>commons-codec</artifactId>
+    </dependency>
+
+    <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-pool2</artifactId>
     </dependency>
@@ -58,6 +63,13 @@
     <dependency>
       <groupId>redis.clients</groupId>
       <artifactId>jedis</artifactId>
+      <scope>compile,test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.github.spullara.redis</groupId>
+      <artifactId>client</artifactId>
+      <scope>compile,test</scope>
     </dependency>
 
     <dependency>
@@ -83,6 +95,18 @@
       <artifactId>junit</artifactId> 
       <scope>test</scope> 
     </dependency> 
+
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>jcl-over-slf4j</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-simple</artifactId>
+      <scope>test</scope>
+    </dependency>
 
     <dependency>
       <groupId>org.springframework</groupId>

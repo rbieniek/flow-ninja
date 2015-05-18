@@ -33,7 +33,8 @@ public class NetworkInformation {
 	}
 	
 	@JsonCreator
-	public NetworkInformation(@JsonProperty("name") String name, @JsonProperty("country") String country, @JsonProperty("rir") ENetworkRegistry regionalInternetRegistry) {
+	public NetworkInformation(@JsonProperty("name") String name, @JsonProperty("country") String country, 
+			@JsonProperty("rir") @JsonFormat(shape=Shape.STRING) ENetworkRegistry regionalInternetRegistry) {
 		this.name = name;
 		this.country = country;
 		this.regionalInternetRegistry = regionalInternetRegistry;
