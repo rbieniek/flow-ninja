@@ -8,15 +8,21 @@ import org.flowninja.rspl.definitions.types.NetworkResource;
 import org.flowninja.types.net.CIDR4Address;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * @author rainer
  *
  */
+@Component
 public class RsplPersistenceService {
 	private static final Logger logger = LoggerFactory.getLogger(RsplPersistenceService.class);
 	
+	@Autowired
 	private INetworkResourcePersistService persistService;
+	
+	@Autowired
 	private INetworkResourceLoadService loadService;
 	
 	/**
