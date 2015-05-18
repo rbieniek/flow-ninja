@@ -19,6 +19,24 @@
     
     <tx:annotation-driven />
 
-    <bean id="jedisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory"/>
+    <bean id="jedisMasterConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+        <property name="hostName" value="${redis.master.host}"/>
+        <property name="port" value="${redis.master.host}"/>
+        <property name="password" value="${redis.master.password}"/>
+    </bean>
+
+    <bean id="redisMasterTemplate" class="org.springframework.data.redis.core.RedisTemplate" >
+        <property name="connectionFactory"  ref="jedisMasterConnectionFactory"/>
+    </bean>
+    
+    <bean id="jedisSlaveConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+        <property name="hostName" value="${redis.slave.host}"/>
+        <property name="port" value="${redis.slave.host}"/>
+        <property name="password" value="${redis.slave.password}"/>
+    </bean>
+
+    <bean id="redisSlaveTemplate" class="org.springframework.data.redis.core.RedisTemplate" >
+        <property name="connectionFactory"  ref="jedisSlaveConnectionFactory"/>
+    </bean>
     
 </beans>

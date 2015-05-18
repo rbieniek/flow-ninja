@@ -211,6 +211,10 @@ public class CIDR4Address implements Serializable {
 		return (new EqualsBuilder()).append(this.address, o.address).append(this.netmask, o.netmask).isEquals();
 	}
 	
+	public boolean isHostAddress() {
+		return this.netmask == 32;
+	}
+	
 	private byte[] maskAddress(byte[] srcAddress, int mask) {
 		byte[] dstAddress = new byte[srcAddress.length];
 		byte[] maskBits = MASK_MAP.get(mask);		
