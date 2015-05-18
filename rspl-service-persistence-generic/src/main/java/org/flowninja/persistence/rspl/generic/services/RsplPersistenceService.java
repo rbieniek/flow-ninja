@@ -34,7 +34,7 @@ public class RsplPersistenceService {
 		logger.info("writing network resource {}", resource);
 		
 		try {
-			persistService.writeNetworkInformation(resource.getNetworkAddress(), 
+			persistService.persistNetworkInformation(resource.getNetworkAddress(), 
 					new NetworkInformation(resource.getName(), 
 							resource.getCountry(), 
 							resource.getRegionalInternetRegistry()));
@@ -53,7 +53,7 @@ public class RsplPersistenceService {
 				NetworkInformation networkInfo ;
 				CIDR4Address netAddress = new CIDR4Address(address.getAddress(), maskBits);
 				
-				if((networkInfo = loadService.readNetworkInformation(netAddress)) != null) {
+				if((networkInfo = loadService.loadNetworkInformation(netAddress)) != null) {
 					resource = new NetworkResource(netAddress, networkInfo.getName(), networkInfo.getCountry(), networkInfo.getRegionalInternetRegistry());
 					
 					break;

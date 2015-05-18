@@ -16,5 +16,5 @@ public interface INetworkResourcePersistService {
 	 * @param address
 	 * @param networkInfo
 	 */
-	public void writeNetworkInformation(CIDR4Address address, NetworkInformation networkInfo);
+	public void persistNetworkInformation(CIDR4Address address, NetworkInformation networkInfo);
 }

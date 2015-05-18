@@ -17,5 +17,5 @@ public interface INetworkResourceLoadService {
 	 * @param address
 	 * @return
 	 */
-	public NetworkInformation readNetworkInformation(CIDR4Address address);
+	public NetworkInformation loadNetworkInformation(CIDR4Address address);
 }

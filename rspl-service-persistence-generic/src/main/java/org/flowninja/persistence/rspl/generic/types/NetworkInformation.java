@@ -3,6 +3,9 @@
  */
 package org.flowninja.persistence.rspl.generic.types;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.flowninja.rspl.definitions.types.ENetworkRegistry;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -77,5 +80,33 @@ public class NetworkInformation {
 	public void setRegionalInternetRegistry(
 			ENetworkRegistry regionalInternetRegistry) {
 		this.regionalInternetRegistry = regionalInternetRegistry;
+	}
+	
+	@Override
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if(!(obj instanceof NetworkInformation))
+			return false;
+		
+		NetworkInformation o = (NetworkInformation)obj;
+		
+		return (new EqualsBuilder())
+				.append(this.country, o.country)
+				.append(this.name, o.name)
+				.append(this.regionalInternetRegistry, o.regionalInternetRegistry)
+				.isEquals();
+	}
+
+	@Override
+	public int hashCode() {
+		return (new HashCodeBuilder())
+				.append(this.country)
+				.append(this.name)
+				.append(this.regionalInternetRegistry)
+				.toHashCode();
 	}
 }

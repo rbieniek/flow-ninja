@@ -3,8 +3,8 @@
  */
 package org.flowninja.persistence.rspl.generic.services;
 
-import static org.fest.assertions.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
+import static org.fest.assertions.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 import org.flowninja.persistence.rspl.generic.types.NetworkInformation;
 import org.flowninja.rspl.definitions.types.ENetworkRegistry;
@@ -41,7 +41,7 @@ public class RsplPersistenceServiceTest {
 		public INetworkResourceLoadService loadService() {
 			INetworkResourceLoadService loadService = Mockito.mock(INetworkResourceLoadService.class);
 			
-			when(loadService.readNetworkInformation(NET_192_168_0_0)).thenReturn(new NetworkInformation("foo", "bar", ENetworkRegistry.RIPE));
+			when(loadService.loadNetworkInformation(NET_192_168_0_0)).thenReturn(new NetworkInformation("foo", "bar", ENetworkRegistry.RIPE));
 			
 			return loadService;
 		}
@@ -54,6 +54,9 @@ public class RsplPersistenceServiceTest {
 	
 	@Autowired
 	private RsplPersistenceService service;
+
+	@Autowired
+	private INetworkResourcePersistService persistService;
 	
 	@Test
 	public void findNet() {
@@ -69,5 +72,12 @@ public class RsplPersistenceServiceTest {
 	@Test
 	public void ignoreNonHost() {
 		assertThat(service.loadNetworkResource(new CIDR4Address(new byte[] { (byte)0xc0, (byte)0xa8, (byte)0x30, (byte)0x04 }, 28))).isNull();
+	}
+	
+	@Test
+	public void persist() {
+		service.persistNetworkResource(new NetworkResource(NET_192_168_0_0, "foo", "bar", ENetworkRegistry.RIPE));
+		
+		verify(persistService).persistNetworkInformation(NET_192_168_0_0, new NetworkInformation("foo", "bar", ENetworkRegistry.RIPE));
 	}
 }
