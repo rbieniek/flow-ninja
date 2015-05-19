@@ -11,7 +11,6 @@
     http://www.springframework.org/schema/redis http://www.springframework.org/schema/redis/spring-redis.xsd">
     
     <!-- Scans for application @Components to deploy -->
-    <context:property-placeholder location="classpath:org/flowninja/webapp/rspl/redis/redis.properties" system-properties-mode="OVERRIDE"/>
     <context:component-scan base-package="org.flowninja.webapp.rspl.redis" />
     <context:component-scan base-package="org.flowninja.persistence.rspl.redis" />
     
@@ -19,26 +18,13 @@
     
     <tx:annotation-driven />
 
-    <bean id="jedisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
-        <constructor-arg>
-            <bean class="org.springframework.data.redis.connection.RedisSentinelConfiguration">
-                <constructor-arg>
-                    <bean class="org.springframework.core.env.MapPropertySource">
-                        <constructor-arg>
-                            <value>ApplicationContextSentinelConfiguration</value>
-                        </constructor-arg>
-                        <constructor-arg>
-                            <map>
-                                <entry key="spring.redis.sentinel.master" value="${redis.master.name}"/>
-                                <entry key="spring.redis.sentinel.nodes" value="${redis.master.nodes}"/>
-                            </map>                            
-                        </constructor-arg>
-                    </bean>
-                </constructor-arg>
-            </bean>
-        </constructor-arg>
-    </bean>
-
+    <!--
+        The JedisConnectionFactory is created from a JavaConfig which is sensitive to system property values
+        - if both properties 'redis.master.nodes' (comma-seperated list of colon-seperated host /port pairs) and 'redis.master.name' (the master name)
+          are given, then a Redis Sentinel-aware conection factory is being created
+        - a connection factory for a single-host configuration is build with the hostname taken from 'redis.host' (defaults to "localhost") 
+          and 'redis.port' (defaults to 6379)
+    -->
     <bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate" >
         <property name="connectionFactory"  ref="jedisConnectionFactory"/>
         <property name="keySerializer">
@@ -58,26 +44,4 @@
         <property name="slaveTemplate" ref="redisTemplate"/> 
     </bean>
     
-    <!--
-    <bean id="jedisMasterConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
-        <property name="hostName" value="${redis.master.host}"/>
-        <property name="port" value="${redis.master.host}"/>
-        <property name="password" value="${redis.master.password}"/>
-    </bean>
-
-    <bean id="redisMasterTemplate" class="org.springframework.data.redis.core.RedisTemplate" >
-        <property name="connectionFactory"  ref="jedisMasterConnectionFactory"/>
-    </bean>
-    
-    <bean id="jedisSlaveConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
-        <property name="hostName" value="${redis.slave.host}"/>
-        <property name="port" value="${redis.slave.host}"/>
-        <property name="password" value="${redis.slave.password}"/>
-    </bean>
-
-    <bean id="redisSlaveTemplate" class="org.springframework.data.redis.core.RedisTemplate" >
-        <property name="connectionFactory"  ref="jedisSlaveConnectionFactory"/>
-    </bean>
-
-    -->
 </beans>

@@ -12,6 +12,8 @@ import java.util.Map;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 /**
  * Model a IPv4 CIDR address. A CIDR address consists of a network address and a netmask ranging from 0 to 32.
  * 
@@ -192,6 +194,7 @@ public class CIDR4Address implements Serializable {
 	}
 	
 	@Override
+	@JsonValue
 	public String toString() {
 		return String.format("%d.%d.%d.%d/%d", address[0] & 0xff, address[1] & 0xff, address[2] & 0xff, address[3] & 0xff, netmask);
 	}

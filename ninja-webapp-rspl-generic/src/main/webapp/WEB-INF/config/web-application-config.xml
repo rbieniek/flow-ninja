@@ -9,6 +9,8 @@
     <!-- Scans for application @Components to deploy -->
     <context:component-scan base-package="org.flowninja.persistence.rspl.generic" />
     <context:component-scan base-package="org.flowninja.persistence.generic" />
+    <context:component-scan base-package="org.flowninja.rspl.client.json" />
+    <context:component-scan base-package="org.flowninja.rspl.client.whois" />
     
     <context:annotation-config/>
     

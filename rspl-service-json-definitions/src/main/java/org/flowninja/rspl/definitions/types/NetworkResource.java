@@ -10,6 +10,10 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.flowninja.types.net.CIDR4Address;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonFormat.Shape;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * @author rainer
  *
@@ -21,9 +25,16 @@ public class NetworkResource implements Serializable {
 	 */
 	private static final long serialVersionUID = -1827511882719877411L;
 
+	@JsonProperty("cidr")
 	private CIDR4Address networkAddress;
+	
+	@JsonProperty("name")
 	private String name;
+	
+	@JsonProperty("country")
 	private String country;
+	
+	@JsonProperty("registry") @JsonFormat(shape=Shape.STRING)
 	private ENetworkRegistry regionalInternetRegistry;
 	
 	/**

@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.flowninja.rspl.definitions.services.INetworkResourceResolver;
 import org.flowninja.rspl.definitions.types.NetworkResource;
+import org.flowninja.types.net.CIDR4Address;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,4 +56,12 @@ public class RSPLServiceWhoisClient {
 		return resolvable;
 	}
 
+	public NetworkResource resolveAddress(CIDR4Address address) {
+		return resolveAddress(address.getAddress());
+	}
+	
+	public boolean canResolveAddress(CIDR4Address address) {
+		return canResolveAddress(address.getAddress());
+	}
+	
 }

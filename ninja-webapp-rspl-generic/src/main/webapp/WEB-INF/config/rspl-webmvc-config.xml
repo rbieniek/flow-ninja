@@ -18,6 +18,7 @@
     
     <mvc:annotation-driven conversion-service="conversionService"/>
     
+    
     <mvc:default-servlet-handler/>
     
     <mvc:resources location="/images/" mapping="/images/**" />

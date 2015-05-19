@@ -4,6 +4,8 @@
 package org.flowninja.shell.admin.mongodb;
 
 import java.net.UnknownHostException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.flowninja.persistence.mongodb.MongoConstants;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,7 @@ import org.springframework.data.mongodb.MongoDbFactory;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
+import org.springframework.util.StringUtils;
 
 import com.mongodb.MongoClient;
 import com.mongodb.ServerAddress;
@@ -33,8 +36,21 @@ public class ShellConfiguration {
 	private Environment env;
 	
 	public @Bean MongoClient mongoClient() throws UnknownHostException {
-		return new MongoClient(new ServerAddress(env.getProperty("mongodb.host"), 
-				env.getProperty("mongodb.port", Integer.class)));
+		List<ServerAddress> replicas = StringUtils.commaDelimitedListToSet(env.getProperty("mongodb.replicas")).stream().map((addrSpec)-> {
+			int idx = addrSpec.indexOf(':');
+			
+			if(idx > 0) {
+				try {
+					return new ServerAddress(addrSpec.substring(0, idx), Integer.parseInt(addrSpec.substring(idx+1)));
+				} catch(NumberFormatException e) {
+					throw new IllegalArgumentException("cannot parse replica address: " + addrSpec, e);					
+				}
+			} else {
+				throw new IllegalArgumentException("cannot parse replica address: " + addrSpec);
+			}
+		}).collect(Collectors.toList());
+		
+		return new MongoClient(replicas);
 	}
 	
 	public @Bean MongoDbFactory mongoDbFactory() throws Exception {

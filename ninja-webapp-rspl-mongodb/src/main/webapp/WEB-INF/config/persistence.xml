@@ -8,7 +8,7 @@
         http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/context 
-        http://www.springframework.org/schema/context/spring-context-3.0.xsd
+        http://www.springframework.org/schema/context/spring-context.xsd
         http://www.springframework.org/schema/tx 
         http://www.springframework.org/schema/tx/spring-tx.xsd
         http://www.springframework.org/schema/data/mongo
@@ -25,7 +25,7 @@
     <!-- MongoDB access configuration -->
     <mongo:auditing modify-on-creation="true" set-dates="true"/>
     
-    <mongo:mongo host="${mongodb.host}" port="${mongodb.port}" id="mongo"/>
+    <mongo:mongo replica-set="${mongodb.replicas}" id="mongo"/>
     <mongo:db-factory id="mongoDbFactory" dbname="${mongodb.name}" mongo-ref="mongo"/>
     <mongo:mapping-converter id="mongoMappingConverter" />
     
