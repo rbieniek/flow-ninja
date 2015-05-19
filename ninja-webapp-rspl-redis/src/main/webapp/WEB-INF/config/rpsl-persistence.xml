@@ -19,6 +19,46 @@
     
     <tx:annotation-driven />
 
+    <bean id="jedisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+        <constructor-arg>
+            <bean class="org.springframework.data.redis.connection.RedisSentinelConfiguration">
+                <constructor-arg>
+                    <bean class="org.springframework.core.env.MapPropertySource">
+                        <constructor-arg>
+                            <value>ApplicationContextSentinelConfiguration</value>
+                        </constructor-arg>
+                        <constructor-arg>
+                            <map>
+                                <entry key="spring.redis.sentinel.master" value="${redis.master.name}"/>
+                                <entry key="spring.redis.sentinel.nodes" value="${redis.master.nodes}"/>
+                            </map>                            
+                        </constructor-arg>
+                    </bean>
+                </constructor-arg>
+            </bean>
+        </constructor-arg>
+    </bean>
+
+    <bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate" >
+        <property name="connectionFactory"  ref="jedisConnectionFactory"/>
+        <property name="keySerializer">
+            <bean class="org.flowninja.persistence.rspl.redis.components.CIDR4AddressRedisSerializer"/>
+        </property>
+        <property name="valueSerializer">
+            <bean class="org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer">
+                <constructor-arg>
+                    <value type="java.lang.Class">org.flowninja.persistence.rspl.generic.types.NetworkInformation</value>
+                </constructor-arg>
+            </bean>
+        </property>
+    </bean>
+    
+    <bean class="org.flowninja.persistence.rspl.redis.services.RedisRsplPersistenceService">
+        <property name="masterTemplate" ref="redisTemplate"/>
+        <property name="slaveTemplate" ref="redisTemplate"/> 
+    </bean>
+    
+    <!--
     <bean id="jedisMasterConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
         <property name="hostName" value="${redis.master.host}"/>
         <property name="port" value="${redis.master.host}"/>
@@ -38,5 +78,6 @@
     <bean id="redisSlaveTemplate" class="org.springframework.data.redis.core.RedisTemplate" >
         <property name="connectionFactory"  ref="jedisSlaveConnectionFactory"/>
     </bean>
-    
+
+    -->
 </beans>

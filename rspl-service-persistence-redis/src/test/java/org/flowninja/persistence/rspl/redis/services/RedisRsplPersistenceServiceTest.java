@@ -3,7 +3,7 @@
  */
 package org.flowninja.persistence.rspl.redis.services;
 
-import static org.fest.assertions.api.Assertions.*;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 import java.util.concurrent.TimeUnit;
 
@@ -12,9 +12,7 @@ import org.flowninja.persistence.rspl.redis.components.CIDR4AddressRedisSerializ
 import org.flowninja.rspl.definitions.types.ENetworkRegistry;
 import org.flowninja.types.net.CIDR4Address;
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
