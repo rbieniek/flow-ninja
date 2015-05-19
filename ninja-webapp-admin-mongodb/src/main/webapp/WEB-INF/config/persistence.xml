@@ -25,11 +25,22 @@
     <!-- MongoDB access configuration -->
     <mongo:auditing modify-on-creation="true" set-dates="true"/>
     
-    <mongo:mongo replica-set="${mongodb.replicas}" id="mongo"/>
-    <mongo:db-factory id="mongoDbFactory" dbname="${mongodb.name}" mongo-ref="mongo"/>
+    <!--
+        The MongoClient is created from a JavaConfig which is sensitive to system property values
+        - if the property 'mongodb.replicas' (comma-seperated list of colon-seperated host /port pairs) is given, then a 
+          replication-aware client is being created. The property 'mongodb.setname' (if given) defines the replica set name
+        - a client for a single-host configuration is build with the hostname taken from 'mongodb.host' (defaults to "localhost") 
+          and 'mongodb.port' (defaults to 27017)
+        The properties 'mongodb.user' and 'mongodb.password' (if given) define the credentials to be used when connectinf to the database
+    -->
+    
     <mongo:mapping-converter id="mongoMappingConverter" />
     
-	<bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+    <!--
+        The MongoDbFactory instance 'mongoDbFactory' is created with taking the property 'mongodb.dbname' (defaults to 'db') into account. This property
+        denotes the db name to which the connection is made
+    -->
+    <bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
     	<constructor-arg ref="mongoDbFactory"/>
 	</bean>
 	
