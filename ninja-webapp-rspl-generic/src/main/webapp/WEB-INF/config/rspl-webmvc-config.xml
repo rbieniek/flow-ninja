@@ -16,8 +16,12 @@
     <!-- Scans for application @Components to deploy -->
     <context:component-scan base-package="org.flowninja.webapp.rspl.generic" />
     
-    <mvc:annotation-driven conversion-service="conversionService"/>
+    <mvc:annotation-driven conversion-service="conversionService">
+        <mvc:async-support task-executor="taskExecutor" default-timeout="5000" />
+    </mvc:annotation-driven>
     
+    <!-- This task executor uses the platform's provided 'DefaultManagedExecutorService' -->
+    <bean id="taskExecutor" class="org.springframework.scheduling.concurrent.DefaultManagedTaskExecutor"/>
     
     <mvc:default-servlet-handler/>
     
