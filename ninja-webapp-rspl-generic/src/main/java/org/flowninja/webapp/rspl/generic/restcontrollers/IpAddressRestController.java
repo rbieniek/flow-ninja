@@ -14,9 +14,9 @@ import org.flowninja.types.utils.NetworkAddressHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -44,60 +44,70 @@ public class IpAddressRestController {
 	
 	@RequestMapping(produces="application/json", method=RequestMethod.GET, value="/rest/ip/address")
 	public ResponseEntity<NetworkResource> ipAddr(@RequestParam(value="ipv4", required=false) String ipAddr) {
-		CIDR4Address cidr;
-		
-		if(StringUtils.isBlank(ipAddr)) {
-			logger.info("No IPv4 address given");
-			
-			return new ResponseEntity<NetworkResource>(HttpStatus.BAD_REQUEST);
-		}
-		
-		logger.info("looking up IP address: '{}'", ipAddr);
-		
 		try {
-			cidr = new CIDR4Address(NetworkAddressHelper.parseAddressSpecification(ipAddr));
-		} catch(IllegalArgumentException e) {
-			logger.info("failed to parse passed address specification", e);
+			CIDR4Address cidr;
 			
-			return new ResponseEntity<NetworkResource>(HttpStatus.BAD_REQUEST);
-		}
-		
-		if(blockednetworkService.findContainingBlockedNetwork(cidr) != null) {
-			logger.info("IP address {} is in adminstratively blocked network range", cidr);
-			
-			return new ResponseEntity<NetworkResource>(HttpStatus.NOT_FOUND);
-		}
-
-		NetworkResource resource = rsplService.loadNetworkResource(cidr);
-		
-		if(resource != null) {
-			logger.info("looked of IP Address {} yielded cache lookup result {}", cidr, resource);
-			
-			return new ResponseEntity<NetworkResource>(resource, HttpStatus.OK);
-		}
-
-		if(jsonClient.canResolveAddress(cidr)) {
-			resource = jsonClient.resolveAddress(cidr);
-			
-			if(resource != null) {
-				rsplService.persistNetworkResource(resource);
-
-				logger.info("looked of IP Address {} yielded JSON WHOIS lookup result {}", cidr, resource);
-
-				return new ResponseEntity<NetworkResource>(resource, HttpStatus.OK);
+			if(StringUtils.isBlank(ipAddr)) {
+				logger.info("No IPv4 address given");
+				
+				return new ResponseEntity<NetworkResource>(HttpStatus.BAD_REQUEST);
 			}
-		} else if(whoisClient.canResolveAddress(cidr)) {
-			resource = whoisClient.resolveAddress(cidr);
+			
+			logger.info("looking up IP address: '{}'", ipAddr);
+			
+			try {
+				cidr = new CIDR4Address(NetworkAddressHelper.parseAddressSpecification(ipAddr));
+			} catch(IllegalArgumentException e) {
+				logger.info("failed to parse passed address specification", e);
+				
+				return new ResponseEntity<NetworkResource>(HttpStatus.BAD_REQUEST);
+			}
+			
+			if(blockednetworkService.findContainingBlockedNetwork(cidr) != null) {
+				logger.info("IP address {} is in adminstratively blocked network range", cidr);
+				
+				return new ResponseEntity<NetworkResource>(HttpStatus.NOT_FOUND);
+			}
+	
+			NetworkResource resource = rsplService.loadNetworkResource(cidr);
 			
 			if(resource != null) {
-				rsplService.persistNetworkResource(resource);
-
-				logger.info("looked of IP Address {} yielded  WHOIS lookup result {}", cidr, resource);
+				logger.info("looked of IP Address {} yielded cache lookup result {}", cidr, resource);
 				
 				return new ResponseEntity<NetworkResource>(resource, HttpStatus.OK);
-			}			
+			}
+	
+			if(jsonClient.canResolveAddress(cidr)) {
+				resource = jsonClient.resolveAddress(cidr);
+				
+				if(resource != null) {
+					rsplService.persistNetworkResource(resource);
+	
+					logger.info("looked of IP Address {} yielded JSON WHOIS lookup result {}", cidr, resource);
+	
+					return new ResponseEntity<NetworkResource>(resource, HttpStatus.OK);
+				}
+			} else if(whoisClient.canResolveAddress(cidr)) {
+				resource = whoisClient.resolveAddress(cidr);
+				
+				if(resource != null) {
+					rsplService.persistNetworkResource(resource);
+	
+					logger.info("looked of IP Address {} yielded  WHOIS lookup result {}", cidr, resource);
+					
+					return new ResponseEntity<NetworkResource>(resource, HttpStatus.OK);
+				}			
+			}
+			
+			return new ResponseEntity<NetworkResource>(HttpStatus.NOT_FOUND);
+		} catch(DataAccessException e) {
+			logger.error("Failed to access persistence modules", e);
+			
+			return new ResponseEntity<NetworkResource>(HttpStatus.SERVICE_UNAVAILABLE);			
+		} catch(Exception e) {
+			logger.error("Exception caught while processing the request", e);
+			
+			return new ResponseEntity<NetworkResource>(HttpStatus.INTERNAL_SERVER_ERROR);				
 		}
-		
-		return new ResponseEntity<NetworkResource>(HttpStatus.NOT_FOUND);
 	}
 }
