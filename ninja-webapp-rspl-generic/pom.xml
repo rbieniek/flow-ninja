@@ -36,6 +36,12 @@
 
     <dependency>
       <groupId>org.flow-ninja</groupId>
+      <artifactId>ninja-statistics-generic</artifactId>
+      <version>${version.flow-ninja}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.flow-ninja</groupId>
       <artifactId>rspl-service-persistence-generic</artifactId>
       <version>${version.flow-ninja}</version>
     </dependency>
