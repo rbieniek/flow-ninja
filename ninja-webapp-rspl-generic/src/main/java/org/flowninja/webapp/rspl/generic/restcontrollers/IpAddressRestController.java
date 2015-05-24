@@ -11,6 +11,7 @@ import org.flowninja.persistence.rspl.generic.services.RsplPersistenceService;
 import org.flowninja.rspl.client.json.RSPLServiceJsonClient;
 import org.flowninja.rspl.client.whois.RSPLServiceWhoisClient;
 import org.flowninja.rspl.definitions.types.NetworkResource;
+import org.flowninja.statistics.generic.services.IRpslStatisticsService;
 import org.flowninja.types.net.CIDR4Address;
 import org.flowninja.types.utils.NetworkAddressHelper;
 import org.slf4j.Logger;
@@ -43,6 +44,9 @@ public class IpAddressRestController {
 	
 	@Autowired
 	private RSPLServiceWhoisClient whoisClient;
+
+	@Autowired
+	private IRpslStatisticsService statisticsService;
 	
 	@RequestMapping(produces="application/json", method=RequestMethod.GET, value="/rest/ip/address")
 	public Callable<ResponseEntity<NetworkResource>> ipAddr(@RequestParam(value="ipv4", required=false) final String ipAddr) {
@@ -53,8 +57,12 @@ public class IpAddressRestController {
 				try {
 					CIDR4Address cidr;
 					
+					statisticsService.recordLookupRequest();
+					
 					if(StringUtils.isBlank(ipAddr)) {
 						logger.info("No IPv4 address given");
+						
+						statisticsService.recordBadRequest();
 						
 						return new ResponseEntity<NetworkResource>(HttpStatus.BAD_REQUEST);
 					}
@@ -66,11 +74,15 @@ public class IpAddressRestController {
 					} catch(IllegalArgumentException e) {
 						logger.info("failed to parse passed address specification", e);
 						
+						statisticsService.recordBadRequest();
+						
 						return new ResponseEntity<NetworkResource>(HttpStatus.BAD_REQUEST);
 					}
 					
 					if(blockednetworkService.findContainingBlockedNetwork(cidr) != null) {
 						logger.info("IP address {} is in adminstratively blocked network range", cidr);
+
+						statisticsService.recordAdminsitrativeBlocked();
 						
 						return new ResponseEntity<NetworkResource>(HttpStatus.NOT_FOUND);
 					}
@@ -79,6 +91,8 @@ public class IpAddressRestController {
 					
 					if(resource != null) {
 						logger.info("looked of IP Address {} yielded cache lookup result {}", cidr, resource);
+						
+						statisticsService.recordResultFromCache();
 						
 						return new ResponseEntity<NetworkResource>(resource, HttpStatus.OK);
 					}
@@ -90,6 +104,8 @@ public class IpAddressRestController {
 							rsplService.persistNetworkResource(resource);
 			
 							logger.info("looked of IP Address {} yielded JSON WHOIS lookup result {}", cidr, resource);
+							
+							statisticsService.recordResultFromJsonService();
 			
 							return new ResponseEntity<NetworkResource>(resource, HttpStatus.OK);
 						}
@@ -101,9 +117,13 @@ public class IpAddressRestController {
 			
 							logger.info("looked of IP Address {} yielded  WHOIS lookup result {}", cidr, resource);
 							
+							statisticsService.recordResultFromWhoisService();
+							
 							return new ResponseEntity<NetworkResource>(resource, HttpStatus.OK);
 						}			
 					}
+
+					statisticsService.recordNotFound();
 					
 					return new ResponseEntity<NetworkResource>(HttpStatus.NOT_FOUND);
 				} catch(DataAccessException e) {
