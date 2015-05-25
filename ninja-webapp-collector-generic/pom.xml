@@ -36,7 +36,7 @@
 
     <dependency>
       <groupId>org.flow-ninja</groupId>
-      <artifactId>ninja-security-web</artifactId>
+      <artifactId>ninja-security-oauth2</artifactId>
       <version>${version.flow-ninja}</version>
     </dependency>
 
