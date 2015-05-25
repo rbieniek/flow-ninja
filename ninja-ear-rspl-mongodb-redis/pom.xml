@@ -75,11 +75,6 @@
 	      <artifactId>slf4j-log4j12</artifactId>
 	    </jarModule>
 
-	    <jarModule>
-	      <groupId>com.google.guava</groupId>
-	      <artifactId>guava</artifactId>
-	    </jarModule>
-
 	    <webModule>
 	      <groupId>org.flow-ninja</groupId>
 	      <artifactId>ninja-webapp-rspl-mongodb-redis</artifactId>
@@ -146,11 +141,6 @@
       <groupId>org.slf4j</groupId>
       <artifactId>jul-to-slf4j</artifactId>
     </dependency>
-
-    <dependency>
-      <groupId>com.google.guava</groupId>
-      <artifactId>guava</artifactId>
-    </dependency>      
 
     <dependency>
       <groupId>junit</groupId>
