@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <parent>
+    <groupId>org.flow-ninja</groupId>
+    <artifactId>flow-ninja-project</artifactId>
+    <version>${version.flow-ninja}</version>
+    <relativePath>../pom.xml</relativePath>
+  </parent>
+
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.flow-ninja</groupId>
+  <artifactId>ninja-ear-collector-mongodb</artifactId>
+  <packaging>ear</packaging>
+  <version>${version.flow-ninja}</version>
+  <name>Collector enterprise application w/ MongoDB persistence</name>
+  <description>Collector enterprise application w/ MongoDB persistence</description>
+  <inceptionYear>2015</inceptionYear>
+
+  <build>
+    <plugins>
+      <plugin>
+	<groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-ear-plugin</artifactId>
+        <extensions>true</extensions>
+        <configuration>
+          <defaultLibBundleDir>lib</defaultLibBundleDir>
+          <modules>
+	    <jarModule>
+	      <groupId>commons-io</groupId>
+	      <artifactId>commons-io</artifactId>
+	    </jarModule>
+
+	    <jarModule>
+	      <groupId>commons-codec</groupId>
+	      <artifactId>commons-codec</artifactId>
+	    </jarModule>
+
+	    <jarModule>
+	      <groupId>org.hibernate</groupId>
+	      <artifactId>hibernate-validator</artifactId>
+	    </jarModule>
+
+	    <jarModule>
+	      <groupId>org.apache.commons</groupId>
+	      <artifactId>commons-lang3</artifactId>
+	    </jarModule>
+
+	    <jarModule>
+	      <groupId>org.apache.commons</groupId>
+	      <artifactId>commons-collections4</artifactId>
+	    </jarModule>
+
+	    <jarModule>
+	      <groupId>org.slf4j</groupId>
+	      <artifactId>slf4j-api</artifactId>
+	    </jarModule>
+
+	    <jarModule>
+	      <groupId>org.slf4j</groupId>
+	      <artifactId>slf4j-ext</artifactId>
+	    </jarModule>
+
+	    <jarModule>
+	      <groupId>org.slf4j</groupId>
+	      <artifactId>jcl-over-slf4j</artifactId>
+	    </jarModule>
+
+	    <jarModule>
+	      <groupId>org.slf4j</groupId>
+	      <artifactId>jul-to-slf4j</artifactId>
+	    </jarModule>
+
+	    <jarModule>
+	      <groupId>org.slf4j</groupId>
+	      <artifactId>slf4j-log4j12</artifactId>
+	    </jarModule>
+
+	    <webModule>
+	      <groupId>org.flow-ninja</groupId>
+	      <artifactId>ninja-webapp-collector-mongodb</artifactId>
+              <contextRoot>/ninja/collector</contextRoot>
+            </webModule>
+
+          </modules>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+  <dependencies>
+
+    <dependency>
+      <groupId>org.flow-ninja</groupId>
+      <artifactId>ninja-webapp-collector-mongodb</artifactId>
+      <type>war</type>
+      <version>${version.flow-ninja}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>commons-codec</groupId>
+      <artifactId>commons-codec</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-collections4</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-validator</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-ext</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>jcl-over-slf4j</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-log4j12</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>jul-to-slf4j</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+  </dependencies>
+</project>
+<!-- Keep this comment at the end of the file
+Local variables:
+mode: xml
+sgml-omittag:nil
+sgml-shorttag:nil
+sgml-namecase-general:nil
+sgml-general-insert-case:lower
+sgml-minimize-attributes:nil
+sgml-always-quote-attributes:t
+sgml-indent-step:2
+sgml-indent-data:t
+sgml-parent-document:nil
+sgml-exposed-tags:nil
+sgml-local-catalogs:nil
+sgml-local-ecat-files:nil
+End:
+-->
