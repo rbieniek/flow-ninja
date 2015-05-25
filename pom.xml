@@ -257,6 +257,8 @@
     <module>ninja-webapp-rspl-mongodb</module>
     <module>ninja-webapp-rspl-redis</module>
     <module>ninja-webapp-rspl-mongodb-redis</module>
+    <module>ninja-webapp-collector-generic</module>
+    <!-- module>ninja-webapp-collector-mongodb</module -->
     <module>ninja-ear-admin-mongodb</module>
     <module>ninja-ear-rspl-mongodb-redis</module>
     <module>ninja-shell-admin-generic</module>
