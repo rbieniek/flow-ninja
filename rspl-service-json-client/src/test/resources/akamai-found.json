@@ -1,0 +1,72 @@
+{
+  "net": {
+    "@xmlns": {
+      "ns3": "http:\/\/www.arin.net\/whoisrws\/netref\/v2",
+      "ns2": "http:\/\/www.arin.net\/whoisrws\/rdns\/v1",
+      "$": "http:\/\/www.arin.net\/whoisrws\/core\/v1"
+    },
+    "@termsOfUse": "https:\/\/www.arin.net\/whois_tou.html",
+    "@inaccuracyReportUrl": "http:\/\/www.arin.net\/public\/whoisinaccuracy\/index.xhtml",
+    "registrationDate": {
+      "$": "2013-03-15T18:35:48-04:00"
+    },
+    "ref": {
+      "$": "http:\/\/whois.arin.net\/rest\/net\/NET-172-224-0-0-1"
+    },
+    "endAddress": {
+      "$": "172.239.255.255"
+    },
+    "handle": {
+      "$": "NET-172-224-0-0-1"
+    },
+    "name": {
+      "$": "AKAMAI"
+    },
+    "netBlocks": {
+      "netBlock": {
+        "cidrLength": {
+          "$": "12"
+        },
+        "endAddress": {
+          "$": "172.239.255.255"
+        },
+        "description": {
+          "$": "Direct Assignment"
+        },
+        "type": {
+          "$": "DS"
+        },
+        "startAddress": {
+          "$": "172.224.0.0"
+        }
+      }
+    },
+    "resources": {
+      "@termsOfUse": "https:\/\/www.arin.net\/whois_tou.html",
+      "@inaccuracyReportUrl": "http:\/\/www.arin.net\/public\/whoisinaccuracy\/index.xhtml",
+      "limitExceeded": {
+        "@limit": "256",
+        "$": "false"
+      }
+    },
+    "orgRef": {
+      "@name": "Akamai Technologies, Inc.",
+      "@handle": "AT-80",
+      "$": "http:\/\/whois.arin.net\/rest\/org\/AT-80"
+    },
+    "parentNetRef": {
+      "@name": "NET172",
+      "@handle": "NET-172-0-0-0-0",
+      "$": "http:\/\/whois.arin.net\/rest\/net\/NET-172-0-0-0-0"
+    },
+    "startAddress": {
+      "$": "172.224.0.0"
+    },
+    "updateDate": {
+      "$": "2013-03-15T18:35:48-04:00"
+    },
+    "version": {
+      "$": "4"
+    }
+  }
+}

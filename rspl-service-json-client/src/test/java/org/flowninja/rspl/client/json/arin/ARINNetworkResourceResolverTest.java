@@ -25,6 +25,7 @@ public class ARINNetworkResourceResolverTest {
 
 	private static final byte[] IP_ADDR_BLIZZARD_FR = new byte[] { (byte)0x50, (byte)0xef, (byte)0xba, (byte)0x1a };
 	private static final byte[] IP_ADDR_WWW_GOOGLE_COM = new byte[] { (byte)0xd8, (byte)0x3a, (byte)0xd3, (byte)0x04 };
+	private static final byte[] IP_ADDR_STATIC_AKAMAI_COM = new byte[] { (byte)0xac, (byte)0xe3, (byte)0xa4, (byte)0x70 };
 	
 	@Autowired
 	private ArinNetworkResourceResolver resolver;
@@ -44,7 +45,13 @@ public class ARINNetworkResourceResolverTest {
 		assertThat(resolver.resolveNetworkAddress(IP_ADDR_WWW_GOOGLE_COM))
 			.isEqualTo(new NetworkResource(new CIDR4Address(IP_ADDR_WWW_GOOGLE_COM, 19), "GOOGLE", null, ENetworkRegistry.ARIN));
 	}
-	
+
+	@Test
+	public void resolveStaticAkamaiCom() throws Exception {
+		assertThat(resolver.resolveNetworkAddress(IP_ADDR_STATIC_AKAMAI_COM))
+			.isEqualTo(new NetworkResource(new CIDR4Address(IP_ADDR_STATIC_AKAMAI_COM, 12), "AKAMAI", null, ENetworkRegistry.ARIN));
+	}
+
 	@Test
 	public void resolveBlizzardFR() throws Exception {
 		assertThat(resolver.resolveNetworkAddress(IP_ADDR_BLIZZARD_FR)).isNull();

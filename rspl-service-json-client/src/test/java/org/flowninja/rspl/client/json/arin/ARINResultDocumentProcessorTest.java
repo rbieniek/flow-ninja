@@ -30,6 +30,7 @@ import com.fasterxml.jackson.datatype.jsonorg.JsonOrgModule;
 @ContextConfiguration(classes=TestConfig.class)
 public class ARINResultDocumentProcessorTest {
 	private static final byte[] IP_ADDR_WWW_GOOGLE_COM = new byte[] { (byte)0xad, (byte)0xc2, (byte)0xd3, (byte)0x04 };
+	private static final byte[] IP_ADDR_STATIC_AKAMAI_COM = new byte[] { (byte)0xac, (byte)0xe3, (byte)0xa4, (byte)0x70 };
 
 	@Autowired
 	private ResourceLoader loader;
@@ -40,6 +41,7 @@ public class ARINResultDocumentProcessorTest {
 	private JSONObject arinFound;
 	private JSONObject arinOther;
 	private JSONObject arinNotFound;
+	private JSONObject akamaiFound;
 	
 	@Before
 	public void before() throws Exception {
@@ -50,22 +52,29 @@ public class ARINResultDocumentProcessorTest {
 		arinFound = mapper.readValue(loader.getResource("classpath:arin-found.json").getInputStream(), JSONObject.class);
 		arinOther = mapper.readValue(loader.getResource("classpath:arin-other.json").getInputStream(), JSONObject.class);
 		arinNotFound = mapper.readValue(loader.getResource("classpath:arin-not-found.json").getInputStream(), JSONObject.class);
+		akamaiFound = mapper.readValue(loader.getResource("classpath:akamai-found.json").getInputStream(), JSONObject.class);
 	}
 
 	
 	@Test
-	public void ripeFound() {
+	public void arinFound() {
 		assertThat(processor.processResultDocument(arinFound))
 			.isEqualTo(new NetworkResource(new CIDR4Address(IP_ADDR_WWW_GOOGLE_COM, 16), "GOOGLE", null, ENetworkRegistry.ARIN));
 	}
 
 	@Test
-	public void ripeOther() {
+	public void akamaiFound() {
+		assertThat(processor.processResultDocument(akamaiFound))
+			.isEqualTo(new NetworkResource(new CIDR4Address(IP_ADDR_STATIC_AKAMAI_COM, 12), "AKAMAI", null, ENetworkRegistry.ARIN));
+	}
+
+	@Test
+	public void arinOther() {
 		assertThat(processor.processResultDocument(arinOther)).isNull();
 	}
 
 	@Test
-	public void ripeNotFound() {
+	public void arinNotFound() {
 		assertThat(processor.processResultDocument(arinNotFound)).isNull();
 	}
 

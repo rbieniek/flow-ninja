@@ -51,7 +51,7 @@ public class ARINResultDocumentProcessor implements IResultDocumentProcessor {
 			String type = processNetBlocks(json.getJSONObject("netBlocks"));
 			
 			if(StringUtils.isNotBlank(startAddress) && StringUtils.isNotBlank(endAddress) 
-					&& StringUtils.isNotBlank(name) && StringUtils.startsWith(type, "DA"))
+					&& StringUtils.isNotBlank(name) && (StringUtils.startsWith(type, "DA") || StringUtils.startsWith(type, "DS")))
 				resource =  new NetworkResource(CIDR4AddressRangeParser.parse(String.format("%s - %s",  startAddress, endAddress)), name, null, ENetworkRegistry.ARIN);
 		}
 		
