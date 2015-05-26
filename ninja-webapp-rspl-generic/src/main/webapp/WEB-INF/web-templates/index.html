@@ -1,19 +1,56 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-	<head th:replace="fragments/preamble::header(title=#{page.title})"/>
+	<head th:replace="fragments/preamble::header(title=#{page.title},pageScript='pages/index.js')"/>
 	
 	<body>
-        <div class="container">
-            <div class="jumbotron">
-                <h1 th:text="#{jumbotron.heading}">Welcome to WebAPI Console</h1>
-                <p class="lead" th:text="#{jumbotron.lead}">Console access to control and configure WebAPI applications</p>
-                <p><a class="btn btn-lg btn-success" href="/console/dashboard" th:href="@{/console/dashboard}" role="button" th:text="#{link.login}">Access console</a></p>
-            </div>
-
-            <div class="row">
-
-            </div>
-        </div>
+		<script th:inline="javascript" type="text/javascript">
+		    /*<![CDATA[*/
+		   	angular.module('org.flowninja.rpsl.lookup').config(function(RestangularProvider,$httpProvider,LookupServiceProvider) {
+			   	LookupServiceProvider.setRestUri([[@{/rest/ip/addr}]]);
+		    });
+		   	/*]]>*/
+		</script>
+        <div class="container-fluid">
+	      <div class="page-header">
+    	    <h1>#{page.headline}</h1>
+    	    <p class="lead">#{page.description}</p>
+    	  </div>
+	      <div class="row">
+        	<div class="col-md-8 col-md-offset-2">
+        		<form>
+					<div class="form-group">
+    					<label for="ipaddr">#{form.field.ipaddr}</label>
+    					<input class="form-control" id="ipaddr" placeholder="Enter IPv4 address"/>
+  					</div>
+  					<button class="btn btn-default">#{form.action.resolve}</button>
+					<div class="form-group has-success has-feedback">
+    					<label for="cidr">#{form.field.cidr}</label>
+      					<p class="form-control-static" id="cidr" aria-describedby="cidrStatus"/>
+						<span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"/>
+  						<span id="cidrStatus" class="sr-only">(success)</span>
+    				</div>
+					<div class="form-group has-error has-feedback">
+    					<label for="netname">#{form.field.netname}</label>
+      					<p class="form-control-static" id="netname" aria-describedby="netnameStatus"/>
+						<span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"/>
+  						<span id="netnameStatus" class="sr-only">(error)</span>
+  					</div>
+					<div class="form-group">
+    					<label for="country">#{form.field.country}</label>
+      					<p class="form-control-static" id="country"/>
+  					</div>
+					<div class="form-group">
+    					<label for="registry">#{form.field.registry}</label>
+      					<p class="form-control-static" id="registry"/>
+  					</div>
+					<div class="form-group">
+    					<label for="source">#{form.field.source}</label>
+      					<p class="form-control-static" id="source"/>
+  					</div>
+           		</form>
+        	</div>
+      	  </div>
+   		</div>
 	</body>
 	
 </html>
