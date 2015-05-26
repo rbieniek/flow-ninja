@@ -49,11 +49,11 @@ public class IpAddressRestController {
 	private IRpslStatisticsService statisticsService;
 	
 	@RequestMapping(produces="application/json", method=RequestMethod.GET, value="/rest/ip/address")
-	public Callable<ResponseEntity<NetworkResource>> ipAddr(@RequestParam(value="ipv4", required=false) final String ipAddr) {
-		return new Callable<ResponseEntity<NetworkResource>>() {
+	public Callable<ResponseEntity<NetworkResourceResult>> ipAddr(@RequestParam(value="ipv4", required=false) final String ipAddr) {
+		return new Callable<ResponseEntity<NetworkResourceResult>>() {
 			
 			@Override
-			public ResponseEntity<NetworkResource> call() throws Exception {
+			public ResponseEntity<NetworkResourceResult> call() throws Exception {
 				try {
 					CIDR4Address cidr;
 					
@@ -64,7 +64,7 @@ public class IpAddressRestController {
 						
 						statisticsService.recordBadRequest();
 						
-						return new ResponseEntity<NetworkResource>(HttpStatus.BAD_REQUEST);
+						return new ResponseEntity<NetworkResourceResult>(HttpStatus.BAD_REQUEST);
 					}
 					
 					logger.info("looking up IP address: '{}'", ipAddr);
@@ -76,7 +76,7 @@ public class IpAddressRestController {
 						
 						statisticsService.recordBadRequest();
 						
-						return new ResponseEntity<NetworkResource>(HttpStatus.BAD_REQUEST);
+						return new ResponseEntity<NetworkResourceResult>(HttpStatus.BAD_REQUEST);
 					}
 					
 					if(blockednetworkService.findContainingBlockedNetwork(cidr) != null) {
@@ -84,7 +84,7 @@ public class IpAddressRestController {
 
 						statisticsService.recordAdminsitrativeBlocked();
 						
-						return new ResponseEntity<NetworkResource>(HttpStatus.NOT_FOUND);
+						return new ResponseEntity<NetworkResourceResult>(HttpStatus.NOT_FOUND);
 					}
 			
 					NetworkResource resource = rsplService.loadNetworkResource(cidr);
@@ -94,7 +94,7 @@ public class IpAddressRestController {
 						
 						statisticsService.recordResultFromCache();
 						
-						return new ResponseEntity<NetworkResource>(resource, HttpStatus.OK);
+						return new ResponseEntity<NetworkResourceResult>(new NetworkResourceResult(resource, EResultSource.CACHE), HttpStatus.OK);
 					}
 			
 					if(jsonClient.canResolveAddress(cidr)) {
@@ -107,7 +107,7 @@ public class IpAddressRestController {
 							
 							statisticsService.recordResultFromJsonService();
 			
-							return new ResponseEntity<NetworkResource>(resource, HttpStatus.OK);
+							return new ResponseEntity<NetworkResourceResult>(new NetworkResourceResult(resource, EResultSource.JSON), HttpStatus.OK);
 						}
 					} else if(whoisClient.canResolveAddress(cidr)) {
 						resource = whoisClient.resolveAddress(cidr);
@@ -119,21 +119,21 @@ public class IpAddressRestController {
 							
 							statisticsService.recordResultFromWhoisService();
 							
-							return new ResponseEntity<NetworkResource>(resource, HttpStatus.OK);
+							return new ResponseEntity<NetworkResourceResult>(new NetworkResourceResult(resource, EResultSource.WHOIS), HttpStatus.OK);
 						}			
 					}
 
 					statisticsService.recordNotFound();
 					
-					return new ResponseEntity<NetworkResource>(HttpStatus.NOT_FOUND);
+					return new ResponseEntity<NetworkResourceResult>(HttpStatus.NOT_FOUND);
 				} catch(DataAccessException e) {
 					logger.error("Failed to access persistence modules", e);
 					
-					return new ResponseEntity<NetworkResource>(HttpStatus.SERVICE_UNAVAILABLE);			
+					return new ResponseEntity<NetworkResourceResult>(HttpStatus.SERVICE_UNAVAILABLE);			
 				} catch(Exception e) {
 					logger.error("Exception caught while processing the request", e);
 					
-					return new ResponseEntity<NetworkResource>(HttpStatus.INTERNAL_SERVER_ERROR);				
+					return new ResponseEntity<NetworkResourceResult>(HttpStatus.INTERNAL_SERVER_ERROR);				
 				}
 			}
 		};
