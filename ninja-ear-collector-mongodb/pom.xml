@@ -9,11 +9,11 @@
 
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.flow-ninja</groupId>
-  <artifactId>ninja-ear-rspl-mongodb-redis</artifactId>
+  <artifactId>ninja-ear-collector-mongodb</artifactId>
   <packaging>ear</packaging>
   <version>${version.flow-ninja}</version>
-  <name>RSPL client enterprise application w/ MongoDB and Redis persistence</name>
-  <description>RSPL client enterprise application w/ MongoDB and Reds persistence</description>
+  <name>Collector enterprise application w/ MongoDB persistence</name>
+  <description>Collector enterprise application w/ MongoDB persistence</description>
   <inceptionYear>2015</inceptionYear>
 
   <build>
@@ -75,10 +75,15 @@
 	      <artifactId>slf4j-log4j12</artifactId>
 	    </jarModule>
 
+	    <jarModule>
+	      <groupId>com.google.guava</groupId>
+	      <artifactId>guava</artifactId>
+	    </jarModule>
+
 	    <webModule>
 	      <groupId>org.flow-ninja</groupId>
-	      <artifactId>ninja-webapp-rspl-mongodb-redis</artifactId>
-              <contextRoot>/whois</contextRoot>
+	      <artifactId>ninja-webapp-collector-mongodb</artifactId>
+              <contextRoot>/ninja/collector</contextRoot>
             </webModule>
 
           </modules>
@@ -91,10 +96,15 @@
 
     <dependency>
       <groupId>org.flow-ninja</groupId>
-      <artifactId>ninja-webapp-rspl-mongodb-redis</artifactId>
+      <artifactId>ninja-webapp-collector-mongodb</artifactId>
       <type>war</type>
       <version>${version.flow-ninja}</version>
     </dependency>
+
+      <dependency>
+	<groupId>com.google.guava</groupId>
+	<artifactId>guava</artifactId>
+      </dependency>
 
     <dependency>
       <groupId>commons-codec</groupId>

@@ -14,40 +14,19 @@
 
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.flow-ninja</groupId>
-  <artifactId>ninja-persistence-mongodb</artifactId>
-  <packaging>jar</packaging>
+  <artifactId>ninja-webapp-collector-generic</artifactId>
+  <packaging>war</packaging>
   <version>${version.flow-ninja}</version>
-  <name>OSGi IP flow collector mongodb persistence</name>
-  <description>MongoDB persistence for JEE-based service</description>
-
-  <build>
-    <plugins>
-      <plugin>
-	<groupId>com.mysema.maven</groupId>
-	<artifactId>apt-maven-plugin</artifactId>
-	<version>${version.com.mysema.maven}</version>
-	<executions>
-	  <execution>
-	    <goals>
-	      <goal>process</goal>
-	    </goals>
-	    <configuration>
-	      <outputDirectory>target/generated-sources/java</outputDirectory>
-	      <processor>org.springframework.data.mongodb.repository.support.MongoAnnotationProcessor</processor>
-	    </configuration>
-	  </execution>
-	</executions>
-      </plugin>
-      <plugin>
-	<artifactId>maven-surefire-plugin</artifactId>
-        <configuration>
-          <argLine>-Xms256m -Xmx1024m -XX:MaxPermSize=512m</argLine>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
+  <name>Generic collector web application</name>
+  <description>Generic collector web application</description>
 
   <dependencies>
+
+    <dependency>
+      <groupId>javax</groupId>
+      <artifactId>javaee-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
 
     <dependency>
       <groupId>org.flow-ninja</groupId>
@@ -56,20 +35,20 @@
     </dependency>
 
     <dependency>
+      <groupId>org.flow-ninja</groupId>
+      <artifactId>ninja-security-oauth2</artifactId>
+      <version>${version.flow-ninja}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.flow-ninja</groupId>
+      <artifactId>ninja-hadoop</artifactId>
+      <version>${version.flow-ninja}</version>
+    </dependency>
+
+    <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
-      <scope>provided</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-collections4</artifactId>
-      <scope>provided</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>commons-codec</groupId>
-      <artifactId>commons-codec</artifactId>
       <scope>provided</scope>
     </dependency>
 
@@ -87,7 +66,18 @@
 
     <dependency>
       <groupId>org.springframework</groupId>
-      <artifactId>spring-tx</artifactId>
+      <artifactId>spring-web</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>commons-logging</groupId>
+          <artifactId>commons-logging</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-webmvc</artifactId>
       <exclusions>
         <exclusion>
           <groupId>commons-logging</groupId>
@@ -98,7 +88,7 @@
 
     <dependency>
       <groupId>org.springframework</groupId>
-      <artifactId>spring-orm</artifactId>
+      <artifactId>spring-tx</artifactId>
       <exclusions>
         <exclusion>
           <groupId>commons-logging</groupId>
@@ -119,8 +109,8 @@
     </dependency>
 
     <dependency>
-      <groupId>org.springframework.data</groupId>
-      <artifactId>spring-data-mongodb</artifactId>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-config</artifactId>
       <exclusions>
         <exclusion>
           <groupId>commons-logging</groupId>
@@ -128,15 +118,47 @@
         </exclusion>
       </exclusions>
     </dependency>
+    
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+        <artifactId>spring-security-web</artifactId>
+	<exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+          </exclusion>
+	</exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>org.springframework.security.oauth</groupId>
+        <artifactId>spring-security-oauth2</artifactId>
+	<exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+          </exclusion>
+	</exclusions>
+      </dependency>
 
     <dependency>
-      <groupId>com.mysema.querydsl</groupId>
-      <artifactId>querydsl-mongodb</artifactId>
+      <groupId>org.springframework.hateoas</groupId>
+      <artifactId>spring-hateoas</artifactId>
     </dependency>
 
     <dependency>
-      <groupId>org.mongodb</groupId>
-      <artifactId>mongo-java-driver</artifactId>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-core</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-annotations</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
     </dependency>
 
     <dependency> 
@@ -146,23 +168,33 @@
     </dependency> 
 
     <dependency>
+      <groupId>org.easytesting</groupId>
+      <artifactId>fest-assert-core</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-test</artifactId>
       <scope>test</scope>
     </dependency> 
 
     <dependency>
-      <groupId>de.flapdoodle.embed</groupId>
-      <artifactId>de.flapdoodle.embed.mongo</artifactId>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.easytesting</groupId>
-      <artifactId>fest-assert-core</artifactId>
-      <scope>test</scope>
-    </dependency>
-
+        <groupId>org.springframework.data</groupId>
+        <artifactId>spring-data-hadoop-test</artifactId>
+       <scope>test</scope>
+ 	<exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>io.netty</groupId>
+            <artifactId>netty</artifactId>
+          </exclusion>
+	</exclusions>
+      </dependency>
+ 
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-all</artifactId>

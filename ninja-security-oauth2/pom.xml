@@ -14,35 +14,46 @@
 
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.flow-ninja</groupId>
-  <artifactId>ninja-hadoop</artifactId>
+  <artifactId>ninja-security-oauth2</artifactId>
   <packaging>jar</packaging>
   <version>${version.flow-ninja}</version>
-  <name>OSGi IP flow collector Hadoop integration</name>
-  <description>Hadoop integration support</description>
+  <name>IP flow collector OAuth2 security</name>
+  <description>OAuth2 security layer for web applications</description>
 
   <dependencies>
+
     <dependency>
       <groupId>org.flow-ninja</groupId>
-      <artifactId>ninja-types-generic</artifactId>
+      <artifactId>ninja-persistence-generic</artifactId>
       <version>${version.flow-ninja}</version>
     </dependency>
 
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
-      <scope>provided</scope>
     </dependency>
 
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-collections4</artifactId>
-      <scope>provided</scope>
-    </dependency>
+      <dependency>
+        <groupId>org.springframework.security</groupId>
+        <artifactId>spring-security-web</artifactId>
+	<exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+          </exclusion>
+	</exclusions>
+      </dependency>
 
-    <dependency>
-      <groupId>org.springframework.data</groupId>
-      <artifactId>spring-data-hadoop</artifactId>
-    </dependency>
+      <dependency>
+        <groupId>org.springframework.security.oauth</groupId>
+        <artifactId>spring-security-oauth2</artifactId>
+	<exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+          </exclusion>
+	</exclusions>
+      </dependency>
 
     <dependency>
       <groupId>org.slf4j</groupId>
@@ -67,28 +78,6 @@
       <scope>test</scope>
     </dependency>
 
-     <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-test</artifactId>
-      <scope>test</scope>
-    </dependency> 
-
-    <dependency>
-        <groupId>org.springframework.data</groupId>
-        <artifactId>spring-data-hadoop-test</artifactId>
-       <scope>test</scope>
- 	<exclusions>
-          <exclusion>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>io.netty</groupId>
-            <artifactId>netty</artifactId>
-          </exclusion>
-	</exclusions>
-      </dependency>
- 
   </dependencies>
 
 </project>

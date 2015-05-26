@@ -245,6 +245,7 @@
     <module>ninja-hadoop</module>
     <module>ninja-redis</module>
     <module>ninja-security-web</module>
+    <module>ninja-security-oauth2</module>
     <module>rspl-service-json-definitions</module>
     <module>rspl-service-json-client</module>
     <module>rspl-service-whois-client</module>
@@ -258,7 +259,10 @@
     <module>ninja-webapp-rspl-mongodb</module>
     <module>ninja-webapp-rspl-redis</module>
     <module>ninja-webapp-rspl-mongodb-redis</module>
+    <module>ninja-webapp-collector-generic</module>
+    <module>ninja-webapp-collector-mongodb</module>
     <module>ninja-ear-admin-mongodb</module>
+    <module>ninja-ear-collector-mongodb</module>
     <module>ninja-ear-rspl-mongodb-redis</module>
     <module>ninja-shell-admin-generic</module>
     <module>ninja-shell-admin-mongodb</module>
@@ -271,6 +275,11 @@
 	<groupId>javax</groupId>
 	<artifactId>javaee-api</artifactId>
 	<version>${version.javax.jee}</version>
+      </dependency>
+      <dependency>
+	<groupId>com.google.guava</groupId>
+	<artifactId>guava</artifactId>
+	<version>${version.com.google.guava}</version>
       </dependency>
       <dependency>
 	<groupId>org.slf4j</groupId>
@@ -456,6 +465,22 @@
 	</exclusions>
       </dependency>
       <dependency>
+        <groupId>org.springframework.data</groupId>
+        <artifactId>spring-data-hadoop-test</artifactId>
+       <scope>test</scope>
+        <version>${version.org.springframework.data.hadoop}</version>
+	<exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>io.netty</groupId>
+            <artifactId>netty</artifactId>
+          </exclusion>
+	</exclusions>
+      </dependency>
+      <dependency>
         <groupId>org.springframework.integration</groupId>
         <artifactId>spring-integration-core</artifactId>
         <version>${version.org.springframework.integration}</version>
@@ -620,12 +645,6 @@
           </exclusion>
 	</exclusions>
       </dependency>
-
-      <dependency>
-	<groupId>com.google.guava</groupId>
-	<artifactId>guava</artifactId>
-	<version>${version.com.google.guava}</version>
-      </dependency>      
 
       <dependency>
 	<groupId>org.thymeleaf</groupId>
