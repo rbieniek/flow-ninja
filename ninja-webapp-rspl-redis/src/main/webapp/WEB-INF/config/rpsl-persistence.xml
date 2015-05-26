@@ -13,6 +13,7 @@
     <!-- Scans for application @Components to deploy -->
     <context:component-scan base-package="org.flowninja.webapp.rspl.redis" />
     <context:component-scan base-package="org.flowninja.persistence.rspl.redis" />
+    <context:component-scan base-package="org.flowninja.statistics.redis" />
     
     <context:annotation-config/>
     
@@ -42,6 +43,30 @@
     <bean class="org.flowninja.persistence.rspl.redis.services.RedisRsplPersistenceService">
         <property name="masterTemplate" ref="redisTemplate"/>
         <property name="slaveTemplate" ref="redisTemplate"/> 
+    </bean>
+
+    <!--
+        The JedisConnectionFactory is created from a JavaConfig which is sensitive to system property values
+        - if both properties 'redis.master.nodes' (comma-seperated list of colon-seperated host /port pairs) and 'redis.master.name' (the master name)
+          are given, then a Redis Sentinel-aware conection factory is being created
+        - a connection factory for a single-host configuration is build with the hostname taken from 'redis.host' (defaults to "localhost") 
+          and 'redis.port' (defaults to 6379)
+    -->
+    <bean id="statisticsTemplate" class="org.springframework.data.redis.core.RedisTemplate" >
+        <property name="connectionFactory"  ref="jedisConnectionFactory"/>
+        <property name="keySerializer">
+            <bean class="org.flowninja.statistics.redis.components.RPSLStatisticsKeyRedisSerializer"/>
+        </property>
+        <property name="hashKeySerializer">
+            <bean class="org.springframework.data.redis.serializer.StringRedisSerializer"/>
+        </property>
+        <property name="hashValueSerializer">
+            <bean class="org.flowninja.statistics.redis.components.LongRedisSerializer"/>
+        </property>
+    </bean>
+    
+    <bean class="org.flowninja.statistics.redis.services.RedisRpslStatisticsService">
+        <property name="template" ref="statisticsTemplate"/>
     </bean>
     
 </beans>
