@@ -50,15 +50,6 @@ public class RedisRsplPersistenceServiceTest {
 		
 		@Bean
 		public RedisConnectionFactory connectionFactory() {
-			/*
-			JedisConnectionFactory factory = new JedisConnectionFactory();
-			
-			factory.setHostName("localhost");
-			factory.setPort(16379);
-			factory.setUsePool(true);
-			
-			return factory;
-			*/
 			SrpConnectionFactory factory = new SrpConnectionFactory();
 			
 			factory.setHostName("localhost");
