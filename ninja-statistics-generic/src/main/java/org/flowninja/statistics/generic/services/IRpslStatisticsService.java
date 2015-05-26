@@ -3,6 +3,8 @@
  */
 package org.flowninja.statistics.generic.services;
 
+import java.util.SortedSet;
+
 /**
  * Interface implemented by usage recording service for RPSL Whois service
  * 
@@ -44,4 +46,11 @@ public interface IRpslStatisticsService {
 	 * 
 	 */
 	void recordBadRequest();
+	
+	/**
+	 * get the history of recorded statistics data
+	 * 
+	 * @return
+	 */
+	SortedSet<RpslStatisticsData> history();
 }
