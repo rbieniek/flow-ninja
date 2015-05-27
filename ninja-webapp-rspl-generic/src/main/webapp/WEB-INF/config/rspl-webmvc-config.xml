@@ -41,46 +41,7 @@
     <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
     
     <!-- Thymeleaf configuration -->
-    <bean id="conversionService" 
-        class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
-        <!--
-        <property name="converters">
-            <set>
-                <bean class="de.urb.wapi.utils.web.spring.conversions.StringToKeyConverterFactory"/>
-                <bean class="de.urb.wapi.utils.web.spring.conversions.ApiKeyToStringConverter"/>
-                <bean class="de.urb.wapi.utils.web.spring.conversions.ApiParameterKeyToStringConverter"/>
-                <bean class="de.urb.wapi.utils.web.spring.conversions.ApplicationConfigKeyToStringConverter"/>
-                <bean class="de.urb.wapi.utils.web.spring.conversions.ApplicationConfigValueKeyToStringConverter"/>
-                <bean class="de.urb.wapi.utils.web.spring.conversions.ApplicationKeyToStringConverter"/>
-                <bean class="de.urb.wapi.utils.web.spring.conversions.CorsKeyToStringConverter"/>
-                <bean class="de.urb.wapi.utils.web.spring.conversions.DeveloperKeyToStringConverter"/>
-                <bean class="de.urb.wapi.utils.web.spring.conversions.EnumValueKeyToStringConverter"/>
-                <bean class="de.urb.wapi.utils.web.spring.conversions.RedirectUriKeyToStringConverter"/>
-                <bean class="de.urb.wapi.utils.web.spring.conversions.OAuth2ScopeKeyToStringConverter"/>
-                <bean class="de.urb.wapi.utils.web.spring.conversions.OAuth2ScopeConfigKeyToStringConverter"/>
-            </set>
-        </property>
-        <property name="formatters">
-            <set>
-                <bean class="de.urb.wapi.utils.web.spring.formatters.ApiKeyFormatter" />
-                <bean class="de.urb.wapi.utils.web.spring.formatters.ApiParameterKeyFormatter" />
-                <bean class="de.urb.wapi.utils.web.spring.formatters.ApplicationKeyFormatter" />
-                <bean class="de.urb.wapi.utils.web.spring.formatters.ApplicationConfigKeyFormatter" />
-                <bean class="de.urb.wapi.utils.web.spring.formatters.ApplicationConfigValueKeyFormatter" />
-                <bean class="de.urb.wapi.utils.web.spring.formatters.CorsKeyFormatter" />
-                <bean class="de.urb.wapi.utils.web.spring.formatters.DeveloperKeyFormatter" />
-                <bean class="de.urb.wapi.utils.web.spring.formatters.EnumValueKeyFormatter" />
-                <bean class="de.urb.wapi.utils.web.spring.formatters.RecoveryKeyFormatter" />
-                <bean class="de.urb.wapi.utils.web.spring.formatters.RegistrationKeyFormatter" />
-                <bean class="de.urb.wapi.utils.web.spring.formatters.DateFormatter"/>
-                <bean class="de.urb.wapi.utils.web.spring.formatters.RedirectUriKeyFormatter" />
-                <bean class="de.urb.wapi.utils.web.spring.formatters.OAuth2ScopeKeyFormatter" />
-                <bean class="de.urb.wapi.utils.web.spring.formatters.OAuth2ScopeConfigKeyFormatter" />
-                <bean class="de.urb.wapi.console.formatters.WapiApiFormatter"/>
-            </set>
-        </property>
-        -->
-    </bean>
+    <bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean"/>
     
     <bean id="webTemplateResolver"
         class="org.thymeleaf.templateresolver.ServletContextTemplateResolver">
@@ -103,11 +64,6 @@
         		<bean class="org.thymeleaf.messageresolver.StandardMessageResolver"/>
         		<bean class="org.thymeleaf.spring4.messageresolver.SpringMessageResolver"/>
         	</set>
-        </property>
-        <property name="additionalDialects">
-            <set>
-                <bean class="org.thymeleaf.extras.springsecurity4.dialect.SpringSecurityDialect"/>
-            </set>
         </property>
     </bean>
         
