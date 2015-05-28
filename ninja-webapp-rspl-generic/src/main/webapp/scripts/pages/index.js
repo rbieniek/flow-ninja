@@ -87,6 +87,35 @@ angular.module('org.flowninja.rpsl.lookup', ['restangular', 'ui.bootstrap']
 	};
 	
 	$scope.resolveNetworkInfo = function() {
-		
+		Restangular.oneUrl('ipAddr', LookupService.restUri()).get({ipv4: $scope.ipAddress}).then(function(info) {
+			$scope.networkInfo = {
+					status: LookupService.status200(),
+					cidr: info.cidr,
+					networkName: info.name,
+					country: info.country,
+					rir: info.registry,
+					source: info.source
+			};
+		}, function(response) {
+			switch(response.status) {
+			case 400:
+				reason = LookupService.status400();
+				break;
+			case 404:
+				reason = LookupService.status404();
+				break;
+			default:
+				reason = LookupService.statusAny();
+				break;	
+			}
+			$scope.networkInfo = {
+					status: LookupService.reason,
+					cidr: null,
+					networkName: null,
+					country: null,
+					rir: null,
+					source: null
+			};			
+		});
 	};
 });

@@ -1,0 +1,155 @@
+{
+  "net": {
+    "@xmlns": {
+      "ns3": "http:\/\/www.arin.net\/whoisrws\/netref\/v2",
+      "ns2": "http:\/\/www.arin.net\/whoisrws\/rdns\/v1",
+      "$": "http:\/\/www.arin.net\/whoisrws\/core\/v1"
+    },
+    "@termsOfUse": "https:\/\/www.arin.net\/whois_tou.html",
+    "@inaccuracyReportUrl": "http:\/\/www.arin.net\/public\/whoisinaccuracy\/index.xhtml",
+    "registrationDate": {
+      "$": "2005-02-28T19:04:06-05:00"
+    },
+    "ref": {
+      "$": "http:\/\/whois.arin.net\/rest\/net\/NET-192-54-31-0-1"
+    },
+    "endAddress": {
+      "$": "192.54.52.255"
+    },
+    "handle": {
+      "$": "NET-192-54-31-0-1"
+    },
+    "name": {
+      "$": "RIPE-ERX-192-54-31-0"
+    },
+    "netBlocks": {
+      "netBlock": [
+        {
+          "cidrLength": {
+            "$": "24"
+          },
+          "endAddress": {
+            "$": "192.54.31.255"
+          },
+          "description": {
+            "$": "Early Registrations, Transferred to RIPE NCC"
+          },
+          "type": {
+            "$": "RX"
+          },
+          "startAddress": {
+            "$": "192.54.31.0"
+          }
+        },
+        {
+          "cidrLength": {
+            "$": "20"
+          },
+          "endAddress": {
+            "$": "192.54.47.255"
+          },
+          "description": {
+            "$": "Early Registrations, Transferred to RIPE NCC"
+          },
+          "type": {
+            "$": "RX"
+          },
+          "startAddress": {
+            "$": "192.54.32.0"
+          }
+        },
+        {
+          "cidrLength": {
+            "$": "22"
+          },
+          "endAddress": {
+            "$": "192.54.51.255"
+          },
+          "description": {
+            "$": "Early Registrations, Transferred to RIPE NCC"
+          },
+          "type": {
+            "$": "RX"
+          },
+          "startAddress": {
+            "$": "192.54.48.0"
+          }
+        },
+        {
+          "cidrLength": {
+            "$": "24"
+          },
+          "endAddress": {
+            "$": "192.54.52.255"
+          },
+          "description": {
+            "$": "Early Registrations, Transferred to RIPE NCC"
+          },
+          "type": {
+            "$": "RX"
+          },
+          "startAddress": {
+            "$": "192.54.52.0"
+          }
+        }
+      ]
+    },
+    "resources": {
+      "@termsOfUse": "https:\/\/www.arin.net\/whois_tou.html",
+      "@inaccuracyReportUrl": "http:\/\/www.arin.net\/public\/whoisinaccuracy\/index.xhtml",
+      "limitExceeded": {
+        "@limit": "256",
+        "$": "false"
+      },
+      "resource": [
+        {
+          "@url": "https:\/\/apps.db.ripe.net\/search\/query.html",
+          "@rel": "SELF",
+          "@media_type": "text\/html",
+          "@description": "Web Page"
+        },
+        {
+          "@url": "whois.ripe.net",
+          "@rel": "SELF",
+          "@media_type": "application\/x-whois",
+          "@description": "Whois"
+        }
+      ]
+    },
+    "orgRef": {
+      "@name": "RIPE Network Coordination Centre",
+      "@handle": "RIPE",
+      "$": "http:\/\/whois.arin.net\/rest\/org\/RIPE"
+    },
+    "parentNetRef": {
+      "@name": "NET192",
+      "@handle": "NET-192-0-0-0-0",
+      "$": "http:\/\/whois.arin.net\/rest\/net\/NET-192-0-0-0-0"
+    },
+    "comment": {
+      "line": [
+        {
+          "@number": "0",
+          "$": "These addresses have been further assigned to users in"
+        },
+        {
+          "@number": "1",
+          "$": "the RIPE NCC region.  Contact information can be found in"
+        },
+        {
+          "@number": "2",
+          "$": "the RIPE database at http:\/\/www.ripe.net\/whois"
+        }
+      ]
+    },
+    "startAddress": {
+      "$": "192.54.31.0"
+    },
+    "updateDate": {
+      "$": "2005-02-28T19:04:05-05:00"
+    },
+    "version": {
+      "$": "4"
+    }
+  }
+}

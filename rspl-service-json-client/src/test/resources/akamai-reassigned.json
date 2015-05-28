@@ -1,0 +1,72 @@
+{
+  "net": {
+    "@xmlns": {
+      "ns3": "http:\/\/www.arin.net\/whoisrws\/netref\/v2",
+      "ns2": "http:\/\/www.arin.net\/whoisrws\/rdns\/v1",
+      "$": "http:\/\/www.arin.net\/whoisrws\/core\/v1"
+    },
+    "@termsOfUse": "https:\/\/www.arin.net\/whois_tou.html",
+    "@inaccuracyReportUrl": "http:\/\/www.arin.net\/public\/whoisinaccuracy\/index.xhtml",
+    "registrationDate": {
+      "$": "2014-04-11T08:56:35-04:00"
+    },
+    "ref": {
+      "$": "http:\/\/whois.arin.net\/rest\/net\/NET-23-57-96-0-1"
+    },
+    "endAddress": {
+      "$": "23.57.111.255"
+    },
+    "handle": {
+      "$": "NET-23-57-96-0-1"
+    },
+    "name": {
+      "$": "AIBV"
+    },
+    "netBlocks": {
+      "netBlock": {
+        "cidrLength": {
+          "$": "20"
+        },
+        "endAddress": {
+          "$": "23.57.111.255"
+        },
+        "description": {
+          "$": "Reassigned"
+        },
+        "type": {
+          "$": "S"
+        },
+        "startAddress": {
+          "$": "23.57.96.0"
+        }
+      }
+    },
+    "resources": {
+      "@termsOfUse": "https:\/\/www.arin.net\/whois_tou.html",
+      "@inaccuracyReportUrl": "http:\/\/www.arin.net\/public\/whoisinaccuracy\/index.xhtml",
+      "limitExceeded": {
+        "@limit": "256",
+        "$": "false"
+      }
+    },
+    "orgRef": {
+      "@name": "Akamai International, BV",
+      "@handle": "AIB-17",
+      "$": "http:\/\/whois.arin.net\/rest\/org\/AIB-17"
+    },
+    "parentNetRef": {
+      "@name": "AKAMAI",
+      "@handle": "NET-23-32-0-0-1",
+      "$": "http:\/\/whois.arin.net\/rest\/net\/NET-23-32-0-0-1"
+    },
+    "startAddress": {
+      "$": "23.57.96.0"
+    },
+    "updateDate": {
+      "$": "2014-04-11T08:56:35-04:00"
+    },
+    "version": {
+      "$": "4"
+    }
+  }
+}

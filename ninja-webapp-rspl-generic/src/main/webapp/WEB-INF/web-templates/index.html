@@ -6,7 +6,7 @@
 		<script th:inline="javascript" type="text/javascript">
 		    /*<![CDATA[*/
 		   	angular.module('org.flowninja.rpsl.lookup').config(function(RestangularProvider,$httpProvider,LookupServiceProvider) {
-			   	LookupServiceProvider.setRestUri([[@{/rest/ip/addr}]]);
+			   	LookupServiceProvider.setRestUri([[@{/rest/ip/address}]]);
 			   	LookupServiceProvider.setStatus200([[#{rest.status200}]]);
 			   	LookupServiceProvider.setStatus400([[#{rest.status400}]]);
 			   	LookupServiceProvider.setStatus404([[#{rest.status404}]]);
@@ -23,7 +23,7 @@
         	<div class="col-md-8 col-md-offset-2">
         		<form ng-controller="LookupController" name="addrForm" class="form-horizontal">
 					<div class="form-group has-feedback" ng-class="getFormGroupCssClasses(addrForm.ipaddr)">
-    					<label class="col-sm-2 control-label" for="ipaddr" th:text="#{form.field.ipaddr}">IP address:</label>
+    					<label class="col-sm-4 control-label" for="ipaddr" th:text="#{form.field.ipaddr}">IP address:</label>
     					<div class="col-sm-6">
 	    					<input class="form-control" id="ipaddr" name="ipaddr" placeholder="IPv4 address" 
 	    						required="required"
@@ -41,39 +41,39 @@
 						</div>
   					</div>
 					<div class="form-group">
-    					<label class="col-sm-2 control-label" for="status" th:text="#{form.field.status}">CIDR:</label>
-    					<div class="col-sm-10">
-	      					<p class="form-control-static" id="status" ng-model="networkInfo.status"/>
+    					<label class="col-sm-4 control-label" for="status" th:text="#{form.field.status}">CIDR:</label>
+    					<div class="col-sm-8">
+	      					<p class="form-control-static" id="status">{{networkInfo.status}}</p>
 	      				</div>
     				</div>
 					<div class="form-group">
-    					<label class="col-sm-2 control-label" for="cidr" th:text="#{form.field.cidr}">CIDR:</label>
-    					<div class="col-sm-10">
-	      					<p class="form-control-static" id="cidr" ng-model="networkInfo.cidr"/>
+    					<label class="col-sm-4 control-label" for="cidr" th:text="#{form.field.cidr}">CIDR:</label>
+    					<div class="col-sm-8">
+	      					<p class="form-control-static" id="cidr">{{networkInfo.cidr}}</p>
 	      				</div>
     				</div>
 					<div class="form-group">
-    					<label class="col-sm-2 control-label" for="netname" th:text="#{form.field.netname}">Network name:</label>
-    					<div class="col-sm-10">
-	      					<p class="form-control-static" id="netname" ng-model="networkInfo.networkName"/>
+    					<label class="col-sm-4 control-label" for="netname" th:text="#{form.field.netname}">Network name:</label>
+    					<div class="col-sm-8">
+	      					<p class="form-control-static" id="netname">{{networkInfo.networkName}}</p>
 	      				</div>
   					</div>
 					<div class="form-group">
-    					<label class="col-sm-2 control-label" for="country" th:text="#{form.field.country}">Country:</label>
-    					<div class="col-sm-10">
-	      					<p class="form-control-static" id="country" ng-model="networkInfo.country"/>
+    					<label class="col-sm-4 control-label" for="country" th:text="#{form.field.country}">Country:</label>
+    					<div class="col-sm-8">
+	      					<p class="form-control-static" id="country">{{networkInfo.country}}</p>
 	      				</div>
   					</div>
 					<div class="form-group">
-    					<label class="col-sm-2 control-label" for="registry" th:text="#{form.field.registry}">Registry:</label>
-    					<div class="col-sm-10">
-	      					<p class="form-control-static" id="registry" ng-model="networkInfo.rir"/>
+    					<label class="col-sm-4 control-label" for="registry" th:text="#{form.field.registry}">Registry:</label>
+    					<div class="col-sm-8">
+	      					<p class="form-control-static" id="registry">{{networkInfo.rir}}</p>
 	      				</div>
   					</div>
 					<div class="form-group">
-    					<label class="col-sm-2 control-label" for="source" th:text="#{form.field.source}">Source:</label>
-    					<div class="col-sm-10">
-	      					<p class="form-control-static" id="source" ng-model="networkInfo.source"/>
+    					<label class="col-sm-4 control-label" for="source" th:text="#{form.field.source}">Source:</label>
+    					<div class="col-sm-8">
+	      					<p class="form-control-static" id="source">{{networkInfo.source}}</p>
 	      				</div>
   					</div>
            		</form>
