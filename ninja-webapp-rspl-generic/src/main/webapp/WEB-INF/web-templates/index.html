@@ -7,45 +7,74 @@
 		    /*<![CDATA[*/
 		   	angular.module('org.flowninja.rpsl.lookup').config(function(RestangularProvider,$httpProvider,LookupServiceProvider) {
 			   	LookupServiceProvider.setRestUri([[@{/rest/ip/addr}]]);
+			   	LookupServiceProvider.setStatus200([[#{rest.status200}]]);
+			   	LookupServiceProvider.setStatus400([[#{rest.status400}]]);
+			   	LookupServiceProvider.setStatus404([[#{rest.status404}]]);
+			   	LookupServiceProvider.setStatusAny([[#{rest.statusAny}]]);			   	
 		    });
 		   	/*]]>*/
 		</script>
         <div class="container-fluid">
 	      <div class="page-header">
-    	    <h1>#{page.headline}</h1>
-    	    <p class="lead">#{page.description}</p>
+    	    <h1 th:text="#{page.headline}">Resolve IP Address</h1>
+    	    <p class="lead" th:text="#{page.description}">Resolve an IP address to network information</p>
     	  </div>
-	      <div class="row">
+	      <div class="row" ng-module="org.flowninja.rpsl.lookup">
         	<div class="col-md-8 col-md-offset-2">
-        		<form>
-					<div class="form-group">
-    					<label for="ipaddr">#{form.field.ipaddr}</label>
-    					<input class="form-control" id="ipaddr" placeholder="Enter IPv4 address"/>
+        		<form ng-controller="LookupController" name="addrForm" class="form-horizontal">
+					<div class="form-group has-feedback" ng-class="getFormGroupCssClasses(addrForm.ipaddr)">
+    					<label class="col-sm-2 control-label" for="ipaddr" th:text="#{form.field.ipaddr}">IP address:</label>
+    					<div class="col-sm-6">
+	    					<input class="form-control" id="ipaddr" name="ipaddr" placeholder="IPv4 address" 
+	    						required="required"
+	    						ng-model="ipAddress" 
+	    						ng-change="clearNetworkInfo()"
+	    						ng-pattern="/^((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.){3}((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))$/"/>
+							<span class="glyphicon form-control-feedback" 
+								ng-show="getFormFeedbackVisible(addrForm.ipaddr)"
+								ng-class="getFormFeedbackCssClasses(addrForm.ipaddr)" 
+								aria-hidden="true"></span>
+						</div>
+						<div class="col-sm-2">
+	  					<button class="btn btn-default" ng-disabled="!canSave()" ng-click="resolveNetworkInfo()"
+  							th:text="#{form.action.resolve}">Resolve network information</button>
+						</div>
   					</div>
-  					<button class="btn btn-default">#{form.action.resolve}</button>
-					<div class="form-group has-success has-feedback">
-    					<label for="cidr">#{form.field.cidr}</label>
-      					<p class="form-control-static" id="cidr" aria-describedby="cidrStatus"/>
-						<span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>
-  						<span id="cidrStatus" class="sr-only">(success)</span>
+					<div class="form-group">
+    					<label class="col-sm-2 control-label" for="status" th:text="#{form.field.status}">CIDR:</label>
+    					<div class="col-sm-10">
+	      					<p class="form-control-static" id="status" ng-model="networkInfo.status"/>
+	      				</div>
     				</div>
-					<div class="form-group has-error has-feedback">
-    					<label for="netname">#{form.field.netname}</label>
-      					<p class="form-control-static" id="netname" aria-describedby="netnameStatus"/>
-						<span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
-  						<span id="netnameStatus" class="sr-only">(error)</span>
+					<div class="form-group">
+    					<label class="col-sm-2 control-label" for="cidr" th:text="#{form.field.cidr}">CIDR:</label>
+    					<div class="col-sm-10">
+	      					<p class="form-control-static" id="cidr" ng-model="networkInfo.cidr"/>
+	      				</div>
+    				</div>
+					<div class="form-group">
+    					<label class="col-sm-2 control-label" for="netname" th:text="#{form.field.netname}">Network name:</label>
+    					<div class="col-sm-10">
+	      					<p class="form-control-static" id="netname" ng-model="networkInfo.networkName"/>
+	      				</div>
   					</div>
 					<div class="form-group">
-    					<label for="country">#{form.field.country}</label>
-      					<p class="form-control-static" id="country"/>
+    					<label class="col-sm-2 control-label" for="country" th:text="#{form.field.country}">Country:</label>
+    					<div class="col-sm-10">
+	      					<p class="form-control-static" id="country" ng-model="networkInfo.country"/>
+	      				</div>
   					</div>
 					<div class="form-group">
-    					<label for="registry">#{form.field.registry}</label>
-      					<p class="form-control-static" id="registry"/>
+    					<label class="col-sm-2 control-label" for="registry" th:text="#{form.field.registry}">Registry:</label>
+    					<div class="col-sm-10">
+	      					<p class="form-control-static" id="registry" ng-model="networkInfo.rir"/>
+	      				</div>
   					</div>
 					<div class="form-group">
-    					<label for="source">#{form.field.source}</label>
-      					<p class="form-control-static" id="source"/>
+    					<label class="col-sm-2 control-label" for="source" th:text="#{form.field.source}">Source:</label>
+    					<div class="col-sm-10">
+	      					<p class="form-control-static" id="source" ng-model="networkInfo.source"/>
+	      				</div>
   					</div>
            		</form>
         	</div>
