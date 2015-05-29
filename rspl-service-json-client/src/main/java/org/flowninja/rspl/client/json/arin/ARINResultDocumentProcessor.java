@@ -7,6 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.flowninja.rspl.client.json.common.IResultDocumentProcessor;
 import org.flowninja.rspl.definitions.types.ENetworkRegistry;
 import org.flowninja.rspl.definitions.types.NetworkResource;
+import org.flowninja.rspl.definitions.types.ResultDocument;
 import org.flowninja.types.utils.CIDR4AddressRangeParser;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,8 +27,8 @@ public class ARINResultDocumentProcessor implements IResultDocumentProcessor {
 	 * @see org.flowninja.rspl.client.json.common.IResultDocumentProcessor#processResultDocument(org.json.JSONObject)
 	 */
 	@Override
-	public NetworkResource processResultDocument(JSONObject json) {
-		NetworkResource resource = null;
+	public ResultDocument processResultDocument(JSONObject json) {
+		ResultDocument resource = null;
 		
 		try {
 			if(json != null)
@@ -41,8 +42,8 @@ public class ARINResultDocumentProcessor implements IResultDocumentProcessor {
 		return resource;
 	}
 
-	private NetworkResource processNet(JSONObject json)  throws JSONException {
-		NetworkResource resource = null;
+	private ResultDocument processNet(JSONObject json)  throws JSONException {
+		ResultDocument resource = null;
 		
 		if(json != null) {
 			String startAddress = dollarValue(json.getJSONObject("startAddress"));
@@ -54,7 +55,7 @@ public class ARINResultDocumentProcessor implements IResultDocumentProcessor {
 					&& StringUtils.isNotBlank(name) && (StringUtils.startsWith(type, "DA") 
 							|| StringUtils.startsWith(type, "DS")
 							|| StringUtils.startsWith(type, "S")))
-				resource =  new NetworkResource(CIDR4AddressRangeParser.parse(String.format("%s - %s",  startAddress, endAddress)), name, null, ENetworkRegistry.ARIN);
+				resource =  new ResultDocument(new NetworkResource(CIDR4AddressRangeParser.parse(String.format("%s - %s",  startAddress, endAddress)), name, null, ENetworkRegistry.ARIN));
 		}
 		
 		return resource;

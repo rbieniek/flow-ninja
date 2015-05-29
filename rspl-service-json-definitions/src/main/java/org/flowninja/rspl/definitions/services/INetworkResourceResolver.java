@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 
 import org.flowninja.rspl.definitions.types.ENetworkRegistry;
-import org.flowninja.rspl.definitions.types.NetworkResource;
+import org.flowninja.rspl.definitions.types.ResultDocument;
 
 /**
  * @author rainer
@@ -19,7 +19,7 @@ public interface INetworkResourceResolver {
 	 * @param networkAddress
 	 * @return
 	 */
-	public NetworkResource resolveNetworkAddress(byte[] networkAddress) throws URISyntaxException, IOException;
+	public ResultDocument resolveNetworkAddress(byte[] networkAddress) throws URISyntaxException, IOException;
 	
 	/**
 	 * 

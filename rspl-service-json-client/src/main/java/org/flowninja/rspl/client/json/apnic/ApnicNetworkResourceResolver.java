@@ -8,9 +8,11 @@ import java.net.URISyntaxException;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.flowninja.rspl.client.json.common.IJsonNetworkResourceResolver;
 import org.flowninja.rspl.definitions.services.INetworkResourceResolver;
 import org.flowninja.rspl.definitions.types.ENetworkRegistry;
 import org.flowninja.rspl.definitions.types.NetworkResource;
+import org.flowninja.rspl.definitions.types.ResultDocument;
 import org.flowninja.types.net.CIDR4Address;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +21,7 @@ import org.springframework.stereotype.Component;
  *
  */
 // @Component
-public class ApnicNetworkResourceResolver implements INetworkResourceResolver {
+public class ApnicNetworkResourceResolver implements IJsonNetworkResourceResolver {
 
 	private Set<CIDR4Address> prefixes = new HashSet<CIDR4Address>();
 
@@ -81,9 +83,9 @@ public class ApnicNetworkResourceResolver implements INetworkResourceResolver {
 	 * @see org.flowninja.rspl.client.common.INetworkResourceResolver#resolveNetworkAddress(byte[])
 	 */
 	@Override
-	public NetworkResource resolveNetworkAddress(byte[] networkAddress)
+	public ResultDocument resolveNetworkAddress(byte[] networkAddress)
 			throws URISyntaxException, IOException {
-		NetworkResource resource = null;
+		ResultDocument resource = null;
 		
 		return resource;
 	}

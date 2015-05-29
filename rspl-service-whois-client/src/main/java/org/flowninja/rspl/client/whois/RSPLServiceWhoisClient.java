@@ -5,8 +5,10 @@ package org.flowninja.rspl.client.whois;
 
 import java.util.Set;
 
+import org.flowninja.rspl.client.whois.common.IWhoisNetworkResourceResolver;
 import org.flowninja.rspl.definitions.services.INetworkResourceResolver;
 import org.flowninja.rspl.definitions.types.NetworkResource;
+import org.flowninja.rspl.definitions.types.ResultDocument;
 import org.flowninja.types.net.CIDR4Address;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +24,7 @@ public class RSPLServiceWhoisClient {
 	private static final Logger logger = LoggerFactory.getLogger(RSPLServiceWhoisClient.class);
 	
 	@Autowired
-	private Set<INetworkResourceResolver> resolvers;
+	private Set<IWhoisNetworkResourceResolver> resolvers;
 	
 	public NetworkResource resolveAddress(byte[] address) {
 		NetworkResource resource = null;
@@ -34,7 +36,10 @@ public class RSPLServiceWhoisClient {
 				logger.info("resolving network address {} in registry {}", address, resolver.resolvingRegistry());
 				
 				try {
-					resource = resolver.resolveNetworkAddress(address);
+					ResultDocument document = resolver.resolveNetworkAddress(address);
+					
+					if(document != null && document.isResolved())
+						resource = document.getNetworkResource();
 				} catch(Exception e) {
 					logger.error("failed to resolve network address with registry {}", resolver.resolvingRegistry(), e);				
 				}				

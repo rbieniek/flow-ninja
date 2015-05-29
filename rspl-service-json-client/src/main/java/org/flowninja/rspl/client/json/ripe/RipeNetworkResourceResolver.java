@@ -16,10 +16,12 @@ import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.ContentType;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.flowninja.rspl.client.json.common.IJsonNetworkResourceResolver;
 import org.flowninja.rspl.client.json.common.RegistryResponseHandler;
 import org.flowninja.rspl.definitions.services.INetworkResourceResolver;
 import org.flowninja.rspl.definitions.types.ENetworkRegistry;
 import org.flowninja.rspl.definitions.types.NetworkResource;
+import org.flowninja.rspl.definitions.types.ResultDocument;
 import org.flowninja.types.net.CIDR4Address;
 import org.flowninja.types.utils.NetworkAddressHelper;
 import org.slf4j.Logger;
@@ -36,7 +38,7 @@ import org.springframework.stereotype.Component;
  *
  */
 @Component
-public class RipeNetworkResourceResolver implements INetworkResourceResolver {
+public class RipeNetworkResourceResolver implements IJsonNetworkResourceResolver {
 	private static final Logger logger = LoggerFactory.getLogger(RipeNetworkResourceResolver.class);
 	
 	private Set<CIDR4Address> prefixes = new HashSet<CIDR4Address>();
@@ -97,8 +99,8 @@ public class RipeNetworkResourceResolver implements INetworkResourceResolver {
 	}
 	
 	@Override
-	public NetworkResource resolveNetworkAddress(byte[] networkAddress) throws URISyntaxException, IOException{
-		NetworkResource result = null;
+	public ResultDocument resolveNetworkAddress(byte[] networkAddress) throws URISyntaxException, IOException{
+		ResultDocument result = null;
 		String ipAddr = NetworkAddressHelper.formatAddressSpecification(networkAddress);
 		URI uri = (new URIBuilder())
 				.setScheme("http")

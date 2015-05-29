@@ -8,6 +8,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
 import org.flowninja.rspl.client.json.TestConfig;
 import org.flowninja.rspl.definitions.types.ENetworkRegistry;
 import org.flowninja.rspl.definitions.types.NetworkResource;
+import org.flowninja.rspl.definitions.types.ResultDocument;
 import org.flowninja.types.net.CIDR4Address;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -43,13 +44,13 @@ public class ARINNetworkResourceResolverTest {
 	@Test
 	public void resolveWwwGoogleCom() throws Exception {
 		assertThat(resolver.resolveNetworkAddress(IP_ADDR_WWW_GOOGLE_COM))
-			.isEqualTo(new NetworkResource(new CIDR4Address(IP_ADDR_WWW_GOOGLE_COM, 19), "GOOGLE", null, ENetworkRegistry.ARIN));
+			.isEqualTo(new ResultDocument(new NetworkResource(new CIDR4Address(IP_ADDR_WWW_GOOGLE_COM, 19), "GOOGLE", null, ENetworkRegistry.ARIN)));
 	}
 
 	@Test
 	public void resolveStaticAkamaiCom() throws Exception {
 		assertThat(resolver.resolveNetworkAddress(IP_ADDR_STATIC_AKAMAI_COM))
-			.isEqualTo(new NetworkResource(new CIDR4Address(IP_ADDR_STATIC_AKAMAI_COM, 12), "AKAMAI", null, ENetworkRegistry.ARIN));
+			.isEqualTo(new ResultDocument(new NetworkResource(new CIDR4Address(IP_ADDR_STATIC_AKAMAI_COM, 12), "AKAMAI", null, ENetworkRegistry.ARIN)));
 	}
 
 	@Test

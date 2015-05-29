@@ -8,6 +8,7 @@ import static org.fest.assertions.api.Assertions.*;
 import org.flowninja.rspl.client.whois.TestConfig;
 import org.flowninja.rspl.definitions.types.ENetworkRegistry;
 import org.flowninja.rspl.definitions.types.NetworkResource;
+import org.flowninja.rspl.definitions.types.ResultDocument;
 import org.flowninja.types.net.CIDR4Address;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -44,9 +45,9 @@ public class AfrinicNetworkResourceResolverTest {
 	@Test
 	public void resolve() throws Exception {
 		assertThat(resolver.resolveNetworkAddress(WWW_AFRINIC_NET))
-			.isEqualTo(new NetworkResource(new CIDR4Address(WWW_AFRINIC_NET, 23), 
+			.isEqualTo(new ResultDocument(new NetworkResource(new CIDR4Address(WWW_AFRINIC_NET, 23), 
 					"AFRINIC", 
 					"ZA", 
-					ENetworkRegistry.AFRINIC));
+					ENetworkRegistry.AFRINIC)));
 	}
 }

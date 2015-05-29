@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.net.whois.WhoisClient;
-import org.flowninja.rspl.definitions.services.INetworkResourceResolver;
 import org.flowninja.rspl.definitions.types.NetworkResource;
+import org.flowninja.rspl.definitions.types.ResultDocument;
 import org.flowninja.types.net.CIDR4Address;
 import org.flowninja.types.utils.NetworkAddressHelper;
 import org.slf4j.Logger;
@@ -22,7 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @author rainer
  *
  */
-public abstract class WhoisClientBase implements INetworkResourceResolver {
+public abstract class WhoisClientBase implements IWhoisNetworkResourceResolver {
 	private static final Logger logger = LoggerFactory.getLogger(WhoisClientBase.class);
 
 	protected Set<CIDR4Address> prefixes = new HashSet<CIDR4Address>();
@@ -38,8 +38,8 @@ public abstract class WhoisClientBase implements INetworkResourceResolver {
 	}
 
 	@Override
-	public NetworkResource resolveNetworkAddress(byte[] networkAddress) throws URISyntaxException, IOException {
-		NetworkResource resource = null;
+	public ResultDocument resolveNetworkAddress(byte[] networkAddress) throws URISyntaxException, IOException {
+		ResultDocument resource = null;
 		WhoisClient client = new WhoisClient();
 		
 		try {
@@ -49,7 +49,7 @@ public abstract class WhoisClientBase implements INetworkResourceResolver {
 			
 			for(IWhoisRecord record : records) {
 				if(record instanceof InetnumRecord) {
-					resource = mapInetNumRecord((InetnumRecord)record);
+					resource = new ResultDocument(mapInetNumRecord((InetnumRecord)record));
 					
 					break;
 				}
