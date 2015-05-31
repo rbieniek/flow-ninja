@@ -27,6 +27,7 @@ public class ARINNetworkResourceResolverTest {
 	private static final byte[] IP_ADDR_BLIZZARD_FR = new byte[] { (byte)0x50, (byte)0xef, (byte)0xba, (byte)0x1a };
 	private static final byte[] IP_ADDR_WWW_GOOGLE_COM = new byte[] { (byte)0xd8, (byte)0x3a, (byte)0xd3, (byte)0x04 };
 	private static final byte[] IP_ADDR_STATIC_AKAMAI_COM = new byte[] { (byte)0xac, (byte)0xe3, (byte)0xa4, (byte)0x70 };
+	private static final byte[] IP_ADDR_TECTRUM24_DE = new byte[] { (byte)0xC0, (byte)0x36, (byte)0x2d, (byte)0x09 };
 	
 	@Autowired
 	private ArinNetworkResourceResolver resolver;
@@ -56,6 +57,12 @@ public class ARINNetworkResourceResolverTest {
 	@Test
 	public void resolveBlizzardFR() throws Exception {
 		assertThat(resolver.resolveNetworkAddress(IP_ADDR_BLIZZARD_FR)).isNull();
+	}
+
+	@Test
+	public void resolveTectrumDE() throws Exception {
+		assertThat(resolver.resolveNetworkAddress(IP_ADDR_TECTRUM24_DE)).
+			isEqualTo(new ResultDocument(ENetworkRegistry.RIPE));
 	}
 
 	@Test

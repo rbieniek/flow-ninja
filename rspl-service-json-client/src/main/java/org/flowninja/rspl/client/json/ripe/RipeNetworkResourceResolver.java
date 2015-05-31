@@ -113,7 +113,7 @@ public class RipeNetworkResourceResolver implements IJsonNetworkResourceResolver
 		
 		logger.info("resolving address {} with URI {}", ipAddr, uri);
 		
-		result = processor.processResultDocument(httpClient.execute(RequestBuilder.get(uri)
+		result = processor.processResultDocument(networkAddress, httpClient.execute(RequestBuilder.get(uri)
 					.setHeader(HttpHeaders.ACCEPT, ContentType.APPLICATION_JSON.getMimeType())
 					.setHeader(HttpHeaders.ACCEPT_CHARSET, ContentType.APPLICATION_JSON.getCharset().name())
 					.build(), 

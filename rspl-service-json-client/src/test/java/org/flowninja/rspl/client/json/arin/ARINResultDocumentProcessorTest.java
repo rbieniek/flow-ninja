@@ -33,6 +33,8 @@ public class ARINResultDocumentProcessorTest {
 	private static final byte[] IP_ADDR_WWW_GOOGLE_COM = new byte[] { (byte)0xad, (byte)0xc2, (byte)0xd3, (byte)0x04 };
 	private static final byte[] IP_ADDR_STATIC_AKAMAI_COM = new byte[] { (byte)0xac, (byte)0xe3, (byte)0xa4, (byte)0x70 };
 	private static final byte[] IP_ADDR_WWW_NDR_DE = new byte[] { (byte)0x17, (byte)0x39, (byte)0x6d, (byte)0xa3 };
+	private static final byte[] IP_ADDR_TECTRUM24_DE = new byte[] { (byte)0xC0, (byte)0x36, (byte)0x2d, (byte)0x09 };
+	private static final byte[] IP_ADDR_MULTICAST = new byte[] { (byte)0xF4, (byte)0x00, (byte)0x00, (byte)0x01 };
 
 	@Autowired
 	private ResourceLoader loader;
@@ -62,30 +64,31 @@ public class ARINResultDocumentProcessorTest {
 	
 	@Test
 	public void arinFound() {
-		assertThat(processor.processResultDocument(arinFound))
+		assertThat(processor.processResultDocument(IP_ADDR_WWW_GOOGLE_COM,arinFound))
 			.isEqualTo(new ResultDocument(new NetworkResource(new CIDR4Address(IP_ADDR_WWW_GOOGLE_COM, 16), "GOOGLE", null, ENetworkRegistry.ARIN)));
 	}
 
 	@Test
 	public void akamaiFound() {
-		assertThat(processor.processResultDocument(akamaiFound))
+		assertThat(processor.processResultDocument(IP_ADDR_STATIC_AKAMAI_COM,akamaiFound))
 			.isEqualTo(new ResultDocument(new NetworkResource(new CIDR4Address(IP_ADDR_STATIC_AKAMAI_COM, 12), "AKAMAI", null, ENetworkRegistry.ARIN)));
 	}
 
 	@Test
 	public void akamaiReassigned() {
-		assertThat(processor.processResultDocument(akamaiReassigned))
+		assertThat(processor.processResultDocument(IP_ADDR_WWW_NDR_DE,akamaiReassigned))
 			.isEqualTo(new ResultDocument(new NetworkResource(new CIDR4Address(IP_ADDR_WWW_NDR_DE, 20), "AIBV", null, ENetworkRegistry.ARIN)));
 	}
 
 	@Test
 	public void arinOther() {
-		assertThat(processor.processResultDocument(arinOther)).isNull();
+		assertThat(processor.processResultDocument(IP_ADDR_TECTRUM24_DE, arinOther))
+			.isEqualTo(new ResultDocument(ENetworkRegistry.RIPE));
 	}
 
 	@Test
 	public void arinNotFound() {
-		assertThat(processor.processResultDocument(arinNotFound)).isNull();
+		assertThat(processor.processResultDocument(IP_ADDR_MULTICAST, arinNotFound)).isNull();
 	}
 
 }

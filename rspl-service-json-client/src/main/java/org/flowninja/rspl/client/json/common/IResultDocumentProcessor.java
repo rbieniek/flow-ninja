@@ -23,5 +23,5 @@ public interface IResultDocumentProcessor {
 	 * @param json the JSON document to process. Maybe <code>null</code>
 	 * @return the result of the resolve process. Will be <code>null</code> if the passed JSON document was <code>null</code>
 	 */
-	ResultDocument processResultDocument(JSONObject json);
+	ResultDocument processResultDocument(byte[] networkAddress, JSONObject json);
 }

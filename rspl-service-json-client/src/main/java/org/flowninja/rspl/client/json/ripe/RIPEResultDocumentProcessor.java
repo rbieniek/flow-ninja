@@ -26,7 +26,7 @@ public class RIPEResultDocumentProcessor implements IResultDocumentProcessor {
 	private static final Logger logger = LoggerFactory.getLogger(RIPEResultDocumentProcessor.class);
 
 	@Override
-	public ResultDocument processResultDocument(JSONObject json) {
+	public ResultDocument processResultDocument(byte[] networkAddress, JSONObject json) {
 		ResultDocument resource = null;
 				
 		try {

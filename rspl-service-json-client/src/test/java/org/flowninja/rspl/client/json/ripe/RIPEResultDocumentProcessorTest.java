@@ -30,8 +30,9 @@ import com.fasterxml.jackson.datatype.jsonorg.JsonOrgModule;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes=TestConfig.class)
 public class RIPEResultDocumentProcessorTest {
-
+	private static final byte[] IP_ADDR_WWW_GOOGLE_COM = new byte[] { (byte)0xad, (byte)0xc2, (byte)0xd3, (byte)0x04 };
 	private static final byte[] IP_ADDR_BLIZZARD_FR = new byte[] { (byte)0x50, (byte)0xef, (byte)0xba, (byte)0x1a };
+	private static final byte[] IP_ADDR_MULTICAST = new byte[] { (byte)0xF4, (byte)0x00, (byte)0x00, (byte)0x01 };
 
 	@Autowired
 	private ResourceLoader loader;
@@ -56,17 +57,17 @@ public class RIPEResultDocumentProcessorTest {
 	
 	@Test
 	public void ripeFound() {
-		assertThat(processor.processResultDocument(ripeFound))
+		assertThat(processor.processResultDocument(IP_ADDR_BLIZZARD_FR, ripeFound))
 			.isEqualTo(new ResultDocument(new NetworkResource(new CIDR4Address(IP_ADDR_BLIZZARD_FR, 24), "FR-BLIZZARD", "FR", ENetworkRegistry.RIPE)));
 	}
 
 	@Test
 	public void ripeOther() {
-		assertThat(processor.processResultDocument(ripeOther)).isNull();
+		assertThat(processor.processResultDocument(IP_ADDR_WWW_GOOGLE_COM, ripeOther)).isNull();
 	}
 
 	@Test
 	public void ripeNotFound() {
-		assertThat(processor.processResultDocument(ripeNotFound)).isNull();
+		assertThat(processor.processResultDocument(IP_ADDR_MULTICAST, ripeNotFound)).isNull();
 	}
 }

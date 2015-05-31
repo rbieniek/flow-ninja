@@ -25,6 +25,7 @@ public class RSPLServiceJsonClientTest {
 	private static final byte[] IP_ADDR_BLIZZARD_FR = new byte[] { (byte)0x50, (byte)0xef, (byte)0xba, (byte)0x1a };
 	private static final byte[] IP_ADDR_WWW_GOOGLE_COM = new byte[] { (byte)0xd8, (byte)0x3a, (byte)0xd3, (byte)0x04 };
 	private static final byte[] IP_ADDR_AP_NIC_NET = new byte[] { (byte)0xca, (byte)0x0c, (byte)0x1d, (byte)0xaf };
+	private static final byte[] IP_ADDR_TECTRUM24_DE = new byte[] { (byte)0xC0, (byte)0x36, (byte)0x2d, (byte)0x09 };
 
 	@Autowired
 	private RSPLServiceJsonClient client;
@@ -38,6 +39,17 @@ public class RSPLServiceJsonClientTest {
 	@Test
 	public void canResolveBlizzardFR() {
 		assertThat(client.canResolveAddress(IP_ADDR_BLIZZARD_FR)).isTrue();
+	}
+
+	@Test
+	public void resolveTectrumDE() throws Exception {
+		assertThat(client.resolveAddress(IP_ADDR_TECTRUM24_DE))
+			.isEqualTo(new NetworkResource(new CIDR4Address(IP_ADDR_TECTRUM24_DE, 24), "IMD-TECTRUM", "DE", ENetworkRegistry.RIPE));
+	}
+
+	@Test
+	public void canResolveTectrumDE() {
+		assertThat(client.canResolveAddress(IP_ADDR_TECTRUM24_DE)).isTrue();
 	}
 
 	@Test
