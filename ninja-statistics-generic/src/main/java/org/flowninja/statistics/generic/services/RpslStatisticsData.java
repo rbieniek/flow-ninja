@@ -29,6 +29,7 @@ public class RpslStatisticsData implements Serializable {
 	private long resultsFromCache;
 	private long resultsFromJsonService;
 	private long resultsFromWhoisService;
+	private long resultsFromRdapService;
 	
 	public RpslStatisticsData() {}
 
@@ -37,7 +38,7 @@ public class RpslStatisticsData implements Serializable {
 	}
 
 	public RpslStatisticsData(LocalDateTime stamp, long lookupRequests, long badRequests, long notFound, long administrativelyBlocked, 
-			long resultsFromCache, long resultsFromJsonService, long resultsFromWhoisService) {
+			long resultsFromCache, long resultsFromJsonService, long resultsFromWhoisService, long resultsFromRdapService) {
 		this.stamp = stamp;
 		this.lookupRequests = lookupRequests;
 		this.badRequests = badRequests;
@@ -46,6 +47,7 @@ public class RpslStatisticsData implements Serializable {
 		this.resultsFromCache = resultsFromCache;
 		this.resultsFromJsonService = resultsFromJsonService;
 		this.resultsFromWhoisService = resultsFromWhoisService;
+		this.resultsFromRdapService = resultsFromRdapService;
 	}
 
 	/**
@@ -132,6 +134,7 @@ public class RpslStatisticsData implements Serializable {
 				.append(this.resultsFromCache, o.resultsFromCache)
 				.append(this.resultsFromJsonService, o.resultsFromJsonService)
 				.append(this.resultsFromWhoisService, o.resultsFromWhoisService)
+				.append(this.resultsFromRdapService, o.resultsFromRdapService)
 				.isEquals();
 	}
 
@@ -146,7 +149,15 @@ public class RpslStatisticsData implements Serializable {
 				.append(resultsFromCache)
 				.append(resultsFromJsonService)
 				.append(resultsFromWhoisService)
+				.append(resultsFromRdapService)
 				.toHashCode();
+	}
+
+	/**
+	 * @param resultsFromRdapService the resultsFromRdapService to set
+	 */
+	public void setResultsFromRdapService(long resultsFromRdapService) {
+		this.resultsFromRdapService = resultsFromRdapService;
 	}
 	
 }

@@ -30,8 +30,13 @@ public interface IRpslStatisticsService {
 	/**
 	 * 
 	 */
+	void recordResultFromRdapService();
+
+	/**
+	 * 
+	 */
 	void recordResultFromJsonService();
-	
+
 	/**
 	 * 
 	 */

@@ -16,6 +16,7 @@ import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.flowninja.rspl.client.rdap.common.RdapPayloadResponseHandler;
 import org.flowninja.rspl.client.rdap.common.RdapRedirectStrategy;
 import org.flowninja.rspl.definitions.types.NetworkResource;
+import org.flowninja.types.net.CIDR4Address;
 import org.flowninja.types.utils.NetworkAddressHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -102,6 +103,10 @@ public class RSPLServiceRdapClient implements InitializingBean, DisposableBean {
 		logger.info("resolved network address {} to resource {}", ipAddr, resource);
 		
 		return resource;
+	}
+	
+	public NetworkResource resolveAddress(CIDR4Address address) {
+		return resolveAddress(address.getAddress());
 	}
 	
 	private CloseableHttpClient httpClient() throws Exception {

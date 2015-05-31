@@ -9,6 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.flowninja.persistence.generic.services.IBlockedNetworksPersistenceService;
 import org.flowninja.persistence.rspl.generic.services.RsplPersistenceService;
 import org.flowninja.rspl.client.json.RSPLServiceJsonClient;
+import org.flowninja.rspl.client.rdap.RSPLServiceRdapClient;
 import org.flowninja.rspl.client.whois.RSPLServiceWhoisClient;
 import org.flowninja.rspl.definitions.types.NetworkResource;
 import org.flowninja.statistics.generic.services.IRpslStatisticsService;
@@ -45,6 +46,8 @@ public class IpAddressRestController {
 	@Autowired
 	private RSPLServiceWhoisClient whoisClient;
 
+	private RSPLServiceRdapClient rdapClient;
+	
 	@Autowired
 	private IRpslStatisticsService statisticsService;
 	
@@ -96,8 +99,16 @@ public class IpAddressRestController {
 						
 						return new ResponseEntity<NetworkResourceResult>(new NetworkResourceResult(resource, EResultSource.CACHE), HttpStatus.OK);
 					}
-			
-					if(jsonClient.canResolveAddress(cidr)) {
+
+					if((resource = rdapClient.resolveAddress(cidr)) != null) { 
+						rsplService.persistNetworkResource(resource);
+						
+						logger.info("looked of IP Address {} yielded JSON RDAP lookup result {}", cidr, resource);
+						
+						statisticsService.recordResultFromRdapService();
+		
+						return new ResponseEntity<NetworkResourceResult>(new NetworkResourceResult(resource, EResultSource.JSON), HttpStatus.OK);					
+					} else if(jsonClient.canResolveAddress(cidr)) {
 						resource = jsonClient.resolveAddress(cidr);
 						
 						if(resource != null) {

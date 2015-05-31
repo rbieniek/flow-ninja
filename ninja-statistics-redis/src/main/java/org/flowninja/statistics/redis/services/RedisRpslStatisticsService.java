@@ -32,6 +32,8 @@ public class RedisRpslStatisticsService implements IRpslStatisticsService {
 
 	private static final String KEY_NOT_FOUND = "notFound";
 
+	private static final String KEY_RESULTS_FROM_RDAP_SERVICE = "resultsFromRdapService";
+
 	private static final String KEY_RESULTS_FROM_WHOIS_SERVICE = "resultsFromWhoisService";
 
 	private static final String KEY_RESULTS_FROM_JSON_SERVICE = "resultsFromJsonService";
@@ -122,13 +124,25 @@ public class RedisRpslStatisticsService implements IRpslStatisticsService {
 		try {
 			BoundHashOperations<LocalDateTime, String, Long> ops = redisTemplate.boundHashOps(LocalDateTime.now());
 			
-			ops.expire(historyDays, TimeUnit.DAYS);			
+			ops.expire(historyDays, TimeUnit.DAYS);
 			ops.increment(KEY_ADMINSTRATIVELY_BLOCKED, 1);
 		} catch(DataAccessException e) {
 			logger.error("failed to record lookup request", e);
 		}
 	}
 
+	@Override
+	public void recordResultFromRdapService() {
+		try {
+			BoundHashOperations<LocalDateTime, String, Long> ops = redisTemplate.boundHashOps(LocalDateTime.now());
+			
+			ops.expire(historyDays, TimeUnit.DAYS);
+			ops.increment(KEY_RESULTS_FROM_RDAP_SERVICE, 1);
+		} catch(DataAccessException e) {
+			logger.error("failed to record lookup request", e);
+		}
+	}
+	
 	public void setTemplate(RedisTemplate<LocalDateTime, Map<String, Long>> redisTemplate) {
 		this.redisTemplate = redisTemplate;
 	}
@@ -152,7 +166,8 @@ public class RedisRpslStatisticsService implements IRpslStatisticsService {
 						defGet(map, KEY_ADMINSTRATIVELY_BLOCKED),
 						defGet(map, KEY_RESULTS_FROM_CACHE),
 						defGet(map, KEY_RESULTS_FROM_JSON_SERVICE),
-						defGet(map, KEY_RESULTS_FROM_WHOIS_SERVICE)));
+						defGet(map, KEY_RESULTS_FROM_WHOIS_SERVICE),
+						defGet(map, KEY_RESULTS_FROM_RDAP_SERVICE)));
 			} else 
 				set.add(new RpslStatisticsData(stamp));
 		}
@@ -173,5 +188,4 @@ public class RedisRpslStatisticsService implements IRpslStatisticsService {
 	public void setHistoryDays(int historyDays) {
 		this.historyDays = historyDays;
 	}
-	
 }

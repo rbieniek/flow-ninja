@@ -114,7 +114,7 @@ public class RedisRpslStatisticsServiceTest {
 		service.recordLookupRequest();
 		
 		assertThat(ops.get(thisHour, "lookupRequests")).isEqualTo(1);
-		assertThat(service.history()).hasSize(720).contains(new RpslStatisticsData(thisHour, 1L, 0L, 0L, 0L, 0L, 0L, 0L));
+		assertThat(service.history()).hasSize(720).contains(new RpslStatisticsData(thisHour, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L));
 	}
 
 	@Test
@@ -124,7 +124,7 @@ public class RedisRpslStatisticsServiceTest {
 		service.recordBadRequest();
 		
 		assertThat(ops.get(thisHour, "badRequest")).isEqualTo(1);
-		assertThat(service.history()).hasSize(720).contains(new RpslStatisticsData(thisHour, 0L, 1L, 0L, 0L, 0L, 0L, 0L));
+		assertThat(service.history()).hasSize(720).contains(new RpslStatisticsData(thisHour, 0L, 1L, 0L, 0L, 0L, 0L, 0L, 0L));
 	}
 
 	@Test
@@ -134,7 +134,7 @@ public class RedisRpslStatisticsServiceTest {
 		service.recordNotFound();
 		
 		assertThat(ops.get(thisHour, "notFound")).isEqualTo(1);
-		assertThat(service.history()).hasSize(720).contains(new RpslStatisticsData(thisHour, 0L, 0L, 1L, 0L, 0L, 0L, 0L));
+		assertThat(service.history()).hasSize(720).contains(new RpslStatisticsData(thisHour, 0L, 0L, 1L, 0L, 0L, 0L, 0L, 0L));
 	}
 
 	@Test
@@ -144,7 +144,7 @@ public class RedisRpslStatisticsServiceTest {
 		service.recordAdminsitrativeBlocked();
 		
 		assertThat(ops.get(thisHour, "adminstrativelyBlocked")).isEqualTo(1);
-		assertThat(service.history()).hasSize(720).contains(new RpslStatisticsData(thisHour, 0L, 0L, 0L, 1L, 0L, 0L, 0L));
+		assertThat(service.history()).hasSize(720).contains(new RpslStatisticsData(thisHour, 0L, 0L, 0L, 1L, 0L, 0L, 0L, 0L));
 	}
 
 	@Test
@@ -154,7 +154,7 @@ public class RedisRpslStatisticsServiceTest {
 		service.recordResultFromCache();
 		
 		assertThat(ops.get(thisHour, "resultsFromCache")).isEqualTo(1);
-		assertThat(service.history()).hasSize(720).contains(new RpslStatisticsData(thisHour, 0L, 0L, 0L, 0L, 1L, 0L, 0L));
+		assertThat(service.history()).hasSize(720).contains(new RpslStatisticsData(thisHour, 0L, 0L, 0L, 0L, 1L, 0L, 0L, 0L));
 	}
 
 	@Test
@@ -164,7 +164,7 @@ public class RedisRpslStatisticsServiceTest {
 		service.recordResultFromJsonService();
 		
 		assertThat(ops.get(thisHour, "resultsFromJsonService")).isEqualTo(1);
-		assertThat(service.history()).hasSize(720).contains(new RpslStatisticsData(thisHour, 0L, 0L, 0L, 0L, 0L, 1L, 0L));
+		assertThat(service.history()).hasSize(720).contains(new RpslStatisticsData(thisHour, 0L, 0L, 0L, 0L, 0L, 1L, 0L, 0L));
 	}
 
 	@Test
@@ -174,6 +174,16 @@ public class RedisRpslStatisticsServiceTest {
 		service.recordResultFromWhoisService();
 		
 		assertThat(ops.get(thisHour, "resultsFromWhoisService")).isEqualTo(1);
-		assertThat(service.history()).hasSize(720).contains(new RpslStatisticsData(thisHour, 0L, 0L, 0L, 0L, 0L, 0L, 1L));
+		assertThat(service.history()).hasSize(720).contains(new RpslStatisticsData(thisHour, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 0L));
+	}
+
+	@Test
+	public void resultsFromRdapService() {
+		assertThat(ops.hasKey(thisHour, "resultsFromRdapService")).isFalse();
+		
+		service.recordResultFromRdapService();
+		
+		assertThat(ops.get(thisHour, "resultsFromRdapService")).isEqualTo(1);
+		assertThat(service.history()).hasSize(720).contains(new RpslStatisticsData(thisHour, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L));
 	}
 }
