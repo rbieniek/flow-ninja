@@ -8,6 +8,7 @@
     
     <!-- Scans for application @Components to deploy -->
     <context:component-scan base-package="org.flowninja.security.web/" />
+    <context:component-scan base-package="org.flowninja.security.oauth2/" />
     
     <context:annotation-config/>
     

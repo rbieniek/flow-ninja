@@ -1,36 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
     xmlns:security="http://www.springframework.org/schema/security"
+    xmlns:oauth2="http://www.springframework.org/schema/security/oauth2"
     xsi:schemaLocation="
-        http://www.springframework.org/schema/beans
-        http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
-	http://www.springframework.org/schema/security 
-	http://www.springframework.org/schema/security/spring-security-4.0.xsd">
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+	    http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
+	    http://www.springframework.org/schema/security/oauth2 http://www.springframework.org/schema/security/spring-security-oauth2.xsd
+	">
 
-    <security:http use-expressions="true" >
-        <security:access-denied-handler error-page="/auth/denied"/>
-        <security:intercept-url pattern="/index" access="permitAll"/>
-        <security:intercept-url pattern="/error/**" access="permitAll"/>
-        <security:intercept-url pattern="/auth/**" access="permitAll"/>
-        <security:intercept-url pattern="/console/**" access="isAuthenticated()"/>
-        <security:intercept-url pattern="/rest/**" access="isAuthenticated()"/>
-        <security:form-login 
-            authentication-failure-url="/auth/login"
-            default-target-url="/console/dashboard"
-            login-page="/auth/login" 
-            login-processing-url="/login" 
-            password-parameter="password" 
-            username-parameter="email" />
-        <security:logout logout-url="/logout"/>
-    </security:http>    
+    <security:http use-expressions="true" 
+        entry-point-ref="authEntryPoint" 
+        authentication-manager-ref="oauthAuthenticationMananger" 
+        create-session="stateless">
+        <security:expression-handler ref="oauth2ExpressionHandler"/>
+        <security:custom-filter ref="feedbackServer" position="PRE_AUTH_FILTER"/>
+        <security:intercept-url pattern="/rest/**" access="#oauth2.clientHasRole('collector')"/>
+    </security:http>
     
-    <security:authentication-manager >
-        <security:authentication-provider ref="adminUserAuthenticationProvider" />
-    </security:authentication-manager>
-
-    <bean id="adminUserServiceRef" class="org.flowninja.security.web.spring.components.AdminDetailsService"/>
+    <oauth2:resource-server id="feedbackServer" 
+        entry-point-ref="authEntryPoint" 
+        authentication-manager-ref="oauthAuthenticationMananger" 
+        token-services-ref="tokenService" />
     
-    <bean id="adminUserAuthenticationProvider" class="org.flowninja.security.web.spring.components.AdminDetailsAuthenticationProvider" />
-
+    <oauth2:web-expression-handler id="oauth2ExpressionHandler" />    
+    
+    <bean id="authEntryPoint" class="org.springframework.security.oauth2.provider.error.OAuth2AuthenticationEntryPoint"/>
+    
+    <bean id="oauthAuthenticationMananger" class="org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationManager">
+        <property name="tokenServices" ref="tokenServices"/>
+    </bean>
+    
+    <bean id="tokenServices" class="org.springframework.security.oauth2.provider.token.DefaultTokenServices">
+        <property name="tokenStore">
+            <bean class="org.flowninja.security.oauth2.components.FlowNinjaTokenStore">
+                <property name="wapiTokenStore">
+                    <bean class="de.urb.wapi.oauth2.persistence.mongodb.components.MongoOAuth2TokenStore"/>
+                </property>
+            </bean>
+        </property>
+        <property name="clientDetailsService">
+            <bean class="org.flowninja.security.oauth2.components.FlowNinjaClientDetailsService"/>
+        </property>
+    </bean>
+    
 </beans>
