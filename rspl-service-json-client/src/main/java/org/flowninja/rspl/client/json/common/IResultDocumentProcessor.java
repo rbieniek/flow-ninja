@@ -3,7 +3,9 @@
  */
 package org.flowninja.rspl.client.json.common;
 
-import org.flowninja.rspl.definitions.types.NetworkResource;
+import javax.naming.spi.ResolveResult;
+
+import org.flowninja.rspl.definitions.types.ResultDocument;
 import org.json.JSONObject;
 
 /**
@@ -21,5 +23,5 @@ public interface IResultDocumentProcessor {
 	 * @param json the JSON document to process. Maybe <code>null</code>
 	 * @return the result of the resolve process. Will be <code>null</code> if the passed JSON document was <code>null</code>
 	 */
-	NetworkResource processResultDocument(JSONObject json);
+	ResultDocument processResultDocument(JSONObject json);
 }

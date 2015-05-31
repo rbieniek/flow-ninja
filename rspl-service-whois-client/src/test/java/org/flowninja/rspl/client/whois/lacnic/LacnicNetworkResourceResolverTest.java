@@ -8,6 +8,7 @@ import static org.fest.assertions.api.Assertions.*;
 import org.flowninja.rspl.client.whois.TestConfig;
 import org.flowninja.rspl.definitions.types.ENetworkRegistry;
 import org.flowninja.rspl.definitions.types.NetworkResource;
+import org.flowninja.rspl.definitions.types.ResultDocument;
 import org.flowninja.types.net.CIDR4Address;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -44,9 +45,9 @@ public class LacnicNetworkResourceResolverTest {
 	@Test
 	public void resolve() throws Exception {
 		assertThat(resolver.resolveNetworkAddress(WWW_LACNIC_NET))
-			.isEqualTo(new NetworkResource(new CIDR4Address(WWW_LACNIC_NET, 22), 
+			.isEqualTo(new ResultDocument(new NetworkResource(new CIDR4Address(WWW_LACNIC_NET, 22), 
 					"LACNIC - Latin American and Caribbean IP address", 
 					null, 
-					ENetworkRegistry.LACNIC));
+					ENetworkRegistry.LACNIC)));
 	}
 }

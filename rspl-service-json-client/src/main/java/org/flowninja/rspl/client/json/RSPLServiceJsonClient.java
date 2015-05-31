@@ -5,8 +5,10 @@ package org.flowninja.rspl.client.json;
 
 import java.util.Set;
 
+import org.flowninja.rspl.client.json.common.IJsonNetworkResourceResolver;
 import org.flowninja.rspl.definitions.services.INetworkResourceResolver;
 import org.flowninja.rspl.definitions.types.NetworkResource;
+import org.flowninja.rspl.definitions.types.ResultDocument;
 import org.flowninja.types.net.CIDR4Address;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,19 +24,36 @@ public class RSPLServiceJsonClient {
 	private static final Logger logger = LoggerFactory.getLogger(RSPLServiceJsonClient.class);
 	
 	@Autowired
-	private Set<INetworkResourceResolver> resolvers;
+	private Set<IJsonNetworkResourceResolver> resolvers;
 
 	public NetworkResource resolveAddress(byte[] address) {
 		NetworkResource resource = null;
 		
 		logger.info("resolving network address: {}", address);
 
-		for(INetworkResourceResolver resolver : resolvers) {
+		for(IJsonNetworkResourceResolver resolver : resolvers) {
 			if(resolver.canResolveAddress(address)) {
 				logger.info("resolving network address {} in registry {}", address, resolver.resolvingRegistry());
 				
 				try {
-					resource = resolver.resolveNetworkAddress(address);
+					ResultDocument document = resolver.resolveNetworkAddress(address);
+
+					if(document != null) {
+						if(document.isResolved())
+							resource = document.getNetworkResource();
+						else if(document.isForwarded()) {
+							logger.info("forward address {} resolution to registry {}", address, document.getForwardedToRegistry());
+							
+							for(IJsonNetworkResourceResolver forwardedResolver : resolvers) {
+								if(forwardedResolver.resolvingRegistry().equals(document.getForwardedToRegistry())) {
+									ResultDocument forwardedDocument = forwardedResolver.resolveNetworkAddress(address);
+									
+									if(forwardedDocument != null && forwardedDocument.isResolved())
+										resource = forwardedDocument.getNetworkResource();
+								}
+							}
+						}
+					}
 				} catch(Exception e) {
 					logger.error("failed to resolve network address with registry {}", resolver.resolvingRegistry(), e);
 				}				

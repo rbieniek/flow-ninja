@@ -9,6 +9,7 @@ import org.flowninja.rspl.client.json.TestConfig;
 import org.flowninja.rspl.client.json.ripe.RIPEResultDocumentProcessor;
 import org.flowninja.rspl.definitions.types.ENetworkRegistry;
 import org.flowninja.rspl.definitions.types.NetworkResource;
+import org.flowninja.rspl.definitions.types.ResultDocument;
 import org.flowninja.types.net.CIDR4Address;
 import org.json.JSONObject;
 import org.junit.Before;
@@ -56,7 +57,7 @@ public class RIPEResultDocumentProcessorTest {
 	@Test
 	public void ripeFound() {
 		assertThat(processor.processResultDocument(ripeFound))
-			.isEqualTo(new NetworkResource(new CIDR4Address(IP_ADDR_BLIZZARD_FR, 24), "FR-BLIZZARD", "FR", ENetworkRegistry.RIPE));
+			.isEqualTo(new ResultDocument(new NetworkResource(new CIDR4Address(IP_ADDR_BLIZZARD_FR, 24), "FR-BLIZZARD", "FR", ENetworkRegistry.RIPE)));
 	}
 
 	@Test

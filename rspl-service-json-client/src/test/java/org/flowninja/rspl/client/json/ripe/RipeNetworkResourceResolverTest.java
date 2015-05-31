@@ -8,6 +8,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
 import org.flowninja.rspl.client.json.TestConfig;
 import org.flowninja.rspl.definitions.types.ENetworkRegistry;
 import org.flowninja.rspl.definitions.types.NetworkResource;
+import org.flowninja.rspl.definitions.types.ResultDocument;
 import org.flowninja.types.net.CIDR4Address;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -42,7 +43,7 @@ public class RipeNetworkResourceResolverTest {
 	@Test
 	public void resolveBlizzardFR() throws Exception {
 		assertThat(resolver.resolveNetworkAddress(IP_ADDR_BLIZZARD_FR))
-			.isEqualTo(new NetworkResource(new CIDR4Address(IP_ADDR_BLIZZARD_FR, 24), "FR-BLIZZARD", "FR", ENetworkRegistry.RIPE));
+			.isEqualTo(new ResultDocument(new NetworkResource(new CIDR4Address(IP_ADDR_BLIZZARD_FR, 24), "FR-BLIZZARD", "FR", ENetworkRegistry.RIPE)));
 	}
 	
 	@Test

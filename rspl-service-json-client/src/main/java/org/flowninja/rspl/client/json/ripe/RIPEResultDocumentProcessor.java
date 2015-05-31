@@ -7,6 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.flowninja.rspl.client.json.common.IResultDocumentProcessor;
 import org.flowninja.rspl.definitions.types.ENetworkRegistry;
 import org.flowninja.rspl.definitions.types.NetworkResource;
+import org.flowninja.rspl.definitions.types.ResultDocument;
 import org.flowninja.types.net.CIDR4Address;
 import org.flowninja.types.utils.CIDR4AddressRangeParser;
 import org.json.JSONArray;
@@ -25,8 +26,8 @@ public class RIPEResultDocumentProcessor implements IResultDocumentProcessor {
 	private static final Logger logger = LoggerFactory.getLogger(RIPEResultDocumentProcessor.class);
 
 	@Override
-	public NetworkResource processResultDocument(JSONObject json) {
-		NetworkResource resource = null;
+	public ResultDocument processResultDocument(JSONObject json) {
+		ResultDocument resource = null;
 				
 		try {
 			if(json != null)
@@ -40,8 +41,8 @@ public class RIPEResultDocumentProcessor implements IResultDocumentProcessor {
 		return resource;
 	}
 	
-	private NetworkResource processObjects(JSONObject json) throws JSONException {
-		NetworkResource resource = null;
+	private ResultDocument processObjects(JSONObject json) throws JSONException {
+		ResultDocument resource = null;
 
 		if(json != null) {
 			resource = processObject(json.getJSONArray("object"));
@@ -51,8 +52,8 @@ public class RIPEResultDocumentProcessor implements IResultDocumentProcessor {
 		
 	}
 
-	private NetworkResource processObject(JSONArray array) throws JSONException {
-		NetworkResource resource = null;
+	private ResultDocument processObject(JSONArray array) throws JSONException {
+		ResultDocument resource = null;
 
 		if(array != null) {
 			for(int i=0; i<array.length(); i++) {
@@ -65,8 +66,8 @@ public class RIPEResultDocumentProcessor implements IResultDocumentProcessor {
 		
 	}
 	
-	private NetworkResource processEntry(JSONObject json) throws JSONException {
-		NetworkResource resource = null;
+	private ResultDocument processEntry(JSONObject json) throws JSONException {
+		ResultDocument resource = null;
 		
 		if(StringUtils.equals(json.getString("type"), "inetnum") 
 				&& json.getJSONObject("source") != null && StringUtils.equals(json.getJSONObject("source").getString("id"), "ripe-grs")) {
@@ -95,7 +96,7 @@ public class RIPEResultDocumentProcessor implements IResultDocumentProcessor {
 				}
 				
 				if(range != null && netName != null)
-					resource = new NetworkResource(range, netName, country, ENetworkRegistry.RIPE);
+					resource = new ResultDocument(new NetworkResource(range, netName, country, ENetworkRegistry.RIPE));
 			}
 		}
 		

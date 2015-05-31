@@ -9,6 +9,7 @@ import org.flowninja.rspl.client.json.TestConfig;
 import org.flowninja.rspl.client.json.ripe.RIPEResultDocumentProcessor;
 import org.flowninja.rspl.definitions.types.ENetworkRegistry;
 import org.flowninja.rspl.definitions.types.NetworkResource;
+import org.flowninja.rspl.definitions.types.ResultDocument;
 import org.flowninja.types.net.CIDR4Address;
 import org.json.JSONObject;
 import org.junit.Before;
@@ -62,19 +63,19 @@ public class ARINResultDocumentProcessorTest {
 	@Test
 	public void arinFound() {
 		assertThat(processor.processResultDocument(arinFound))
-			.isEqualTo(new NetworkResource(new CIDR4Address(IP_ADDR_WWW_GOOGLE_COM, 16), "GOOGLE", null, ENetworkRegistry.ARIN));
+			.isEqualTo(new ResultDocument(new NetworkResource(new CIDR4Address(IP_ADDR_WWW_GOOGLE_COM, 16), "GOOGLE", null, ENetworkRegistry.ARIN)));
 	}
 
 	@Test
 	public void akamaiFound() {
 		assertThat(processor.processResultDocument(akamaiFound))
-			.isEqualTo(new NetworkResource(new CIDR4Address(IP_ADDR_STATIC_AKAMAI_COM, 12), "AKAMAI", null, ENetworkRegistry.ARIN));
+			.isEqualTo(new ResultDocument(new NetworkResource(new CIDR4Address(IP_ADDR_STATIC_AKAMAI_COM, 12), "AKAMAI", null, ENetworkRegistry.ARIN)));
 	}
 
 	@Test
 	public void akamaiReassigned() {
 		assertThat(processor.processResultDocument(akamaiReassigned))
-			.isEqualTo(new NetworkResource(new CIDR4Address(IP_ADDR_WWW_NDR_DE, 20), "AIBV", null, ENetworkRegistry.ARIN));
+			.isEqualTo(new ResultDocument(new NetworkResource(new CIDR4Address(IP_ADDR_WWW_NDR_DE, 20), "AIBV", null, ENetworkRegistry.ARIN)));
 	}
 
 	@Test
