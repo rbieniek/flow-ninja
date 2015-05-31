@@ -248,6 +248,7 @@
     <module>ninja-security-oauth2</module>
     <module>rspl-service-json-definitions</module>
     <module>rspl-service-json-client</module>
+    <module>rspl-service-rdap-client</module>
     <module>rspl-service-whois-client</module>
     <module>rspl-service-persistence-generic</module>
     <module>rspl-service-persistence-redis</module>
