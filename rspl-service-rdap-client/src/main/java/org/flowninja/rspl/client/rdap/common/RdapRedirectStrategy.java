@@ -15,13 +15,13 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultRedirectStrategy;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.Args;
-import org.springframework.context.annotation.ComponentScan;
+import org.springframework.stereotype.Component;
 
 /**
  * @author rainer
  *
  */
-@ComponentScan
+@Component
 public class RdapRedirectStrategy extends DefaultRedirectStrategy {
 
 	/**

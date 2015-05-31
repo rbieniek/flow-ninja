@@ -46,6 +46,7 @@ public class IpAddressRestController {
 	@Autowired
 	private RSPLServiceWhoisClient whoisClient;
 
+	@Autowired
 	private RSPLServiceRdapClient rdapClient;
 	
 	@Autowired
