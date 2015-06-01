@@ -9,7 +9,7 @@ import java.util.Date;
  * @author rainer
  *
  */
-public interface WapiOAuth2RefreshToken {
+public interface IOAuth2RefreshToken {
 	/**
 	 * 
 	 * @param value

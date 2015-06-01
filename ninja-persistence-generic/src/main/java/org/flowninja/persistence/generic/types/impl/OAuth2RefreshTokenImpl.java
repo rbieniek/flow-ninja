@@ -6,13 +6,13 @@ package org.flowninja.persistence.generic.types.impl;
 import java.util.Date;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.flowninja.persistence.generic.types.WapiOAuth2RefreshToken;
+import org.flowninja.persistence.generic.types.IOAuth2RefreshToken;
 
 /**
  * @author rainer
  *
  */
-public class DefaultWapiOAuth2RefreshToken implements WapiOAuth2RefreshToken {
+public class OAuth2RefreshTokenImpl implements IOAuth2RefreshToken {
 
 	private String value;
 	private Date expiration;

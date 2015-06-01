@@ -10,7 +10,7 @@ import java.util.Set;
  * @author rainer
  *
  */
-public interface WapiOAuth2Request {
+public interface IOAuth2Request {
 	/**
 	 * 
 	 * @param clientId

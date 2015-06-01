@@ -11,7 +11,7 @@ import java.util.Set;
  * @author rainer
  *
  */
-public interface WapiOAuth2AccessToken {
+public interface IOAuth2AccessToken {
 	/**
 	 * 
 	 * @param value
@@ -63,23 +63,23 @@ public interface WapiOAuth2AccessToken {
 	 * 
 	 * @param refreshToken
 	 */
-	public void setRefreshToken(WapiOAuth2RefreshToken refreshToken);
+	public void setRefreshToken(IOAuth2RefreshToken refreshToken);
 	
 	/**
 	 * 
 	 * @return
 	 */
-	public WapiOAuth2RefreshToken getRefreshToken();
+	public IOAuth2RefreshToken getRefreshToken();
 	
 	/**
 	 * 
 	 * @param authentication
 	 */
-	public void setAuthentication(WapiOAuth2Authentication authentication);
+	public void setAuthentication(IOAuth2Authentication authentication);
 	
 	/**
 	 * 
 	 * @return
 	 */
-	public WapiOAuth2Authentication getAuthentication();
+	public IOAuth2Authentication getAuthentication();
 }

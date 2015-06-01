@@ -7,13 +7,13 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.flowninja.persistence.generic.types.WapiOAuth2Request;
+import org.flowninja.persistence.generic.types.IOAuth2Request;
 
 /**
  * @author rainer
  *
  */
-public class DefaultWapiOAuth2Request implements WapiOAuth2Request {
+public class OAuth2RequestImpl implements IOAuth2Request {
 	private String clientId;
 	private Set<String> scope;
 	private Map<String, String> parameters;

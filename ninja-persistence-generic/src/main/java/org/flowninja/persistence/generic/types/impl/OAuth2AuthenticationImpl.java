@@ -4,25 +4,25 @@
 package org.flowninja.persistence.generic.types.impl;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.flowninja.persistence.generic.types.WapiOAuth2Authentication;
-import org.flowninja.persistence.generic.types.WapiOAuth2Request;
+import org.flowninja.persistence.generic.types.IOAuth2Authentication;
+import org.flowninja.persistence.generic.types.IOAuth2Request;
 
 /**
  * @author rainer
  *
  */
-public class DefaultWapiOAuth2Authentication implements WapiOAuth2Authentication {
+public class OAuth2AuthenticationImpl implements IOAuth2Authentication {
 
-	private WapiOAuth2Request storedRequest;
+	private IOAuth2Request storedRequest;
 	private byte[] authentication;
 	
 	@Override
-	public void setStoredRequest(WapiOAuth2Request storedRequest) {
+	public void setStoredRequest(IOAuth2Request storedRequest) {
 		this.storedRequest = storedRequest;
 	}
 
 	@Override
-	public WapiOAuth2Request getStoredRequest() {
+	public IOAuth2Request getStoredRequest() {
 		return storedRequest;
 	}
 

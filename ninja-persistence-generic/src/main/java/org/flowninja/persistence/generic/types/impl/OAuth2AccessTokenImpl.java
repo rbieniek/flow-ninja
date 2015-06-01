@@ -8,22 +8,22 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.flowninja.persistence.generic.types.WapiOAuth2AccessToken;
-import org.flowninja.persistence.generic.types.WapiOAuth2Authentication;
-import org.flowninja.persistence.generic.types.WapiOAuth2RefreshToken;
+import org.flowninja.persistence.generic.types.IOAuth2AccessToken;
+import org.flowninja.persistence.generic.types.IOAuth2Authentication;
+import org.flowninja.persistence.generic.types.IOAuth2RefreshToken;
 
 /**
  * @author rainer
  *
  */
-public class DefaultWapiOAuth2AccessToken implements WapiOAuth2AccessToken {
+public class OAuth2AccessTokenImpl implements IOAuth2AccessToken {
 
 	private String value;
 	private Map<String, Object> infos;
 	private Date expiration;
 	private Set<String> scope;
-	private WapiOAuth2RefreshToken refreshToken;
-	private WapiOAuth2Authentication authentication;
+	private IOAuth2RefreshToken refreshToken;
+	private IOAuth2Authentication authentication;
  	
 	/* (non-Javadoc)
 	 * @see de.urb.wapi.oauth2.persistence.generic.WapiOAuth2AccessToken#setValue(java.lang.String)
@@ -90,22 +90,22 @@ public class DefaultWapiOAuth2AccessToken implements WapiOAuth2AccessToken {
 	}
 
 	@Override
-	public void setRefreshToken(WapiOAuth2RefreshToken refreshToken) {
+	public void setRefreshToken(IOAuth2RefreshToken refreshToken) {
 		this.refreshToken = refreshToken;
 	}
 
 	@Override
-	public WapiOAuth2RefreshToken getRefreshToken() {
+	public IOAuth2RefreshToken getRefreshToken() {
 		return refreshToken;
 	}
 
 	@Override
-	public void setAuthentication(WapiOAuth2Authentication authentication) {
+	public void setAuthentication(IOAuth2Authentication authentication) {
 		this.authentication = authentication;
 	}
 
 	@Override
-	public WapiOAuth2Authentication getAuthentication() {
+	public IOAuth2Authentication getAuthentication() {
 		return authentication;
 	}
 

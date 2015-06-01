@@ -9,7 +9,7 @@ import org.springframework.security.core.GrantedAuthority;
  * @author rainer
  *
  */
-public class WapiClientGrantedAuthority implements GrantedAuthority {
+public class FlowNinjaClientGrantedAuthority implements GrantedAuthority {
 
 	/**
 	 * 
@@ -18,9 +18,9 @@ public class WapiClientGrantedAuthority implements GrantedAuthority {
 
 	private String authority;
 	
-	public WapiClientGrantedAuthority() {}
+	public FlowNinjaClientGrantedAuthority() {}
 	
-	public WapiClientGrantedAuthority(String authority) {
+	public FlowNinjaClientGrantedAuthority(String authority) {
 		this.authority = authority;
 	}
  	

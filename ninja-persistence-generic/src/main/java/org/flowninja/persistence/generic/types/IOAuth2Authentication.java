@@ -7,18 +7,18 @@ package org.flowninja.persistence.generic.types;
  * @author rainer
  *
  */
-public interface WapiOAuth2Authentication {
+public interface IOAuth2Authentication {
 	/**
 	 * 
 	 * @param storedRequest
 	 */
-	public void setStoredRequest(WapiOAuth2Request storedRequest);
+	public void setStoredRequest(IOAuth2Request storedRequest);
 	
 	/**
 	 * 
 	 * @return
 	 */
-	public WapiOAuth2Request getStoredRequest();
+	public IOAuth2Request getStoredRequest();
 	
 	/**
 	 * 

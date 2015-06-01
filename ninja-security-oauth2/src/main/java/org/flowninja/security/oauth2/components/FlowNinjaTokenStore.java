@@ -15,16 +15,16 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.flowninja.persistence.generic.services.WapiOAuth2TokenStore;
-import org.flowninja.persistence.generic.types.WapiOAuth2AccessToken;
-import org.flowninja.persistence.generic.types.WapiOAuth2Authentication;
-import org.flowninja.persistence.generic.types.WapiOAuth2RefreshToken;
-import org.flowninja.persistence.generic.types.WapiOAuth2Request;
-import org.flowninja.persistence.generic.types.impl.DefaultWapiOAuth2AccessToken;
-import org.flowninja.persistence.generic.types.impl.DefaultWapiOAuth2Authentication;
-import org.flowninja.persistence.generic.types.impl.DefaultWapiOAuth2RefreshToken;
-import org.flowninja.persistence.generic.types.impl.DefaultWapiOAuth2Request;
-import org.flowninja.security.oauth2.types.WapiClientGrantedAuthority;
+import org.flowninja.persistence.generic.services.IOAuth2TokenStore;
+import org.flowninja.persistence.generic.types.IOAuth2AccessToken;
+import org.flowninja.persistence.generic.types.IOAuth2Authentication;
+import org.flowninja.persistence.generic.types.IOAuth2RefreshToken;
+import org.flowninja.persistence.generic.types.IOAuth2Request;
+import org.flowninja.persistence.generic.types.impl.OAuth2AccessTokenImpl;
+import org.flowninja.persistence.generic.types.impl.OAuth2AuthenticationImpl;
+import org.flowninja.persistence.generic.types.impl.OAuth2RefreshTokenImpl;
+import org.flowninja.persistence.generic.types.impl.OAuth2RequestImpl;
+import org.flowninja.security.oauth2.types.FlowNinjaClientGrantedAuthority;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.GrantedAuthority;
@@ -45,7 +45,7 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 public class FlowNinjaTokenStore implements TokenStore {
 	private static final Logger logger = LoggerFactory.getLogger(FlowNinjaTokenStore.class);
 
-	private WapiOAuth2TokenStore wapiTokenStore;
+	private IOAuth2TokenStore wapiTokenStore;
 	
 	/* (non-Javadoc)
 	 * @see org.springframework.security.oauth2.provider.token.TokenStore#readAuthentication(org.springframework.security.oauth2.common.OAuth2AccessToken)
@@ -56,7 +56,7 @@ public class FlowNinjaTokenStore implements TokenStore {
 		
 		logger.info("reading authentication for token {}", token);
 		
-		WapiOAuth2Authentication auth = wapiTokenStore.readAuthenticationForAccessToken(token.getValue());
+		IOAuth2Authentication auth = wapiTokenStore.readAuthenticationForAccessToken(token.getValue());
 
 		if(auth != null) {
 			try {
@@ -81,7 +81,7 @@ public class FlowNinjaTokenStore implements TokenStore {
 
 		logger.info("reading authentication for token value {}", token);
 
-		WapiOAuth2Authentication auth = wapiTokenStore.readAuthenticationForAccessToken(token);
+		IOAuth2Authentication auth = wapiTokenStore.readAuthenticationForAccessToken(token);
 
 		if(auth != null) {
 			try {
@@ -104,7 +104,7 @@ public class FlowNinjaTokenStore implements TokenStore {
 	public void storeAccessToken(OAuth2AccessToken token, OAuth2Authentication authentication) {
 		logger.info("storing access token for token {} and authentication {}", token, authentication);
 
-		WapiOAuth2AccessToken wapiToken = new DefaultWapiOAuth2AccessToken();
+		IOAuth2AccessToken wapiToken = new OAuth2AccessTokenImpl();
 		
 		wapiToken.setAdditionalInformation(token.getAdditionalInformation());
 		wapiToken.setExpiration(token.getExpiration());
@@ -113,7 +113,7 @@ public class FlowNinjaTokenStore implements TokenStore {
 		
 		if(token.getRefreshToken() != null) {
 			OAuth2RefreshToken refreshToken = token.getRefreshToken();
-			WapiOAuth2RefreshToken wapiRefreshToken = new DefaultWapiOAuth2RefreshToken();
+			IOAuth2RefreshToken wapiRefreshToken = new OAuth2RefreshTokenImpl();
 			
 			wapiRefreshToken.setValue(refreshToken.getValue());
 			
@@ -123,8 +123,8 @@ public class FlowNinjaTokenStore implements TokenStore {
 			wapiToken.setRefreshToken(wapiRefreshToken);
 		}
 
-		WapiOAuth2Authentication wapiAuthentication = new DefaultWapiOAuth2Authentication();
-		WapiOAuth2Request wapiRequest = new DefaultWapiOAuth2Request();		
+		IOAuth2Authentication wapiAuthentication = new OAuth2AuthenticationImpl();
+		IOAuth2Request wapiRequest = new OAuth2RequestImpl();		
 		OAuth2Request request = authentication.getOAuth2Request();
 		
 		wapiRequest.setApproved(request.isApproved());
@@ -178,7 +178,7 @@ public class FlowNinjaTokenStore implements TokenStore {
 		
 		logger.info("reading access token for value {}", tokenValue);
 		
-		WapiOAuth2AccessToken wapiToken = wapiTokenStore.readAccessTokenForValue(tokenValue);
+		IOAuth2AccessToken wapiToken = wapiTokenStore.readAccessTokenForValue(tokenValue);
 		
 		if(wapiToken != null) {
 			token = new DefaultOAuth2AccessToken(wapiToken.getValue());
@@ -320,9 +320,9 @@ public class FlowNinjaTokenStore implements TokenStore {
 			return null;
 	}
 	
-	private OAuth2Request restoreAuthentication(WapiOAuth2Request wr) {
+	private OAuth2Request restoreAuthentication(IOAuth2Request wr) {
 		Set<? extends GrantedAuthority> authorities = (wr.getGrantedAuthorities() != null) 
-				? wr.getGrantedAuthorities().stream().map((v) -> new WapiClientGrantedAuthority(v)).collect(Collectors.toSet())
+				? wr.getGrantedAuthorities().stream().map((v) -> new FlowNinjaClientGrantedAuthority(v)).collect(Collectors.toSet())
 				: null;
 		Map<String, Serializable> extensions = new HashMap<String, Serializable>();
 		
