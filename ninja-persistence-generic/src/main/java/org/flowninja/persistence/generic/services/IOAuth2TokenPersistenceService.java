@@ -11,7 +11,7 @@ import org.flowninja.persistence.generic.types.IOAuth2Authentication;
  * @author rainer
  *
  */
-public interface IOAuth2TokenStore {
+public interface IOAuth2TokenPersistenceService {
 
 	/**
 	 * Store the access token. The token must contain authentication information and may contain a refresh token
