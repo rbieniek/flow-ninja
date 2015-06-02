@@ -19,7 +19,7 @@
     </security:authentication-manager>
 
 	<bean id="clientDetailsUserService" class="org.springframework.security.oauth2.provider.client.ClientDetailsUserDetailsService">
-	    <constructor-arg ref="wapiClientDetailsService" />
+	    <constructor-arg ref="ninjaClientDetailsService" />
 	</bean>
 	
 </beans>

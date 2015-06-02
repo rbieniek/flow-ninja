@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.flowninja.persistence.generic.services.IOAuth2TokenStore;
+import org.flowninja.persistence.generic.services.IOAuth2TokenPersistenceService;
 import org.flowninja.persistence.generic.types.IOAuth2AccessToken;
 import org.flowninja.persistence.generic.types.IOAuth2Authentication;
 import org.flowninja.persistence.generic.types.IOAuth2RefreshToken;
@@ -27,6 +27,7 @@ import org.flowninja.persistence.generic.types.impl.OAuth2RequestImpl;
 import org.flowninja.security.oauth2.types.FlowNinjaClientGrantedAuthority;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.common.DefaultExpiringOAuth2RefreshToken;
 import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
@@ -45,7 +46,8 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 public class FlowNinjaTokenStore implements TokenStore {
 	private static final Logger logger = LoggerFactory.getLogger(FlowNinjaTokenStore.class);
 
-	private IOAuth2TokenStore wapiTokenStore;
+	@Autowired
+	private IOAuth2TokenPersistenceService wapiTokenStore;
 	
 	/* (non-Javadoc)
 	 * @see org.springframework.security.oauth2.provider.token.TokenStore#readAuthentication(org.springframework.security.oauth2.common.OAuth2AccessToken)

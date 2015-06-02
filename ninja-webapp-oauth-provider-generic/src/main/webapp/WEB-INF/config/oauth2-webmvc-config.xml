@@ -28,22 +28,19 @@
 		token-endpoint-url="/token" 
 		user-approval-page="forward:/confirm_access" 
 		error-page="forward:/error" 
-		client-details-service-ref="wapiClientDetailsService" 
+		client-details-service-ref="ninjaClientDetailsService" 
 		token-services-ref="tokenServices"
-		request-validator-ref="wapiRequestValidator"
+		request-validator-ref="oauthRequestValidator"
 		>
 		<oauth2:client-credentials disabled="false" />
 	</oauth2:authorization-server>
 
 	<bean id="tokenServices" class="org.springframework.security.oauth2.provider.token.DefaultTokenServices">
 		<property name="tokenStore">
-			<bean class="de.urb.wapi.security.spring.oauth2.provider.token.WapiTokenStore">
-				<property name="wapiTokenStore">
-					<bean class="de.urb.wapi.oauth2.persistence.mongodb.components.MongoOAuth2TokenStore"/>
-				</property>
-			</bean>
+			<bean class="de.urb.wapi.security.spring.oauth2.provider.token.WapiTokenStore"/>
 		</property>
-		<property name="clientDetailsService" ref="wapiClientDetailsService"/>
+		<property name="clientDetailsService" ref="ninjaClientDetailsService"/>
+		<!--
 		<property name="tokenEnhancer">
 			<bean class="org.springframework.security.oauth2.provider.token.TokenEnhancerChain">
 				<property name="tokenEnhancers">
@@ -53,14 +50,17 @@
 				</property>
 			</bean>
 		</property>
+		-->
 	</bean>
 
+<!--
 	<bean class="de.urb.wapi.security.spring.oauth2.provider.WapiOAuth2ClientConfiguration" >
 		<property name="refreshTokenValidityInSeconds" value="43200"/>
 		<property name="accessTokenValidityInSeconds" value="7200"/>
 	</bean>
-
-    <!-- WAPI Console beans -->
+-->
+	
+    <!-- Web page rendering beans -->
  	
     <!-- Thymeleaf configuration -->
     
