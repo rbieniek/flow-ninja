@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:mvc="http://www.springframework.org/schema/mvc"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:oauth2="http://www.springframework.org/schema/security/oauth2"
+    xsi:schemaLocation="
+    http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+    http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+    http://www.springframework.org/schema/security/oauth2 http://www.springframework.org/schema/security/spring-security-oauth2.xsd
+    ">
+
+	<context:property-placeholder location="classpath:de/urb/wapi/oauth2/webmvc.properties" system-properties-mode="OVERRIDE"/>
+    
+    <!-- Scans for application @Components to deploy -->
+    <context:component-scan base-package="de.urb.wapi.oauth2" />
+    <context:component-scan base-package="de.urb.wapi.oauth2.persistence.mongodb" />
+    <context:component-scan base-package="de.urb.wapi.security.spring.oauth2"/>
+
+    <mvc:annotation-driven />
+    
+    <mvc:default-servlet-handler/>
+    
+    <mvc:resources location="/images/" mapping="/images/**" />
+    <mvc:resources location="/css/" mapping="/css/**" />
+
+	<!-- OAuth2 security provider -->
+	<oauth2:authorization-server
+		authorization-endpoint-url="/authorize" 
+		token-endpoint-url="/token" 
+		user-approval-page="forward:/confirm_access" 
+		error-page="forward:/error" 
+		client-details-service-ref="wapiClientDetailsService" 
+		token-services-ref="tokenServices"
+		request-validator-ref="wapiRequestValidator"
+		>
+		<oauth2:client-credentials disabled="false" />
+	</oauth2:authorization-server>
+
+	<bean id="tokenServices" class="org.springframework.security.oauth2.provider.token.DefaultTokenServices">
+		<property name="tokenStore">
+			<bean class="de.urb.wapi.security.spring.oauth2.provider.token.WapiTokenStore">
+				<property name="wapiTokenStore">
+					<bean class="de.urb.wapi.oauth2.persistence.mongodb.components.MongoOAuth2TokenStore"/>
+				</property>
+			</bean>
+		</property>
+		<property name="clientDetailsService" ref="wapiClientDetailsService"/>
+		<property name="tokenEnhancer">
+			<bean class="org.springframework.security.oauth2.provider.token.TokenEnhancerChain">
+				<property name="tokenEnhancers">
+					<list>
+						<ref bean="onApplicationTokenLifetimeEnhancer"/>
+					</list>
+				</property>
+			</bean>
+		</property>
+	</bean>
+
+	<bean class="de.urb.wapi.security.spring.oauth2.provider.WapiOAuth2ClientConfiguration" >
+		<property name="refreshTokenValidityInSeconds" value="43200"/>
+		<property name="accessTokenValidityInSeconds" value="7200"/>
+	</bean>
+
+    <!-- WAPI Console beans -->
+ 	
+    <!-- Thymeleaf configuration -->
+    <!--
+    <bean id="conversionService" 
+        class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+        <property name="formatters">
+            <set>
+                <bean class="thymeleafexamples.stsm.web.conversion.VarietyFormatter" />
+                <bean class="thymeleafexamples.stsm.web.conversion.DateFormatter" />
+            </set>
+        </property>
+    </bean>
+    -->
+    
+    <bean id="webTemplateResolver"
+        class="org.thymeleaf.templateresolver.ServletContextTemplateResolver">
+        <property name="prefix" value="/WEB-INF/web-templates/" />
+        <property name="suffix" value=".html" />
+        <property name="templateMode" value="HTML5" />
+        <property name="characterEncoding" value="UTF-8" />
+        <property name="order" value="2" />
+    </bean>
+    
+    <bean id="templateEngine"
+        class="org.thymeleaf.spring4.SpringTemplateEngine">
+        <property name="templateResolvers">
+            <set>
+                <ref bean="webTemplateResolver" />
+            </set>
+        </property>
+        <property name="messageResolvers">
+        	<set>
+        		<bean class="org.thymeleaf.messageresolver.StandardMessageResolver"/>
+        	</set>
+        </property>
+    </bean>
+    
+    <bean class="org.thymeleaf.spring4.view.ThymeleafViewResolver">
+        <property name="templateEngine" ref="templateEngine" />
+        <property name="characterEncoding" value="UTF-8" />
+    </bean>
+</beans>

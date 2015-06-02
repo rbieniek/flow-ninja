@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:security="http://www.springframework.org/schema/security"
+    xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+	    http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.2.xsd">
+
+    <context:component-scan base-package="de.urb.wapi.oauth2" />
+
+	<security:http pattern="/token" create-session="stateless" authentication-manager-ref="clientAuthenticationManager">
+		<security:intercept-url pattern="/token" access="IS_AUTHENTICATED_FULLY" />
+	    <security:anonymous enabled="false" />
+    	<security:http-basic />	
+    </security:http>
+    
+    <security:authentication-manager id="clientAuthenticationManager">
+    	<security:authentication-provider user-service-ref="clientDetailsUserService"/>
+    </security:authentication-manager>
+
+	<bean id="clientDetailsUserService" class="org.springframework.security.oauth2.provider.client.ClientDetailsUserDetailsService">
+	    <constructor-arg ref="wapiClientDetailsService" />
+	</bean>
+	
+<!-- 
+    <security:http use-expressions="true" access-denied-page="/auth/denied" >
+        <security:intercept-url pattern="/token" access="permitAll"/>
+        <security:intercept-url pattern="/error" access="permitAll"/>
+        <security:intercept-url pattern="/auth/**" access="permitAll"/>
+        <security:intercept-url pattern="/authorize" access="hasRole('user')"/>
+        <security:intercept-url pattern="/confirm" access="hasRole('user')"/>
+        <security:form-login 
+            authentication-failure-url="/auth/login"
+            login-page="/auth/login" 
+            login-processing-url="/login" 
+            password-parameter="password" 
+            username-parameter="email" />
+        <security:logout logout-url="/logout"/>
+    </security:http>    
+    
+    <security:authentication-manager >
+        <security:authentication-provider ref="publicUserAuthenticationProvider" />
+    </security:authentication-manager>
+
+    <bean id="publicUserAuthenticationProvider" class="de.urb.wapi.security.spring.components.PublicUserAuthenticationProvider" />
+-->
+
+</beans>

@@ -262,6 +262,8 @@
     <module>ninja-webapp-rspl-mongodb-redis</module>
     <module>ninja-webapp-collector-generic</module>
     <module>ninja-webapp-collector-mongodb</module>
+    <module>ninja-webapp-oauth-provider-generic</module>
+    <module>ninja-webapp-oauth-provider-mongodb</module>
     <module>ninja-ear-admin-mongodb</module>
     <module>ninja-ear-collector-mongodb</module>
     <module>ninja-ear-rspl-mongodb-redis</module>
