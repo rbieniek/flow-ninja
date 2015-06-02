@@ -86,6 +86,12 @@
               <contextRoot>/ninja/collector</contextRoot>
             </webModule>
 
+	    <webModule>
+	      <groupId>org.flow-ninja</groupId>
+	      <artifactId>ninja-webapp-oauth-provider-mongodb</artifactId>
+	      <contextRoot>/oauth</contextRoot>
+            </webModule>
+
           </modules>
         </configuration>
       </plugin>
@@ -97,6 +103,13 @@
     <dependency>
       <groupId>org.flow-ninja</groupId>
       <artifactId>ninja-webapp-collector-mongodb</artifactId>
+      <type>war</type>
+      <version>${version.flow-ninja}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.flow-ninja</groupId>
+      <artifactId>ninja-webapp-oauth-provider-mongodb</artifactId>
       <type>war</type>
       <version>${version.flow-ninja}</version>
     </dependency>

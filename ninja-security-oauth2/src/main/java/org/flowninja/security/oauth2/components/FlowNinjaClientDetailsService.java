@@ -13,13 +13,6 @@ import org.springframework.security.oauth2.provider.ClientRegistrationException;
  */
 public class FlowNinjaClientDetailsService implements ClientDetailsService {
 
-	/**
-	 * 
-	 */
-	public FlowNinjaClientDetailsService() {
-		// TODO Auto-generated constructor stub
-	}
-
 	/* (non-Javadoc)
 	 * @see org.springframework.security.oauth2.provider.ClientDetailsService#loadClientByClientId(java.lang.String)
 	 */

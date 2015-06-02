@@ -6,17 +6,13 @@
     xmlns:oauth2="http://www.springframework.org/schema/security/oauth2"
     xsi:schemaLocation="
     http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-    http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
-    http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+    http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+    http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
     http://www.springframework.org/schema/security/oauth2 http://www.springframework.org/schema/security/spring-security-oauth2.xsd
     ">
-
-	<context:property-placeholder location="classpath:de/urb/wapi/oauth2/webmvc.properties" system-properties-mode="OVERRIDE"/>
     
     <!-- Scans for application @Components to deploy -->
-    <context:component-scan base-package="de.urb.wapi.oauth2" />
-    <context:component-scan base-package="de.urb.wapi.oauth2.persistence.mongodb" />
-    <context:component-scan base-package="de.urb.wapi.security.spring.oauth2"/>
+    <context:component-scan base-package="org.flowninja.webapp.oauth.generic" />
 
     <mvc:annotation-driven />
     
@@ -24,7 +20,8 @@
     
     <mvc:resources location="/images/" mapping="/images/**" />
     <mvc:resources location="/css/" mapping="/css/**" />
-
+    <mvc:resources location="/scripts/" mapping="/scripts/**" />
+    
 	<!-- OAuth2 security provider -->
 	<oauth2:authorization-server
 		authorization-endpoint-url="/authorize" 
@@ -66,17 +63,6 @@
     <!-- WAPI Console beans -->
  	
     <!-- Thymeleaf configuration -->
-    <!--
-    <bean id="conversionService" 
-        class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
-        <property name="formatters">
-            <set>
-                <bean class="thymeleafexamples.stsm.web.conversion.VarietyFormatter" />
-                <bean class="thymeleafexamples.stsm.web.conversion.DateFormatter" />
-            </set>
-        </property>
-    </bean>
-    -->
     
     <bean id="webTemplateResolver"
         class="org.thymeleaf.templateresolver.ServletContextTemplateResolver">
