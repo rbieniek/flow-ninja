@@ -19,9 +19,9 @@ import org.flowninja.persistence.generic.types.impl.OAuth2RequestImpl;
 import org.flowninja.persistence.mongodb.data.MongoOAuth2AccessToken;
 import org.flowninja.persistence.mongodb.data.MongoOAuth2Authentication;
 import org.flowninja.persistence.mongodb.data.MongoOAuth2RefreshToken;
-import org.flowninja.persistence.mongodb.repositories.MongoOAuth2AccessTokenRepository;
-import org.flowninja.persistence.mongodb.repositories.MongoOAuth2AuthenticationRepository;
-import org.flowninja.persistence.mongodb.repositories.MongoOAuth2RefreshTokenRepository;
+import org.flowninja.persistence.mongodb.repositories.IMongoOAuth2AccessTokenRepository;
+import org.flowninja.persistence.mongodb.repositories.IMongoOAuth2AuthenticationRepository;
+import org.flowninja.persistence.mongodb.repositories.IMongoOAuth2RefreshTokenRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,13 +44,13 @@ public class MongoOAuth2TokenPersistenceServiceTest {
 	private MongoOAuth2TokenPersistenceService tokenStore;
 	
 	@Autowired
-	private MongoOAuth2RefreshTokenRepository refreshTokenRepository;
+	private IMongoOAuth2RefreshTokenRepository refreshTokenRepository;
 
 	@Autowired
-	private MongoOAuth2AuthenticationRepository authenticationRepository;
+	private IMongoOAuth2AuthenticationRepository authenticationRepository;
 	
 	@Autowired
-	private MongoOAuth2AccessTokenRepository accessTokenRepository;
+	private IMongoOAuth2AccessTokenRepository accessTokenRepository;
 	
 	@Test
 	public void persistBasicToken() {

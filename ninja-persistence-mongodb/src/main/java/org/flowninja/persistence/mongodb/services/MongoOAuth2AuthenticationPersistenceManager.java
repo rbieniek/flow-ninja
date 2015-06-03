@@ -16,7 +16,7 @@ import org.flowninja.persistence.generic.types.IOAuth2Request;
 import org.flowninja.persistence.generic.types.impl.OAuth2AuthenticationImpl;
 import org.flowninja.persistence.generic.types.impl.OAuth2RequestImpl;
 import org.flowninja.persistence.mongodb.data.MongoOAuth2Authentication;
-import org.flowninja.persistence.mongodb.repositories.MongoOAuth2AuthenticationRepository;
+import org.flowninja.persistence.mongodb.repositories.IMongoOAuth2AuthenticationRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +34,7 @@ public class MongoOAuth2AuthenticationPersistenceManager {
 	private static final Logger logger = LoggerFactory.getLogger(MongoOAuth2AuthenticationPersistenceManager.class);
 	
 	@Autowired
-	private MongoOAuth2AuthenticationRepository authenticationRepository;
+	private IMongoOAuth2AuthenticationRepository authenticationRepository;
 
 	public MongoOAuth2Authentication persistWapiAuthentication(IOAuth2Authentication authentication) {
 		MongoOAuth2Authentication ma = new MongoOAuth2Authentication();

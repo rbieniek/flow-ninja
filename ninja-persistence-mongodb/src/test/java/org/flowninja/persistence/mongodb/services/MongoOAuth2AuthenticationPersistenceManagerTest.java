@@ -11,7 +11,7 @@ import org.flowninja.persistence.generic.types.IOAuth2Request;
 import org.flowninja.persistence.generic.types.impl.OAuth2AuthenticationImpl;
 import org.flowninja.persistence.generic.types.impl.OAuth2RequestImpl;
 import org.flowninja.persistence.mongodb.data.MongoOAuth2Authentication;
-import org.flowninja.persistence.mongodb.repositories.MongoOAuth2AuthenticationRepository;
+import org.flowninja.persistence.mongodb.repositories.IMongoOAuth2AuthenticationRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +29,7 @@ public class MongoOAuth2AuthenticationPersistenceManagerTest {
 	private MongoOAuth2AuthenticationPersistenceManager persistence;
 	
 	@Autowired
-	private MongoOAuth2AuthenticationRepository repository;
+	private IMongoOAuth2AuthenticationRepository repository;
 	
 	@Test
 	public void persistBasicAuthentication() {

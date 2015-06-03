@@ -17,7 +17,7 @@ import org.flowninja.persistence.generic.types.impl.OAuth2AccessTokenImpl;
 import org.flowninja.persistence.mongodb.data.MongoOAuth2AccessToken;
 import org.flowninja.persistence.mongodb.data.MongoOAuth2Authentication;
 import org.flowninja.persistence.mongodb.data.QMongoOAuth2AccessToken;
-import org.flowninja.persistence.mongodb.repositories.MongoOAuth2AccessTokenRepository;
+import org.flowninja.persistence.mongodb.repositories.IMongoOAuth2AccessTokenRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +38,7 @@ public class MongoOAuth2TokenPersistenceService implements IOAuth2TokenPersisten
 	private MongoOAuth2RefreshTokenPersistenceManager refreshTokenPersistence; 
 	
 	@Autowired
-	private MongoOAuth2AccessTokenRepository accessTokenRepository;
+	private IMongoOAuth2AccessTokenRepository accessTokenRepository;
 	
 	@SuppressWarnings("unchecked")
 	@Override

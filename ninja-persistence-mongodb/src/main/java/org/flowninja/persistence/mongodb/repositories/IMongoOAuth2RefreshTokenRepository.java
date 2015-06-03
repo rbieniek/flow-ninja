@@ -12,6 +12,6 @@ import org.springframework.data.repository.CrudRepository;
  * @author rainer
  *
  */
-public interface MongoOAuth2RefreshTokenRepository extends CrudRepository<MongoOAuth2RefreshToken, ObjectId>, QueryDslPredicateExecutor<MongoOAuth2RefreshToken>{
+public interface IMongoOAuth2RefreshTokenRepository extends CrudRepository<MongoOAuth2RefreshToken, ObjectId>, QueryDslPredicateExecutor<MongoOAuth2RefreshToken>{
 
 }

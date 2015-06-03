@@ -9,7 +9,7 @@ import org.flowninja.persistence.generic.types.IOAuth2RefreshToken;
 import org.flowninja.persistence.generic.types.impl.OAuth2RefreshTokenImpl;
 import org.flowninja.persistence.mongodb.MongoConstants;
 import org.flowninja.persistence.mongodb.data.MongoOAuth2RefreshToken;
-import org.flowninja.persistence.mongodb.repositories.MongoOAuth2RefreshTokenRepository;
+import org.flowninja.persistence.mongodb.repositories.IMongoOAuth2RefreshTokenRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.DisposableBean;
@@ -34,7 +34,7 @@ public class MongoOAuth2RefreshTokenPersistenceManagerTest {
 	private MongoOAuth2RefreshTokenPersistenceManager persistence;
 	
 	@Autowired
-	private MongoOAuth2RefreshTokenRepository repository;
+	private IMongoOAuth2RefreshTokenRepository repository;
 	
 	@Test
 	public void persistRefreshToken() {
