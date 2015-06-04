@@ -114,9 +114,9 @@ public class AccountingGroupsCommands implements CommandMarker {
 			AccountingGroupRecord group = groupService.findByKey(new AccountingGroupKey(UUID.fromString(key)));
 
 			if(group != null) {
-				if(!StringUtils.equals(name, group.getName()))
+				if(StringUtils.isNotBlank(name) && !StringUtils.equals(name, group.getName()))
 					group.setName(name);
-				if(!StringUtils.equals(comment, group.getComment()))
+				if(StringUtils.isNotBlank(comment) && !StringUtils.equals(comment, group.getComment()))
 					group.setComment(comment);
 				
 				obj = convertAccountingGroup(groupService.updateAccoutingGroup(group), false);
