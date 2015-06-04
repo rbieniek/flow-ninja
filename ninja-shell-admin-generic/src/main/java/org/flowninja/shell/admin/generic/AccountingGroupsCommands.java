@@ -142,9 +142,11 @@ public class AccountingGroupsCommands implements CommandMarker {
 	}
 
 	private JSONObject convertAccountingGroup(AccountingGroupRecord db, boolean deep) {
+		// logger.info("converting accouting group record {} with deep flag {}", db, deep);
+		
 		JSONObject json = new JSONObject();
 		
-		json.put("key", db.getKey());
+		json.put("key", db.getKey().toString());
 		json.put("name", db.getName());
 		json.put("comment", db.getComment());
 //		json.put("created-when", db.getCreatedWhen());
@@ -156,13 +158,15 @@ public class AccountingGroupsCommands implements CommandMarker {
 			json.put("collectors", collectors);
 		}
 		
+		// logger.info("converted accounting group record {} to JSON object {}", db, json);
+		
 		return json;
 	}
 
 	private JSONObject convertCollector(CollectorRecord db) {
 		JSONObject json = new JSONObject();
 		
-		json.put("key", db.getKey());
+		json.put("key", db.getKey().toString());
 		json.put("name", db.getName());
 		json.put("comment", db.getComment());
 		json.put("client-id", db.getClientId());
