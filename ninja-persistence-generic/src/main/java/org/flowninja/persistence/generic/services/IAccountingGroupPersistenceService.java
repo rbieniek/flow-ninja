@@ -49,6 +49,11 @@ public interface IAccountingGroupPersistenceService {
 	public AccountingGroupRecord createAccountingGroup(String name, String comment) throws RecordAlreadyExistsException;
 	
 	/**
+	 * Update values of an accounting group. These values can be changed:
+	 * <ul>
+	 * <li>name</li>
+	 * <li>comment</li>
+	 * </ul>
 	 * 
 	 * @param record
 	 * @return
