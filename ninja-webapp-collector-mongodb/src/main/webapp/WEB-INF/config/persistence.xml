@@ -14,8 +14,7 @@
         http://www.springframework.org/schema/data/mongo
         http://www.springframework.org/schema/data/mongo/spring-mongo.xsd">
 
-    <context:property-placeholder location="classpath:org/flowninja/webapp/admin/mongodb/mongodb.properties" system-properties-mode="OVERRIDE"/>
-    <context:component-scan base-package="org.flowninja.webapp.admin.mongodb"/>
+    <context:component-scan base-package="org.flowninja.webapp.collector.mongodb"/>
     <context:component-scan base-package="org.flowninja.persistence.mongodb"/>
     
 	

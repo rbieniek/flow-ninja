@@ -35,11 +35,7 @@
     
     <bean id="tokenServices" class="org.springframework.security.oauth2.provider.token.DefaultTokenServices">
         <property name="tokenStore">
-            <bean class="org.flowninja.security.oauth2.components.FlowNinjaTokenStore">
-                <property name="wapiTokenStore">
-                    <bean class="de.urb.wapi.oauth2.persistence.mongodb.components.MongoOAuth2TokenStore"/>
-                </property>
-            </bean>
+            <bean class="org.flowninja.security.oauth2.components.FlowNinjaTokenStore"/>            
         </property>
         <property name="clientDetailsService">
             <bean class="org.flowninja.security.oauth2.components.FlowNinjaClientDetailsService"/>

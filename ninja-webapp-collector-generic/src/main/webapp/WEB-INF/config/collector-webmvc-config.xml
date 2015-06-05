@@ -11,104 +11,10 @@
     http://www.springframework.org/schema/webflow-config http://www.springframework.org/schema/webflow-config/spring-webflow-config-2.4.xsd
     ">
 
-    <context:property-placeholder location="classpath:org/flowninja/webapp/admin/generic/webmvc.properties" system-properties-mode="OVERRIDE"/>
-    
     <!-- Scans for application @Components to deploy -->
-    <context:component-scan base-package="org.flowninja.webapp.admin.generic" />
-    <context:component-scan base-package="org.flowninja.security.web.spring" />
+    <context:component-scan base-package="org.flowninja.webapp.collector.generic" />
     
-    <mvc:annotation-driven conversion-service="conversionService"/>
+    <mvc:annotation-driven />
     
-    <mvc:default-servlet-handler/>
-    
-    <mvc:resources location="/images/" mapping="/images/**" />
-    <mvc:resources location="/css/" mapping="/css/**" />
-    <mvc:resources location="/scripts/" mapping="/scripts/**" />
-    
-    <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
-		<property name="basenames">
-            <list>
-                <value>messages</value>
-                <value>navbar</value>
-            </list>
-        </property>
-    </bean>
-    
-    <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
-    
-    <!-- Thymeleaf configuration -->
-    <bean id="conversionService" 
-        class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
-        <!--
-        <property name="converters">
-            <set>
-                <bean class="de.urb.wapi.utils.web.spring.conversions.StringToKeyConverterFactory"/>
-                <bean class="de.urb.wapi.utils.web.spring.conversions.ApiKeyToStringConverter"/>
-                <bean class="de.urb.wapi.utils.web.spring.conversions.ApiParameterKeyToStringConverter"/>
-                <bean class="de.urb.wapi.utils.web.spring.conversions.ApplicationConfigKeyToStringConverter"/>
-                <bean class="de.urb.wapi.utils.web.spring.conversions.ApplicationConfigValueKeyToStringConverter"/>
-                <bean class="de.urb.wapi.utils.web.spring.conversions.ApplicationKeyToStringConverter"/>
-                <bean class="de.urb.wapi.utils.web.spring.conversions.CorsKeyToStringConverter"/>
-                <bean class="de.urb.wapi.utils.web.spring.conversions.DeveloperKeyToStringConverter"/>
-                <bean class="de.urb.wapi.utils.web.spring.conversions.EnumValueKeyToStringConverter"/>
-                <bean class="de.urb.wapi.utils.web.spring.conversions.RedirectUriKeyToStringConverter"/>
-                <bean class="de.urb.wapi.utils.web.spring.conversions.OAuth2ScopeKeyToStringConverter"/>
-                <bean class="de.urb.wapi.utils.web.spring.conversions.OAuth2ScopeConfigKeyToStringConverter"/>
-            </set>
-        </property>
-        <property name="formatters">
-            <set>
-                <bean class="de.urb.wapi.utils.web.spring.formatters.ApiKeyFormatter" />
-                <bean class="de.urb.wapi.utils.web.spring.formatters.ApiParameterKeyFormatter" />
-                <bean class="de.urb.wapi.utils.web.spring.formatters.ApplicationKeyFormatter" />
-                <bean class="de.urb.wapi.utils.web.spring.formatters.ApplicationConfigKeyFormatter" />
-                <bean class="de.urb.wapi.utils.web.spring.formatters.ApplicationConfigValueKeyFormatter" />
-                <bean class="de.urb.wapi.utils.web.spring.formatters.CorsKeyFormatter" />
-                <bean class="de.urb.wapi.utils.web.spring.formatters.DeveloperKeyFormatter" />
-                <bean class="de.urb.wapi.utils.web.spring.formatters.EnumValueKeyFormatter" />
-                <bean class="de.urb.wapi.utils.web.spring.formatters.RecoveryKeyFormatter" />
-                <bean class="de.urb.wapi.utils.web.spring.formatters.RegistrationKeyFormatter" />
-                <bean class="de.urb.wapi.utils.web.spring.formatters.DateFormatter"/>
-                <bean class="de.urb.wapi.utils.web.spring.formatters.RedirectUriKeyFormatter" />
-                <bean class="de.urb.wapi.utils.web.spring.formatters.OAuth2ScopeKeyFormatter" />
-                <bean class="de.urb.wapi.utils.web.spring.formatters.OAuth2ScopeConfigKeyFormatter" />
-                <bean class="de.urb.wapi.console.formatters.WapiApiFormatter"/>
-            </set>
-        </property>
-        -->
-    </bean>
-    
-    <bean id="webTemplateResolver"
-        class="org.thymeleaf.templateresolver.ServletContextTemplateResolver">
-        <property name="prefix" value="/WEB-INF/web-templates/" />
-        <property name="suffix" value=".html" />
-        <property name="templateMode" value="HTML5" />
-        <property name="characterEncoding" value="UTF-8" />
-        <property name="order" value="2" />
-    </bean>
-    
-    <bean id="templateEngine"
-        class="org.thymeleaf.spring4.SpringTemplateEngine">
-        <property name="templateResolvers">
-            <set>
-                <ref bean="webTemplateResolver" />
-            </set>
-        </property>
-        <property name="messageResolvers">
-        	<set>
-        		<bean class="org.thymeleaf.messageresolver.StandardMessageResolver"/>
-        		<bean class="org.thymeleaf.spring4.messageresolver.SpringMessageResolver"/>
-        	</set>
-        </property>
-        <property name="additionalDialects">
-            <set>
-                <bean class="org.thymeleaf.extras.springsecurity4.dialect.SpringSecurityDialect"/>
-            </set>
-        </property>
-    </bean>
-        
-    <bean class="org.thymeleaf.spring4.view.ThymeleafViewResolver">
-        <property name="templateEngine" ref="templateEngine" />
-        <property name="characterEncoding" value="UTF-8" />
-    </bean>
+    <mvc:default-servlet-handler/>    
 </beans>
