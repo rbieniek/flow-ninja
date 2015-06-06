@@ -14,8 +14,8 @@
         user-principal="${flowninja.user}"
         user-keytab="file://${flowninja.home}/etc/${flowninja.user}.keytab"
         security-method="kerberos" 
-        namenode-principal="hdfs/_HOST@VIRT.URB.DE"
-        rm-manager-principal="yarn/_HOST@VIRT.URB.DE"
+        namenode-principal="${flowninja.principal.dfs}"
+        rm-manager-principal="${flowninja.principal.rm}"
         resources="file://${flowninja.home}/etc/hadoop/conf/core-site.xml,file://${flowninja.home}/etc/hadoop/conf/hdfs-site.xml"/>
     
     <hdp:file-system />
