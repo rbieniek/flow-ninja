@@ -220,6 +220,7 @@
     <version.org.thymeleaf.java8time>2.1.0.RELEASE</version.org.thymeleaf.java8time>
 
     <version.org.apache.avro>1.7.7</version.org.apache.avro>
+    <version.org.kitesdk>1.0.0</version.org.kitesdk>
 
     <version.io.netty4>4.0.26.Final</version.io.netty4>
 
@@ -761,6 +762,12 @@
 	<groupId>org.apache.avro</groupId>
 	<artifactId>avro</artifactId>
 	<version>${version.org.apache.avro}</version>
+      </dependency>
+
+      <dependency>
+	<groupId>org.kitesdk</groupId>
+	<artifactId>kite-data-core</artifactId>
+	<version>${version.org.kitesdk}</version>
       </dependency>
 
       <dependency>
