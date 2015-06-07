@@ -4,7 +4,7 @@
 package org.flowninja.webapp.collector.generic.components;
 
 import org.apache.commons.lang3.StringUtils;
-import org.flowninja.types.flows.IPFlow;
+import org.flowninja.types.flows.IPv4Flow;
 import org.kitesdk.data.Formats;
 import org.kitesdk.data.PartitionStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,15 +45,16 @@ public class DatasetConfiguration {
 	}	
 
 	@Bean
-	public DatasetDefinition ipFlowDatasetDefinition() {
+	public DatasetDefinition ipv4FlowDatasetDefinition() {
 	    DatasetDefinition definition = new DatasetDefinition();
 	    
 	    definition.setFormat(Formats.AVRO.getName());
-	    definition.setTargetClass(IPFlow.class);
+	    definition.setTargetClass(IPv4Flow.class);
 	    definition.setAllowNullValues(false);
 	    definition.setPartitionStrategy((new PartitionStrategy.Builder())
 	    		.identity("accountingGroupUuid", "accountingGroup")
 	    		.identity("collectorUuid", "collector")
+	    		.provided("ipv4")
 	    		.year("header.stamp")
 	    		.month("header.stamp")
 	    		.day("header.stamp")
@@ -64,7 +65,7 @@ public class DatasetConfiguration {
 	  }
 	
 	@Bean
-	public DataStoreWriter<IPFlow> ipFloeDataStoreWriter() {
-	    return new AvroPojoDatasetStoreWriter<IPFlow>(IPFlow.class, datasetRepositoryFactory(), ipFlowDatasetDefinition());
+	public DataStoreWriter<IPv4Flow> ipv4FlowDataStoreWriter() {
+	    return new AvroPojoDatasetStoreWriter<IPv4Flow>(IPv4Flow.class, datasetRepositoryFactory(), ipv4FlowDatasetDefinition());
 	  }
 }

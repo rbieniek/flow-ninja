@@ -12,7 +12,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @author rainer
  *
  */
-public class IPFlow implements Serializable {
+public class IPv4Flow implements Serializable {
 
 	/**
 	 * 
@@ -34,7 +34,7 @@ public class IPFlow implements Serializable {
 	@JsonIgnore
 	private String collectorUuid;
 	
-	public IPFlow() {
+	public IPv4Flow() {
 		
 	}
 

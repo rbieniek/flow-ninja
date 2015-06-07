@@ -14,19 +14,19 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class IPFlowCollection {
 	@JsonProperty(value="flows", required=true)
-	private List<IPFlow> flows = new LinkedList<IPFlow>();
+	private List<IPv4Flow> flows = new LinkedList<IPv4Flow>();
 
 	/**
 	 * @return the flows
 	 */
-	public List<IPFlow> getFlows() {
+	public List<IPv4Flow> getFlows() {
 		return flows;
 	}
 
 	/**
 	 * @param flows the flows to set
 	 */
-	public void setFlows(List<IPFlow> flows) {
+	public void setFlows(List<IPv4Flow> flows) {
 		this.flows = flows;
 	}
 	
