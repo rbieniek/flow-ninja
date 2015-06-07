@@ -36,7 +36,7 @@
     <mongo:mapping-converter id="mongoMappingConverter" />
     
     <!--
-        The MongoDbFactory instance 'mongoDbFactory' is created with taking the property 'mongodb.dbname' (defaults to 'db') into account. This property
+        The MongoDbFactory instance 'mongoDbFactory' is created with taking the property 'mongodb.name' (defaults to 'db') into account. This property
         denotes the db name to which the connection is made
     -->
     <bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">

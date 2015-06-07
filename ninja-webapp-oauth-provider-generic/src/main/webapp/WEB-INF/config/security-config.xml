@@ -9,9 +9,9 @@
 	    http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
 
 	<security:http pattern="/token" create-session="stateless" authentication-manager-ref="clientAuthenticationManager">
-		<security:intercept-url pattern="/token" access="IS_AUTHENTICATED_FULLY" />
 	    <security:anonymous enabled="false" />
     	<security:http-basic />	
+		<security:csrf disabled="true"/>
     </security:http>
     
     <security:authentication-manager id="clientAuthenticationManager">

@@ -74,7 +74,7 @@ public class MongoCollectorPersistenceService implements ICollectorPersistenceSe
 	 */
 	@Override
 	public CollectorRecord findCollectoryByKey(CollectorKey key) {
-		logger.info("finding collector for key {}", key);
+		logger.info("finding collector for key '{}'", key);
 
 		return fromDBConditionally(collectorRepository.findOne(key));
 	}
@@ -84,7 +84,7 @@ public class MongoCollectorPersistenceService implements ICollectorPersistenceSe
 	 */
 	@Override
 	public CollectorRecord findCollectoryByName(String name) {
-		logger.info("finding collector for name {}", name);
+		logger.info("finding collector for name '{}'", name);
 
 		return fromDBConditionally(collectorRepository.findOne(QMongoCollectorRecord.mongoCollectorRecord.name.eq(name)));
 	}
@@ -94,7 +94,7 @@ public class MongoCollectorPersistenceService implements ICollectorPersistenceSe
 	 */
 	@Override
 	public CollectorRecord findCollectoryByClientID(String clientID) {
-		logger.info("finding collector for client ID {}", clientID);
+		logger.info("finding collector for client ID '{}'", clientID);
 
 		return fromDBConditionally(collectorRepository.findOne(QMongoCollectorRecord.mongoCollectorRecord.clientID.eq(clientID)));
 	}
@@ -230,12 +230,16 @@ public class MongoCollectorPersistenceService implements ICollectorPersistenceSe
 	private CollectorRecord fromDBConditionally(MongoCollectorRecord db) {
 		CollectorRecord record = null;
 		
+		logger.info("converting collector database record {}", db);
+		
 		if(db != null) {
 			AccountingGroupRecord groupRecord = groupService.findByKey(db.getGroupKey());
 			
 			if(groupRecord != null)
 				record = fromDB(db, groupRecord);
 		}
+
+		logger.info("converted collector database record {} to record {}", db, record);
 		
 		return record;
 	}
