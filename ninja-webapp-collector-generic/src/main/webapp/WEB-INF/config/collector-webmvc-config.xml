@@ -16,5 +16,15 @@
     
     <mvc:annotation-driven />
     
-    <mvc:default-servlet-handler/>    
+    <mvc:default-servlet-handler/>
+
+    <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+        <property name="messageConverters">
+            <list>
+                <ref bean="jsonHttpMessageConverter"/>               
+            </list>
+        </property>
+    </bean>
+    
+    <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter" id="jsonHttpMessageConverter"/>
 </beans>
