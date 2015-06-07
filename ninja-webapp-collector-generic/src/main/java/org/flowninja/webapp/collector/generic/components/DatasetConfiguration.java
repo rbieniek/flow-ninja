@@ -14,7 +14,9 @@ import org.springframework.core.env.Environment;
 import org.springframework.data.hadoop.store.DataStoreWriter;
 import org.springframework.data.hadoop.store.dataset.AvroPojoDatasetStoreWriter;
 import org.springframework.data.hadoop.store.dataset.DatasetDefinition;
+import org.springframework.data.hadoop.store.dataset.DatasetOperations;
 import org.springframework.data.hadoop.store.dataset.DatasetRepositoryFactory;
+import org.springframework.data.hadoop.store.dataset.DatasetTemplate;
 
 /**
  * @author rainer
@@ -67,5 +69,10 @@ public class DatasetConfiguration {
 	@Bean
 	public DataStoreWriter<IPv4Flow> ipv4FlowDataStoreWriter() {
 	    return new AvroPojoDatasetStoreWriter<IPv4Flow>(IPv4Flow.class, datasetRepositoryFactory(), ipv4FlowDatasetDefinition());
-	  }
+	}
+	
+	@Bean
+	public DatasetOperations datasetOperations() {
+		return new DatasetTemplate(datasetRepositoryFactory(), ipv4FlowDatasetDefinition());
+	}
 }
