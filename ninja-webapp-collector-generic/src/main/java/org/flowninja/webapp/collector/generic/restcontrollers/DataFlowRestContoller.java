@@ -12,6 +12,7 @@ import org.flowninja.security.oauth2.annotations.OAuth2LoggedIn;
 import org.flowninja.types.flows.IPFlowCollection;
 import org.flowninja.types.flows.IPv4Flow;
 import org.kitesdk.data.Dataset;
+import org.kitesdk.data.DatasetNotFoundException;
 import org.kitesdk.data.RefinableView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -94,6 +95,10 @@ public class DataFlowRestContoller {
 							.with("collector", collector.getKey().toString());
 				}	
 			});
+		} catch(DatasetNotFoundException e) {
+			logger.error("dataset not found for reading IPv4 flows", e);
+
+			return new ResponseEntity<IPv4FlowInfoModel>(HttpStatus.NOT_FOUND);
 		} catch(Exception e) {
 			logger.error("failed to read IPv4 flows", e);
 			

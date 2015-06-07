@@ -8,7 +8,9 @@ import org.flowninja.persistence.generic.types.CollectorRecord;
 import org.flowninja.security.oauth2.types.CollectorClientDetails;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.security.oauth2.provider.ClientDetails;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.ClientRegistrationException;
@@ -17,11 +19,14 @@ import org.springframework.security.oauth2.provider.ClientRegistrationException;
  * @author rainer
  *
  */
-public class FlowNinjaClientDetailsService implements ClientDetailsService {
+public class FlowNinjaClientDetailsService implements ClientDetailsService, InitializingBean {
 	private static final Logger logger = LoggerFactory.getLogger(FlowNinjaClientDetailsService.class);
 	
 	@Autowired
 	private ICollectorPersistenceService collectorPersistence;
+	
+	@Autowired
+	private Environment environment;
 	
 	private int accessTokenValiditySeconds = 30;
 	
@@ -48,11 +53,11 @@ public class FlowNinjaClientDetailsService implements ClientDetailsService {
 		return details;
 	}
 
-	/**
-	 * @param accessTokenValiditySeconds the accessTokenValiditySeconds to set
-	 */
-	public void setAccessTokenValiditySeconds(int accessTokenValiditySeconds) {
-		this.accessTokenValiditySeconds = accessTokenValiditySeconds;
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		accessTokenValiditySeconds = environment.getProperty("flowninja.oauth.lifetime.access", Integer.class, 3600);
+		
+		logger.info("setting access token lifetime to {} seconds", accessTokenValiditySeconds);
 	}
 
 }

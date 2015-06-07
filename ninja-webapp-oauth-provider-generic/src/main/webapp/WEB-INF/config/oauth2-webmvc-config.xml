@@ -40,26 +40,17 @@
 			<bean class="org.flowninja.security.oauth2.components.FlowNinjaTokenStore"/>
 		</property>
 		<property name="clientDetailsService" ref="ninjaClientDetailsService"/>
-		<!--
 		<property name="tokenEnhancer">
 			<bean class="org.springframework.security.oauth2.provider.token.TokenEnhancerChain">
 				<property name="tokenEnhancers">
 					<list>
-						<ref bean="onApplicationTokenLifetimeEnhancer"/>
+						<bean class="org.flowninja.security.oauth2.components.FlowNinjaTokenLifetimeEnhancer"/>
 					</list>
 				</property>
 			</bean>
 		</property>
-		-->
 	</bean>
 
-<!--
-	<bean class="de.urb.wapi.security.spring.oauth2.provider.WapiOAuth2ClientConfiguration" >
-		<property name="refreshTokenValidityInSeconds" value="43200"/>
-		<property name="accessTokenValidityInSeconds" value="7200"/>
-	</bean>
--->
-	
     <!-- Web page rendering beans -->
  	
     <!-- Thymeleaf configuration -->
