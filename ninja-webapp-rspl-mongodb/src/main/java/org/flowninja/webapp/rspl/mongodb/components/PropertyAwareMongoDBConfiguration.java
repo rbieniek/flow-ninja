@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.PropertyResolver;
+import org.springframework.core.env.Environment;
 import org.springframework.data.mongodb.MongoDbFactory;
 import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
 import org.springframework.util.StringUtils;
@@ -31,7 +31,7 @@ public class PropertyAwareMongoDBConfiguration {
 	private static final Logger logger = LoggerFactory.getLogger(PropertyAwareMongoDBConfiguration.class);
 	
 	@Autowired
-	private PropertyResolver properties;
+	private Environment properties;
 
 	@Autowired(required=false)
 	private MongoClientOptions clientOptions;
@@ -40,11 +40,20 @@ public class PropertyAwareMongoDBConfiguration {
 	public MongoClient mongo() {
 		List<MongoCredential> credentials = null;
 		
+		logger.info("MongoDB replicas='{}', host='{}', port='{}', database name='{}', user='{}', password='{}'", 
+				properties.getProperty("mongodb.replicas"), 
+				properties.getProperty("mongodb.host"), properties.getProperty("mongodb.port"),
+				properties.getProperty("mongodb.name"), 
+				properties.getProperty("mongodb.user"), properties.getProperty("mongodb.password"));
+		
 		if(properties.getProperty("mongodb.user") != null && properties.getProperty("mongodb.password") != null) {
 			credentials = new LinkedList<MongoCredential>();
-			
+
+			if(properties.getProperty("mongodb.name") == null)
+				throw new IllegalArgumentException("required property 'mongodb.name' not set");
+
 			credentials.add(MongoCredential.createCredential(properties.getProperty("mongodb.user"), 
-					properties.getProperty("mongodb.name", "db"), 
+					properties.getProperty("mongodb.name"), 
 					properties.getProperty("mongodb.password").toCharArray()));
 		}
 
@@ -57,7 +66,7 @@ public class PropertyAwareMongoDBConfiguration {
 
 		if(properties.getProperty("mongodb.replicas") != null) {
 			List<ServerAddress> serverAddresses = StringUtils.commaDelimitedListToSet(properties.getProperty("mongodb.replicas")).stream().map((node) -> {
-				logger.info("adding Redis node: {}", node);
+				logger.info("adding MongoDB node: {}", node);
 				
 				int idx = node.indexOf(':');
 				
@@ -85,16 +94,19 @@ public class PropertyAwareMongoDBConfiguration {
 				return new MongoClient(serverAddresses, builder.build());
 		} else {
 			if(credentials != null)
-				return new MongoClient(new ServerAddress(properties.getProperty("mongo.host", "localhost"), 
-						properties.getProperty("mongo.port", Integer.class, 27017)), credentials, builder.build());
+				return new MongoClient(new ServerAddress(properties.getProperty("mongodb.host", "localhost"), 
+						properties.getProperty("mongodb.port", Integer.class, 27017)), credentials, builder.build());
 			else
-				return new MongoClient(new ServerAddress(properties.getProperty("mongo.host", "localhost"), 
-						properties.getProperty("mongo.port", Integer.class, 27017)), builder.build());
+				return new MongoClient(new ServerAddress(properties.getProperty("mongodb.host", "localhost"), 
+						properties.getProperty("mongodb.port", Integer.class, 27017)), builder.build());
 		}
 	}
 	
 	@Bean(name="mongoDbFactory")
 	public MongoDbFactory dbFactory() {
-		return new SimpleMongoDbFactory(mongo(), properties.getProperty("mongodb.dbname", "db"));
+		if(properties.getProperty("mongodb.name") == null)
+			throw new IllegalArgumentException("required property 'mongodb.name' not set");
+		
+		return new SimpleMongoDbFactory(mongo(), properties.getProperty("mongodb.name"));
 	}
 }

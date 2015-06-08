@@ -45,12 +45,15 @@ public class PropertyAwareMongoDBConfiguration {
 				properties.getProperty("mongodb.host"), properties.getProperty("mongodb.port"),
 				properties.getProperty("mongodb.name"), 
 				properties.getProperty("mongodb.user"), properties.getProperty("mongodb.password"));
-
+		
 		if(properties.getProperty("mongodb.user") != null && properties.getProperty("mongodb.password") != null) {
 			credentials = new LinkedList<MongoCredential>();
-			
+
+			if(properties.getProperty("mongodb.name") == null)
+				throw new IllegalArgumentException("required property 'mongodb.name' not set");
+
 			credentials.add(MongoCredential.createCredential(properties.getProperty("mongodb.user"), 
-					properties.getProperty("mongodb.name", "db"), 
+					properties.getProperty("mongodb.name"), 
 					properties.getProperty("mongodb.password").toCharArray()));
 		}
 
@@ -101,6 +104,9 @@ public class PropertyAwareMongoDBConfiguration {
 	
 	@Bean(name="mongoDbFactory")
 	public MongoDbFactory dbFactory() {
-		return new SimpleMongoDbFactory(mongo(), properties.getProperty("mongodb.name", "db"));
+		if(properties.getProperty("mongodb.name") == null)
+			throw new IllegalArgumentException("required property 'mongodb.name' not set");
+		
+		return new SimpleMongoDbFactory(mongo(), properties.getProperty("mongodb.name"));
 	}
 }

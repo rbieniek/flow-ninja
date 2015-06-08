@@ -48,7 +48,10 @@ public class PropertyAwareMongoDBConfiguration {
 		
 		if(properties.getProperty("mongodb.user") != null && properties.getProperty("mongodb.password") != null) {
 			credentials = new LinkedList<MongoCredential>();
-			
+
+			if(properties.getProperty("mongodb.name") == null)
+				throw new IllegalArgumentException("required property 'mongodb.name' not set");
+
 			credentials.add(MongoCredential.createCredential(properties.getProperty("mongodb.user"), 
 					properties.getProperty("mongodb.name"), 
 					properties.getProperty("mongodb.password").toCharArray()));
