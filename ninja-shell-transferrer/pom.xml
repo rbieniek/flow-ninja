@@ -43,6 +43,18 @@
   <dependencies>
 
     <dependency>
+      <groupId>org.flow-ninja</groupId>
+      <artifactId>ninja-types-generic</artifactId>
+      <version>${version.flow-ninja}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.flow-ninja</groupId>
+      <artifactId>ninja-collector-client</artifactId>
+      <version>${version.flow-ninja}</version>
+    </dependency>
+
+    <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
     </dependency>
@@ -84,14 +96,20 @@
 
     <dependency>
       <groupId>com.fasterxml.jackson.datatype</groupId>
-      <artifactId>jackson-datatype-json-org</artifactId>
+      <artifactId>jackson-datatype-jsr353</artifactId>
+      <version>${version.com.fasterxml.jackson}</version>
     </dependency>
 
     <dependency>
-      <groupId>org.json</groupId>
-      <artifactId>json</artifactId>
+      <groupId>javax.json</groupId>
+      <artifactId>javax.json-api</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>org.glassfish</groupId>
+      <artifactId>javax.json</artifactId>
+    </dependency>
+    
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-beans</artifactId>
