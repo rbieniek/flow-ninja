@@ -191,6 +191,8 @@
     <version.org.quartz-scheduler>2.2.1</version.org.quartz-scheduler>
     <version.com.mchange.c3p0>0.9.5</version.com.mchange.c3p0>
 
+    <version.org.apache.derby>10.11.1.1</version.org.apache.derby>
+
     <version.org.springframework>4.1.6.RELEASE</version.org.springframework>
     <version.org.springframework.data.mongodb>1.7.0.RELEASE</version.org.springframework.data.mongodb>
     <version.org.springframework.data.redis>1.5.0.RELEASE</version.org.springframework.data.redis>
@@ -875,6 +877,12 @@
         <groupId>com.github.spullara.redis</groupId>
         <artifactId>client</artifactId>
         <version>${version.redis.clients.srp}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.derby</groupId>
+        <artifactId>derby</artifactId>
+        <version>${version.org.apache.derby}</version>
       </dependency>
 
       <dependency> 
