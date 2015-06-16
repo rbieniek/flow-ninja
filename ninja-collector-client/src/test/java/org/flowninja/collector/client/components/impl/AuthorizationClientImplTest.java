@@ -20,6 +20,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -29,10 +30,11 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes=TestConfiguration.class)
+@DirtiesContext(classMode=ClassMode.AFTER_EACH_TEST_METHOD)
 public class AuthorizationClientImplTest {
 
 	@Autowired
-	private ApplicationContext ctx;
+	private CloseableHttpClient httpClient;
 	
 	@Autowired
 	private Server httpServer;
@@ -46,7 +48,7 @@ public class AuthorizationClientImplTest {
 	
 	@Before
 	public void before() throws Exception {
-		this.client = new AuthorizationClientImpl(ctx.getBean(CloseableHttpClient.class));
+		this.client = new AuthorizationClientImpl(httpClient);
 		
 		httpServer.start();
 		
