@@ -11,22 +11,18 @@ import org.apache.http.conn.HttpClientConnectionManager;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
-import org.eclipse.jetty.annotations.ServletContainerInitializersStarter;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
+import org.eclipse.jetty.servlet.FilterHolder;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
-import org.eclipse.jetty.webapp.WebAppContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.beans.factory.FactoryBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.context.ContextLoader;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.request.RequestContextListener;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
-import org.springframework.web.context.support.GenericWebApplicationContext;
-import org.springframework.web.context.support.XmlWebApplicationContext;
 import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.servlet.DispatcherServlet;
 
@@ -39,16 +35,33 @@ public class TestConfiguration {
 
 	@Bean
 	public HttpClientConnectionManager connectionManager() {
-		PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager();
-		
-		return cm;
+			PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager();
+			
+			return cm;
 	}
 	
 	@Bean
-	public CloseableHttpClient httpClient() {
-		return HttpClients.custom()
-				.setConnectionManager(connectionManager())
-				.build();
+	public FactoryBean<CloseableHttpClient> httpClient() {
+		return new FactoryBean<CloseableHttpClient>() {
+
+			@Override
+			public CloseableHttpClient getObject() throws Exception {
+				return HttpClients.custom()
+						.setConnectionManager(connectionManager())
+						.build();
+			}
+
+			@Override
+			public Class<?> getObjectType() {
+				return CloseableHttpClient.class;
+			}
+
+			@Override
+			public boolean isSingleton() {
+				return false;
+			}
+		};
+		
 	}
 	
 	@Bean
@@ -61,22 +74,19 @@ public class TestConfiguration {
 		ServletContextHandler context = new ServletContextHandler();
 
 		context.setContextPath("/");
-		
-		AnnotationConfigWebApplicationContext rootContext = new AnnotationConfigWebApplicationContext();
-		AnnotationConfigWebApplicationContext dispatcherServletContext = new AnnotationConfigWebApplicationContext();
 
-		rootContext.register(RootConfiguration.class);
-		dispatcherServletContext.register(DispatcherServletConfiguration.class);		
-		dispatcherServletContext.setParent(rootContext);
-		
-		rootContext.refresh();
-		dispatcherServletContext.refresh();
-		
-		context.addEventListener(new ContextLoaderListener(dispatcherServletContext));
+		AnnotationConfigWebApplicationContext appContext = new AnnotationConfigWebApplicationContext();
+
+		appContext.register(OAuth2AuthorizationServerConfiguration.class,
+				OAuth2ResourceServerConfiguration.class,
+				WebSecurityConfiguration.class,
+				DispatcherServletConfiguration.class);
+				
+		context.addEventListener(new ContextLoaderListener(appContext));
 		context.addEventListener(new RequestContextListener());
-		context.addFilter(DelegatingFilterProxy.class, "/*", EnumSet.of(DispatcherType.REQUEST));
-		context.addServlet(new ServletHolder(new DispatcherServlet(dispatcherServletContext)), "/*");
-		
+		context.addFilter(new FilterHolder(new DelegatingFilterProxy("springSecurityFilterChain", appContext)), "/*", EnumSet.of(DispatcherType.REQUEST));
+		context.addServlet(new ServletHolder(new DispatcherServlet(appContext)), "/*");
+
 		server.setHandler(context);
 		
 		return server;

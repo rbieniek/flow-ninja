@@ -18,6 +18,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -30,7 +32,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 public class AuthorizationClientImplTest {
 
 	@Autowired
-	private CloseableHttpClient httpClient;
+	private ApplicationContext ctx;
 	
 	@Autowired
 	private Server httpServer;
@@ -39,16 +41,20 @@ public class AuthorizationClientImplTest {
 	private ServerConnector serverConnector;
 	
 	private AuthorizationClientImpl client;
-	private BearerCredentials credentials;
+	private BearerCredentials unscopedCredentials;
+	private BearerCredentials scopedCredentials;
 	
 	@Before
 	public void before() throws Exception {
-		this.client = new AuthorizationClientImpl(httpClient);
+		this.client = new AuthorizationClientImpl(ctx.getBean(CloseableHttpClient.class));
 		
 		httpServer.start();
 		
-		this.credentials = new BearerCredentials("foo", "bar", 
-				new URI("http", null, "localhost", serverConnector.getLocalPort(), "/oauth2/token", 
+		this.unscopedCredentials = new BearerCredentials("foo", "bar", 
+				new URI("http", null, "localhost", serverConnector.getLocalPort(), "/oauth/token", 
+				null, null));
+		this.scopedCredentials = new BearerCredentials("foofoo", "barbar", 
+				new URI("http", null, "localhost", serverConnector.getLocalPort(), "/oauth/token", 
 				null, null));
 	}
 	
@@ -58,8 +64,17 @@ public class AuthorizationClientImplTest {
 	}
 	
 	@Test
-	public void obtainToken() throws Exception {
-		BearerToken token = client.grantClientCredentials(credentials, null);
+	public void obtainTokenWithoutScope() throws Exception {
+		BearerToken token = client.grantClientCredentials(unscopedCredentials, null);
+		
+		assertThat(token).isNotNull();
+		assertThat(token.getToken()).isNotNull();
+		assertThat(token.getTimeToLive()).isNotNull();
+	}
+	
+	@Test
+	public void obtainTokenWithScope() throws Exception {
+		BearerToken token = client.grantClientCredentials(scopedCredentials, "restricted");
 		
 		assertThat(token).isNotNull();
 		assertThat(token.getToken()).isNotNull();

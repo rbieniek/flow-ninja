@@ -84,7 +84,7 @@ public class AuthorizationClientImpl implements AuthorizationClient {
 		httpPost.setHeader(HttpHeaders.ACCEPT, ContentType.APPLICATION_JSON.getMimeType());
 		
 		try {
-			BearerToken token = httpClient.execute(authorizationHost, httpPost, new ResponseHandler<BearerToken>() {
+			BearerToken token = httpClient.execute(authorizationHost, httpPost,new ResponseHandler<BearerToken>() {
 
 				@Override
 				public BearerToken handleResponse(HttpResponse response) throws ClientProtocolException, IOException {
