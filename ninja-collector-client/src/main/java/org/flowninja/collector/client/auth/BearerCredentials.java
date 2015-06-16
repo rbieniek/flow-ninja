@@ -7,6 +7,9 @@ import java.io.Serializable;
 import java.net.URI;
 import java.security.Principal;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.http.auth.Credentials;
 
 /**
@@ -57,5 +60,31 @@ public class BearerCredentials implements Credentials, Serializable {
 		return authorizationEndpoint;
 	}
 
+	@Override
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this);
+	}
 	
+	@Override
+	public boolean equals(Object obj) {
+		if(!(obj instanceof BearerCredentials))
+			return false;
+		
+		BearerCredentials o = (BearerCredentials)obj;
+		
+		return (new EqualsBuilder())
+				.append(this.authorizationEndpoint, o.authorizationEndpoint)
+				.append(this.principal, o.principal)
+				.append(this.secret, o.secret)
+				.isEquals();
+	}
+	
+	@Override
+	public int hashCode() {
+		return (new HashCodeBuilder())
+				.append(authorizationEndpoint)
+				.append(principal)
+				.append(secret)
+				.toHashCode();
+	}
 }
