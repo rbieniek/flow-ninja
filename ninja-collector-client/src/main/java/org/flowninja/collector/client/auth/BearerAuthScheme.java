@@ -3,20 +3,13 @@
  */
 package org.flowninja.collector.client.auth;
 
-import java.nio.charset.Charset;
-
-import org.apache.commons.lang3.NotImplementedException;
 import org.apache.http.Header;
 import org.apache.http.HttpRequest;
 import org.apache.http.auth.AUTH;
 import org.apache.http.auth.AuthenticationException;
 import org.apache.http.auth.Credentials;
-import org.apache.http.auth.MalformedChallengeException;
-import org.apache.http.impl.auth.AuthSchemeBase;
 import org.apache.http.impl.auth.RFC2617Scheme;
-import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.message.BufferedHeader;
-import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.CharArrayBuffer;
 import org.flowninja.collector.client.components.AuthorizationClient;
 import org.flowninja.collector.client.components.BearerToken;

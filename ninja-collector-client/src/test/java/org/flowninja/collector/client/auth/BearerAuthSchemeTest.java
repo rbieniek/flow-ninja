@@ -13,23 +13,18 @@ import javax.json.JsonObject;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
-import org.apache.http.auth.AuthSchemeProvider;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.ResponseHandler;
-import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.protocol.HttpClientContext;
-import org.apache.http.config.RegistryBuilder;
 import org.apache.http.entity.ContentType;
-import org.apache.http.impl.client.BasicAuthCache;
-import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
+import org.flowninja.collector.client.BearerHttpClientContextBuilder;
 import org.flowninja.collector.client.TestConfiguration;
 import org.flowninja.collector.client.components.impl.DefaultAuthorizationClientFactory;
 import org.flowninja.collector.client.components.impl.rest.RestClientDetails;
@@ -123,17 +118,12 @@ public class BearerAuthSchemeTest {
 	@Test
 	public void readClientCredentialsWithoutScope() throws Exception {
 		HttpGet httpGet = new HttpGet(clientDetailsURI);
-		HttpClientContext context = HttpClientContext.create();
-		CredentialsProvider creds = new BasicCredentialsProvider();
+		HttpClientContext context = BearerHttpClientContextBuilder.create()
+				.withBearerCredentials(new AuthScope(serverConnector.getHost(),serverConnector.getLocalPort()), unscopedCredentials)
+				.withBearerSchemeFactory(schemeFactory)
+				.build();
 		
 		httpGet.setHeader(HttpHeaders.ACCEPT, ContentType.APPLICATION_JSON.getMimeType());
-		
-		creds.setCredentials(new AuthScope(serverConnector.getHost(),serverConnector.getLocalPort()), unscopedCredentials);
-		
-		context.setCredentialsProvider(creds);
-		context.setAuthSchemeRegistry(RegistryBuilder.<AuthSchemeProvider>create().register(BearerSchemeFactory.SCHEME, schemeFactory).build());
-		context.setAuthCache(new BasicAuthCache());
-		context.setRequestConfig(RequestConfig.custom().setAuthenticationEnabled(true).setTargetPreferredAuthSchemes(BearerSchemeFactory.SCHEME_COLLECTION).build());
 		
 		RestClientDetails details = httpClient.execute(httpGet, new ClientDetailsResponseHandler(), context);
 		
@@ -145,17 +135,12 @@ public class BearerAuthSchemeTest {
 	@Test
 	public void readClientCredentialsWithScope() throws Exception {
 		HttpGet httpGet = new HttpGet(clientDetailsURI);
-		HttpClientContext context = HttpClientContext.create();
-		CredentialsProvider creds = new BasicCredentialsProvider();
+		HttpClientContext context = BearerHttpClientContextBuilder.create()
+				.withBearerCredentials(new AuthScope(serverConnector.getHost(),serverConnector.getLocalPort()), scopedCredentials)
+				.withBearerSchemeFactory(schemeFactory)
+				.build();
 		
 		httpGet.setHeader(HttpHeaders.ACCEPT, ContentType.APPLICATION_JSON.getMimeType());
-
-		creds.setCredentials(new AuthScope(serverConnector.getHost(),serverConnector.getLocalPort()), scopedCredentials);
-		
-		context.setCredentialsProvider(creds);
-		context.setAuthSchemeRegistry(RegistryBuilder.<AuthSchemeProvider>create().register(BearerSchemeFactory.SCHEME, schemeFactory).build());
-		context.setAuthCache(new BasicAuthCache());
-		context.setRequestConfig(RequestConfig.custom().setAuthenticationEnabled(true).setTargetPreferredAuthSchemes(BearerSchemeFactory.SCHEME_COLLECTION).build());
 
 		RestClientDetails details = httpClient.execute(httpGet, new ClientDetailsResponseHandler(), context);
 		
