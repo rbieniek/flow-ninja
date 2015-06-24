@@ -198,8 +198,8 @@
     <version.org.springframework.data.redis>1.5.0.RELEASE</version.org.springframework.data.redis>
     <version.org.springframework.data.commons>1.10.0.RELEASE</version.org.springframework.data.commons>
     <version.org.springframework.data.hadoop>2.1.2.RELEASE</version.org.springframework.data.hadoop>
-    <version.org.springframework.integration>4.1.3.RELEASE</version.org.springframework.integration>
-    <version.org.springframework.batch>3.0.3.RELEASE</version.org.springframework.batch>
+    <version.org.springframework.integration>4.1.5.RELEASE</version.org.springframework.integration>
+    <version.org.springframework.batch>3.0.4.RELEASE</version.org.springframework.batch>
     <version.org.springframework.security>4.0.1.RELEASE</version.org.springframework.security>
     <version.org.springframework.security.oauth2>2.0.7.RELEASE</version.org.springframework.security.oauth2>
     <version.org.springframework.security.jwt>1.0.2.RELEASE</version.org.springframework.security.jwt>
