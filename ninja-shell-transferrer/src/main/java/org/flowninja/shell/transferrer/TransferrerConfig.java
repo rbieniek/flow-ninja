@@ -11,17 +11,23 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.integration.annotation.IntegrationComponentScan;
+import org.springframework.integration.channel.DirectChannel;
+import org.springframework.integration.config.EnableIntegration;
 import org.springframework.integration.endpoint.SourcePollingChannelAdapter;
 import org.springframework.integration.file.DefaultDirectoryScanner;
 import org.springframework.integration.file.DirectoryScanner;
 import org.springframework.integration.file.FileReadingMessageSource;
+import org.springframework.messaging.MessageChannel;
 
 /**
  * @author rainer
  *
  */
 @Configuration
+@EnableIntegration
 @ComponentScan(basePackageClasses=TransferrerConfig.class)
+@IntegrationComponentScan(basePackageClasses=IgnoreCurrentHourFileFilter.class)
 public class TransferrerConfig {
 	@Value("#{systemProperties.sourceDirectory}")
 	private File sourceDirectory;
@@ -54,7 +60,38 @@ public class TransferrerConfig {
 		SourcePollingChannelAdapter adapter = new SourcePollingChannelAdapter();
 
 		adapter.setSource(collectorFileSource());
+		adapter.setOutputChannel(sourceFileChannel());
 		
 		return adapter;
+	}
+	
+	@Bean
+	public MessageChannel sourceFileChannel() {
+		return new DirectChannel();
+	}
+
+	@Bean
+	public MessageChannel sourceDataFileChannel() {
+		return new DirectChannel();
+	}
+
+	@Bean
+	public MessageChannel sourceOptionsFileChannel() {
+		return new DirectChannel();
+	}
+
+	@Bean
+	public MessageChannel unprocessableFileChannel() {
+		return new DirectChannel();
+	}
+
+	@Bean
+	public MessageChannel sourceDataFlowChannel() {
+		return new DirectChannel();
+	}
+
+	@Bean
+	public MessageChannel sourceOptionsFlowChannel() {
+		return new DirectChannel();
 	}
 }
