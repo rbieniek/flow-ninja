@@ -7,7 +7,7 @@ import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.flowninja.types.flows.IPv4Flow;
+import org.flowninja.types.flows.NetworkFlow;
 import org.flowninja.types.flows.OptionsFlow;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

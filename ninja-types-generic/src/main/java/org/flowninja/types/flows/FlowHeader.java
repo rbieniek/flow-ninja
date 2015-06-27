@@ -6,6 +6,10 @@ package org.flowninja.types.flows;
 import java.io.Serializable;
 import java.util.Date;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -21,6 +25,58 @@ public class FlowHeader implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 6322350109524223750L;
+	
+	public static class Builder {
+		private FlowHeader header = new FlowHeader();
+
+		private Builder() {}
+		
+		public static Builder newBuilder() {
+			return new Builder();
+		}
+		
+		public Builder withRecordCount(int recordCount) {
+			header.recordCount = recordCount;
+			
+			return this;
+		}
+		
+		public Builder withSequenceNumber(int sequenceNumber) {
+			header.sequenceNumber = sequenceNumber;
+			
+			return this;
+		}
+		
+		public Builder withSourceId(long sourceId) {
+			header.sourceId = sourceId;
+			
+			return this;
+		}
+		
+		public Builder withSysUpTime(long sysUpTime) {
+			header.sysUpTime = sysUpTime;
+			
+			return this;
+		}
+		
+		public Builder withTimestamp(Date timestamp) {
+			header.timestamp = timestamp;
+			header.unixSeconds = timestamp.getTime() / 1000L;
+			
+			return this;
+		}
+		
+		public Builder withUnixSeconds(long unixSeconds) {
+			header.unixSeconds = unixSeconds;
+			header.timestamp = new Date(unixSeconds*1000L);
+			
+			return this;
+		}
+		
+		public FlowHeader build() {
+			return header;
+		}
+	}
 	
 	@JsonProperty(value="recordCount", required=true)
 	private int recordCount;
@@ -50,13 +106,6 @@ public class FlowHeader implements Serializable {
 		this.sequenceNumber = sequenceNumber;
 		this.sourceId = sourceId;
 		this.timestamp = new Date(unixSeconds * 1000L);
-	}
-
-	/**
-	 * @return the serialversionuid
-	 */
-	public static long getSerialversionuid() {
-		return serialVersionUID;
 	}
 
 	/**
@@ -99,5 +148,39 @@ public class FlowHeader implements Serializable {
 	 */
 	public Date getTimestamp() {
 		return timestamp;
+	}
+	
+	@Override
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this);
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(!(obj instanceof FlowHeader))
+			return false;
+		
+		FlowHeader o = (FlowHeader)obj;
+		
+		return (new EqualsBuilder())
+				.append(this.recordCount, o.recordCount)
+				.append(this.sequenceNumber, o.sequenceNumber)
+				.append(this.sourceId, o.sourceId)
+				.append(this.sysUpTime, o.sysUpTime)
+				.append(this.timestamp, o.timestamp)
+				.append(this.unixSeconds, o.unixSeconds)
+				.isEquals();
+	}
+	
+	@Override
+	public int hashCode() {
+		return (new HashCodeBuilder())
+				.append(recordCount)
+				.append(sequenceNumber)
+				.append(sourceId)
+				.append(sysUpTime)
+				.append(timestamp)
+				.append(unixSeconds)
+				.toHashCode();
 	}
 }

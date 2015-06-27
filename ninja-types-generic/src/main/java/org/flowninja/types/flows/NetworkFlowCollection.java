@@ -12,21 +12,21 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @author rainer
  *
  */
-public class IPFlowCollection {
+public class NetworkFlowCollection {
 	@JsonProperty(value="flows", required=true)
-	private List<IPv4Flow> flows = new LinkedList<IPv4Flow>();
+	private List<NetworkFlow> flows = new LinkedList<NetworkFlow>();
 
 	/**
 	 * @return the flows
 	 */
-	public List<IPv4Flow> getFlows() {
+	public List<NetworkFlow> getFlows() {
 		return flows;
 	}
 
 	/**
 	 * @param flows the flows to set
 	 */
-	public void setFlows(List<IPv4Flow> flows) {
+	public void setFlows(List<NetworkFlow> flows) {
 		this.flows = flows;
 	}
 	

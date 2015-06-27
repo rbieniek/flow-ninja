@@ -9,8 +9,8 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import org.flowninja.persistence.generic.types.CollectorRecord;
 import org.flowninja.security.oauth2.annotations.OAuth2LoggedIn;
-import org.flowninja.types.flows.IPFlowCollection;
-import org.flowninja.types.flows.IPv4Flow;
+import org.flowninja.types.flows.NetworkFlowCollection;
+import org.flowninja.types.flows.NetworkFlow;
 import org.kitesdk.data.Dataset;
 import org.kitesdk.data.DatasetNotFoundException;
 import org.kitesdk.data.RefinableView;
@@ -39,13 +39,13 @@ public class DataFlowRestContoller {
 	private static final Logger logger = LoggerFactory.getLogger(DataFlowRestContoller.class);
 	
 	@Autowired
-	private DataStoreWriter<IPv4Flow> ipFlowWriter;
+	private DataStoreWriter<NetworkFlow> ipFlowWriter;
 	
 	@Autowired
 	private DatasetOperations datasetOperations;
 	
 	@RequestMapping(consumes="application/json", value="/rest/data-flows/ipv4", method=RequestMethod.PUT)
-	public ResponseEntity<Object> storeIPFlow(HttpEntity<IPFlowCollection> requestEntity, 
+	public ResponseEntity<Object> storeIPFlow(HttpEntity<NetworkFlowCollection> requestEntity, 
 			@ModelAttribute CollectorRecord collector) throws UnsupportedEncodingException {
 
 		logger.info("Putting IP data flow collection for collector {}", collector);
@@ -54,7 +54,7 @@ public class DataFlowRestContoller {
 			return new ResponseEntity<Object>(HttpStatus.FORBIDDEN);
 		
 		try {
-			for(IPv4Flow flow : requestEntity.getBody().getFlows()) {
+			for(NetworkFlow flow : requestEntity.getBody().getFlows()) {
 				flow.setAccountingGroupUuid(collector.getAccountingGroup().getKey().toString());
 				flow.setCollectorUuid(collector.getKey().toString());
 				
@@ -81,10 +81,10 @@ public class DataFlowRestContoller {
 		final AtomicLong count = new AtomicLong();
 		
 		try {
-			datasetOperations.read(IPv4Flow.class, new RecordCallback<IPv4Flow>() {
+			datasetOperations.read(NetworkFlow.class, new RecordCallback<NetworkFlow>() {
 	
 				@Override
-				public void doInRecord(IPv4Flow record) {
+				public void doInRecord(NetworkFlow record) {
 					count.getAndIncrement();
 				}
 			}, new ViewCallback() {

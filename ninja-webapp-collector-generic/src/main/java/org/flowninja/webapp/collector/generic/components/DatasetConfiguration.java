@@ -4,7 +4,7 @@
 package org.flowninja.webapp.collector.generic.components;
 
 import org.apache.commons.lang3.StringUtils;
-import org.flowninja.types.flows.IPv4Flow;
+import org.flowninja.types.flows.NetworkFlow;
 import org.kitesdk.data.Formats;
 import org.kitesdk.data.PartitionStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +51,7 @@ public class DatasetConfiguration {
 	    DatasetDefinition definition = new DatasetDefinition();
 	    
 	    definition.setFormat(Formats.AVRO.getName());
-	    definition.setTargetClass(IPv4Flow.class);
+	    definition.setTargetClass(NetworkFlow.class);
 	    definition.setAllowNullValues(false);
 	    definition.setPartitionStrategy((new PartitionStrategy.Builder())
 	    		.identity("accountingGroupUuid", "accountingGroup")
@@ -67,8 +67,8 @@ public class DatasetConfiguration {
 	  }
 	
 	@Bean
-	public DataStoreWriter<IPv4Flow> ipv4FlowDataStoreWriter() {
-	    return new AvroPojoDatasetStoreWriter<IPv4Flow>(IPv4Flow.class, datasetRepositoryFactory(), ipv4FlowDatasetDefinition());
+	public DataStoreWriter<NetworkFlow> ipv4FlowDataStoreWriter() {
+	    return new AvroPojoDatasetStoreWriter<NetworkFlow>(NetworkFlow.class, datasetRepositoryFactory(), ipv4FlowDatasetDefinition());
 	}
 	
 	@Bean

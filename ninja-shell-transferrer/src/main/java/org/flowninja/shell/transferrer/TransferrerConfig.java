@@ -31,7 +31,7 @@ import org.springframework.messaging.MessageChannel;
 public class TransferrerConfig {
 	@Value("#{systemProperties.sourceDirectory}")
 	private File sourceDirectory;
-	
+
 	@Autowired
 	private IgnoreCurrentHourFileFilter ignoreCurrentHourFilter;
 	
