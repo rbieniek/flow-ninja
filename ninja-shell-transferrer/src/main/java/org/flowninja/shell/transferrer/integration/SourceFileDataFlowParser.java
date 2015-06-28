@@ -21,6 +21,7 @@ import javax.json.JsonObject;
 import javax.json.JsonString;
 import javax.json.JsonValue;
 
+import org.apache.commons.lang3.StringUtils;
 import org.flowninja.types.flows.FlowData;
 import org.flowninja.types.flows.FlowDirection;
 import org.flowninja.types.flows.FlowHeader;
@@ -321,7 +322,7 @@ public class SourceFileDataFlowParser implements InitializingBean {
 		try {
 			lnr = new LineNumberReader(new FileReader(flowFile.getPayload()));
 			
-			while((currentLine = lnr.readLine()) != null) {
+			while(StringUtils.isNotEmpty(currentLine = StringUtils.strip(lnr.readLine()))) {
 				JsonObject root = mapper.readValue(new StringReader(currentLine), JsonObject.class);
 
 				flows.add(parseFlowRoot(root));
