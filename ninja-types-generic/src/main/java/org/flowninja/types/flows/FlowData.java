@@ -6,7 +6,6 @@ package org.flowninja.types.flows;
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.EnumSet;
 import java.util.SortedSet;
 import java.util.TreeSet;
 

@@ -37,9 +37,13 @@ public class IntegrationTestConfig {
 		return new DirectChannel();
 	}
 
-
 	@Bean
 	public MessageChannel sourceOptionsFileChannel() {
+		return new DirectChannel();
+	}
+
+	@Bean
+	public MessageChannel sourceOptionsFlowChannel() {
 		return new DirectChannel();
 	}
 
@@ -47,4 +51,5 @@ public class IntegrationTestConfig {
 	public MessageChannel unprocessableFileChannel() {
 		return new DirectChannel();
 	}
+
 }
