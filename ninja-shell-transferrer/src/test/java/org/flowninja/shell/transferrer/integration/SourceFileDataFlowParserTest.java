@@ -3,7 +3,7 @@
  */
 package org.flowninja.shell.transferrer.integration;
 
-import static org.fest.assertions.api.Assertions.*;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 import java.io.File;
 import java.math.BigInteger;
@@ -47,11 +47,13 @@ public class SourceFileDataFlowParserTest {
 	public static class DataFlowHandler implements MessageHandler {
 
 		private List<NetworkFlow> flows = new LinkedList<NetworkFlow>();
+		private List<File> files = new LinkedList<File>();
 		
 		@SuppressWarnings("unchecked")
 		@Override
 		public void handleMessage(Message<?> message) throws MessagingException {
 			flows.addAll((List<NetworkFlow>)message.getPayload());
+			files.add(message.getHeaders().get(TransferrerConstants.SOURCE_FILE_HEADER, File.class));
 		}
 
 		/**
@@ -59,6 +61,13 @@ public class SourceFileDataFlowParserTest {
 		 */
 		public List<NetworkFlow> getFlows() {
 			return flows;
+		}
+
+		/**
+		 * @return the files
+		 */
+		public List<File> getFiles() {
+			return files;
 		}
 		
 	}
@@ -169,5 +178,7 @@ public class SourceFileDataFlowParserTest {
 						.withSourceAs(0)
 						.build())
 				.build());
+		
+		assertThat(this.handler.getFiles()).containsExactly(dataFlowFile);
 	}
 }

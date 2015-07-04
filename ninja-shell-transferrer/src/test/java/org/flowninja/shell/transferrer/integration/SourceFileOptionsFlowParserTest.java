@@ -43,11 +43,13 @@ public class SourceFileOptionsFlowParserTest {
 	public static class OptionsFlowHandler implements MessageHandler {
 
 		private List<OptionsFlow> flows = new LinkedList<OptionsFlow>();
-		
+		private List<File> files = new LinkedList<File>();
+
 		@SuppressWarnings("unchecked")
 		@Override
 		public void handleMessage(Message<?> message) throws MessagingException {
 			flows.addAll((List<OptionsFlow>)message.getPayload());
+			files.add(message.getHeaders().get(TransferrerConstants.SOURCE_FILE_HEADER, File.class));
 		}
 
 		/**
@@ -57,6 +59,13 @@ public class SourceFileOptionsFlowParserTest {
 			return flows;
 		}
 		
+
+		/**
+		 * @return the files
+		 */
+		public List<File> getFiles() {
+			return files;
+		}
 	}
 	
 	@Autowired
@@ -103,5 +112,7 @@ public class SourceFileOptionsFlowParserTest {
 						.withTotalPacketsExported(new BigInteger("515370"))
 						.build())
 				.build());
+		
+		assertThat(this.handler.getFiles()).containsExactly(dataFlowFile);
 	}
 }

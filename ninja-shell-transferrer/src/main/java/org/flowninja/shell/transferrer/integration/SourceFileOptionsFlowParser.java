@@ -27,6 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.integration.annotation.Transformer;
+import org.springframework.integration.support.MessageBuilder;
 import org.springframework.messaging.Message;
 import org.springframework.stereotype.Component;
 
@@ -72,7 +73,7 @@ public class SourceFileOptionsFlowParser implements InitializingBean {
 	
 	
 	@Transformer(inputChannel="sourceOptionsFileChannel", outputChannel="sourceOptionsFlowChannel")
-	public List<OptionsFlow> parseDataFlows(Message<File> flowFile) throws IOException {
+	public Message<List<OptionsFlow>> parseDataFlows(Message<File> flowFile) throws IOException {
 		List<OptionsFlow> flows = new LinkedList<OptionsFlow>();
 		
 		LineNumberReader lnr = null;
@@ -104,7 +105,7 @@ public class SourceFileOptionsFlowParser implements InitializingBean {
 			}
 		}
 
-		return flows;
+		return MessageBuilder.withPayload(flows).setHeader(TransferrerConstants.SOURCE_FILE_HEADER, flowFile.getPayload()).build();
 	}
 
 	private OptionsFlow parseFlowRoot(JsonObject root) {

@@ -38,6 +38,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.integration.annotation.Transformer;
+import org.springframework.integration.support.MessageBuilder;
 import org.springframework.messaging.Message;
 import org.springframework.stereotype.Component;
 
@@ -314,7 +315,7 @@ public class SourceFileDataFlowParser implements InitializingBean {
 	}
 	
 	@Transformer(inputChannel="sourceDataFileChannel", outputChannel="sourceDataFlowChannel")
-	public List<NetworkFlow> parseDataFlows(Message<File> flowFile) throws IOException {
+	public Message<List<NetworkFlow>> parseDataFlows(Message<File> flowFile) throws IOException {
 		List<NetworkFlow> flows = new LinkedList<NetworkFlow>();
 		LineNumberReader lnr = null;
 		String currentLine;
@@ -345,7 +346,7 @@ public class SourceFileDataFlowParser implements InitializingBean {
 			}
 		}
 		
-		return flows;
+		return MessageBuilder.withPayload(flows).setHeader(TransferrerConstants.SOURCE_FILE_HEADER, flowFile.getPayload()).build();
 	}
 
 	private NetworkFlow parseFlowRoot(JsonObject root) {
