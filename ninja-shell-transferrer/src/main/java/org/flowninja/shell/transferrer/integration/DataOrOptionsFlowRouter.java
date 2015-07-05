@@ -3,12 +3,9 @@
  */
 package org.flowninja.shell.transferrer.integration;
 
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.integration.annotation.Router;
-
 import java.io.File;
 
-import org.springframework.messaging.Message;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 /**
@@ -18,13 +15,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class DataOrOptionsFlowRouter {
 
-	private static final String DATA_CHANNNEL = "sourceDataFileChannel";
-	private static final String OPTIONS_CHANNNEL = "sourceOptionsFileChannel";
-	private static final String UNPROCESSABLE_CHANNNEL = "unprocessableFileChannel";
+	private static final String DATA_CHANNNEL = "data";
+	private static final String OPTIONS_CHANNNEL = "options";
+	private static final String UNPROCESSABLE_CHANNNEL = "unprocessable";
 	
-	@Router(inputChannel="sourceFileChannel", defaultOutputChannel="sourceUnprocessableFileChannel")
-	public String routeDataOrOptionsFlow(Message<File> flowFile) {
-		String fname = flowFile.getPayload().getName();
+	public String routeDataOrOptionsFlow(File flowFile) {
+		String fname = flowFile.getName();
 		
 		if(StringUtils.startsWith(fname, "data-flow-"))
 			return DATA_CHANNNEL;

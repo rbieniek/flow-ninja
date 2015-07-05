@@ -6,6 +6,7 @@ package org.flowninja.shell.transferrer;
 import java.io.File;
 
 import org.flowninja.shell.transferrer.integration.IgnoreCurrentHourFileFilter;
+import org.flowninja.shell.transferrer.integration.SetFileNameHeaderTransformer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -14,6 +15,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.integration.annotation.IntegrationComponentScan;
 import org.springframework.integration.channel.DirectChannel;
 import org.springframework.integration.config.EnableIntegration;
+import org.springframework.integration.dsl.IntegrationFlow;
+import org.springframework.integration.dsl.IntegrationFlows;
 import org.springframework.integration.endpoint.SourcePollingChannelAdapter;
 import org.springframework.integration.file.DefaultDirectoryScanner;
 import org.springframework.integration.file.DirectoryScanner;
@@ -34,6 +37,9 @@ public class TransferrerConfig {
 
 	@Autowired
 	private IgnoreCurrentHourFileFilter ignoreCurrentHourFilter;
+	
+	@Autowired
+	private SetFileNameHeaderTransformer fileNameHeaderTransformer;
 	
 	@Bean
 	public FileReadingMessageSource collectorFileSource() {		
@@ -56,13 +62,10 @@ public class TransferrerConfig {
 	}
 	
 	@Bean
-	public SourcePollingChannelAdapter collectorPoller() {
-		SourcePollingChannelAdapter adapter = new SourcePollingChannelAdapter();
-
-		adapter.setSource(collectorFileSource());
-		adapter.setOutputChannel(sourceFileChannel());
-		
-		return adapter;
+	public IntegrationFlow fileScannerFlow() {
+		return IntegrationFlows.from(collectorFileSource())
+				.transform(fileNameHeaderTransformer)
+				.get();
 	}
 	
 	@Bean

@@ -12,7 +12,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.integration.dsl.IntegrationFlow;
+import org.springframework.integration.dsl.IntegrationFlows;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
@@ -33,6 +36,34 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @DirtiesContext(classMode=ClassMode.AFTER_EACH_TEST_METHOD)
 public class DataOrOptionsFlowRouterTest {
 
+	@Configuration
+	public static class TestConfiguration {
+		@Autowired
+		private MessageChannel sourceFileChannel;
+		
+		@Autowired
+		private SubscribableChannel sourceDataFileChannel;
+		
+		@Autowired
+		private SubscribableChannel sourceOptionsFileChannel;
+		
+		@Autowired
+		private SubscribableChannel unprocessableFileChannel;
+
+		@Autowired
+		private DataOrOptionsFlowRouter router;
+		
+		@Bean
+		public IntegrationFlow dataTypeFlow() {
+			return IntegrationFlows.from(sourceFileChannel)
+					.<File, String>route(router::routeDataOrOptionsFlow, 
+							m -> m.subFlowMapping("data", f -> f.channel(sourceDataFileChannel))
+							.subFlowMapping("options", f -> f.channel(sourceOptionsFileChannel))
+							.subFlowMapping("unprocessable", f -> f.channel(unprocessableFileChannel)))
+					.get();
+		}
+	}
+	
 	private static class CountingHandler implements MessageHandler {
 
 		private int counter = 0;
@@ -52,19 +83,15 @@ public class DataOrOptionsFlowRouterTest {
 	}
 	
 	@Autowired
-	@Qualifier("sourceFileChannel")
 	private MessageChannel sourceFileChannel;
 	
 	@Autowired
-	@Qualifier("sourceDataFileChannel")
 	private SubscribableChannel sourceDataFileChannel;
 	
 	@Autowired
-	@Qualifier("sourceOptionsFileChannel")
 	private SubscribableChannel sourceOptionsFileChannel;
 	
 	@Autowired
-	@Qualifier("unprocessableFileChannel")
 	private SubscribableChannel unprocessableFileChannel;
 	
 	private CountingHandler dataHandler;
