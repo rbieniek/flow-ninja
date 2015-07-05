@@ -19,8 +19,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.integration.dsl.IntegrationFlow;
+import org.springframework.integration.dsl.IntegrationFlows;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageHandler;
@@ -39,6 +42,30 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @ContextConfiguration(classes=IntegrationTestConfig.class)
 @DirtiesContext(classMode=ClassMode.AFTER_EACH_TEST_METHOD)
 public class SourceFileOptionsFlowParserTest {
+
+	@Configuration
+	public static class TestConfiguration {
+		@Autowired
+		private SourceFileOptionsFlowParser parser;
+		
+		@Autowired
+		private SetFileNameHeaderTransformer fileNameHeader;
+		
+		@Autowired
+		private SubscribableChannel sourceOptionsFileChannel;
+
+		@Autowired
+		private SubscribableChannel sourceOptionsFlowChannel;
+
+		@Bean
+		public IntegrationFlow optionsFlow() {
+			return IntegrationFlows.from(sourceOptionsFileChannel)
+					.transform(fileNameHeader)
+					.<File, List<OptionsFlow>>transform(parser::parseSingleOptionsFlowFile)
+					.channel(sourceOptionsFlowChannel)
+					.get();
+		}
+	}
 
 	public static class OptionsFlowHandler implements MessageHandler {
 
@@ -69,11 +96,9 @@ public class SourceFileOptionsFlowParserTest {
 	}
 	
 	@Autowired
-	@Qualifier("sourceOptionsFileChannel")
 	private SubscribableChannel sourceOptionsFileChannel;
 
 	@Autowired
-	@Qualifier("sourceOptionsFlowChannel")
 	private SubscribableChannel sourceOptionsFlowChannel;
 	
 	@Autowired
@@ -89,7 +114,7 @@ public class SourceFileOptionsFlowParserTest {
 	}
 	
 	@Test
-	public void parseDataFlow() throws Exception {
+	public void parseOptionsFlow() throws Exception {
 		File dataFlowFile = resourceLoader.getResource("classpath:options-flow.json").getFile();
 		
 		sourceOptionsFileChannel.send(MessageBuilder.withPayload(dataFlowFile).build());

@@ -26,9 +26,7 @@ import org.flowninja.types.flows.ScopeType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.integration.annotation.Transformer;
-import org.springframework.integration.support.MessageBuilder;
-import org.springframework.messaging.Message;
+import org.springframework.messaging.MessagingException;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -71,16 +69,14 @@ public class SourceFileOptionsFlowParser implements InitializingBean {
 
 	}
 	
-	
-	@Transformer(inputChannel="sourceOptionsFileChannel", outputChannel="sourceOptionsFlowChannel")
-	public Message<List<OptionsFlow>> parseDataFlows(Message<File> flowFile) throws IOException {
+	public List<OptionsFlow> parseSingleOptionsFlowFile(File flowFile) {
 		List<OptionsFlow> flows = new LinkedList<OptionsFlow>();
 		
 		LineNumberReader lnr = null;
 		String currentLine;
 		
 		try {
-			lnr = new LineNumberReader(new FileReader(flowFile.getPayload()));
+			lnr = new LineNumberReader(new FileReader(flowFile));
 			
 			while(StringUtils.isNotEmpty(currentLine = StringUtils.strip(lnr.readLine()))) {
 				JsonObject root = mapper.readValue(new StringReader(currentLine), JsonObject.class);
@@ -88,13 +84,13 @@ public class SourceFileOptionsFlowParser implements InitializingBean {
 				flows.add(parseFlowRoot(root));
 			}
 		} catch(IOException e) {
-			logger.error("failed to parse data flows file {}", flowFile.getPayload().getAbsolutePath(), e);
+			logger.error("failed to parse data flows file {}", flowFile.getAbsolutePath(), e);
 			
-			throw e;
+			throw new MessagingException("failed to process options flow file " + flowFile, e);
 		} catch(RuntimeException e) {
-			logger.error("failed to parse data flows file {}", flowFile.getPayload().getAbsolutePath(), e);
+			logger.error("failed to parse data flows file {}", flowFile.getAbsolutePath(), e);
 			
-			throw e;
+			throw new MessagingException("failed to process options flow file " + flowFile, e);
 		} finally {
 			if(lnr != null) {
 				try {
@@ -105,7 +101,7 @@ public class SourceFileOptionsFlowParser implements InitializingBean {
 			}
 		}
 
-		return MessageBuilder.withPayload(flows).setHeader(TransferrerConstants.SOURCE_FILE_HEADER, flowFile.getPayload()).build();
+		return flows;
 	}
 
 	private OptionsFlow parseFlowRoot(JsonObject root) {

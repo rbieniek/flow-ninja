@@ -37,9 +37,7 @@ import org.flowninja.types.net.TCPFLags;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.integration.annotation.Transformer;
-import org.springframework.integration.support.MessageBuilder;
-import org.springframework.messaging.Message;
+import org.springframework.messaging.MessagingException;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -314,14 +312,14 @@ public class SourceFileDataFlowParser implements InitializingBean {
 
 	}
 	
-	@Transformer(inputChannel="sourceDataFileChannel", outputChannel="sourceDataFlowChannel")
-	public Message<List<NetworkFlow>> parseDataFlows(Message<File> flowFile) throws IOException {
+	// @Transformer(inputChannel="sourceDataFileChannel", outputChannel="sourceDataFlowChannel")
+	public List<NetworkFlow> parseSingleDataFlowFile(File flowFile) {
 		List<NetworkFlow> flows = new LinkedList<NetworkFlow>();
 		LineNumberReader lnr = null;
 		String currentLine;
 		
 		try {
-			lnr = new LineNumberReader(new FileReader(flowFile.getPayload()));
+			lnr = new LineNumberReader(new FileReader(flowFile));
 			
 			while(StringUtils.isNotEmpty(currentLine = StringUtils.strip(lnr.readLine()))) {
 				JsonObject root = mapper.readValue(new StringReader(currentLine), JsonObject.class);
@@ -329,13 +327,13 @@ public class SourceFileDataFlowParser implements InitializingBean {
 				flows.add(parseFlowRoot(root));
 			}
 		} catch(IOException e) {
-			logger.error("failed to parse data flows file {}", flowFile.getPayload().getAbsolutePath(), e);
+			logger.error("failed to parse data flows file {}", flowFile.getAbsolutePath(), e);
 			
-			throw e;
+			throw new MessagingException("Cannot process flow file " + flowFile, e);
 		} catch(RuntimeException e) {
-			logger.error("failed to parse data flows file {}", flowFile.getPayload().getAbsolutePath(), e);
+			logger.error("failed to parse data flows file {}", flowFile.getAbsolutePath(), e);
 			
-			throw e;
+			throw new MessagingException("Cannot process flow file " + flowFile, e);
 		} finally {
 			if(lnr != null) {
 				try {
@@ -346,7 +344,7 @@ public class SourceFileDataFlowParser implements InitializingBean {
 			}
 		}
 		
-		return MessageBuilder.withPayload(flows).setHeader(TransferrerConstants.SOURCE_FILE_HEADER, flowFile.getPayload()).build();
+		return flows;
 	}
 
 	private NetworkFlow parseFlowRoot(JsonObject root) {

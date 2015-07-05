@@ -10,7 +10,6 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.integration.annotation.IntegrationComponentScan;
 import org.springframework.integration.channel.DirectChannel;
 import org.springframework.integration.config.EnableIntegration;
-import org.springframework.messaging.MessageChannel;
 
 /**
  * @author rainer
@@ -23,32 +22,32 @@ import org.springframework.messaging.MessageChannel;
 @PropertySource("classpath:/test-config.properties")
 public class IntegrationTestConfig {
 	@Bean
-	public MessageChannel sourceFileChannel() {
+	public DirectChannel sourceFileChannel() {
 		return new DirectChannel();
 	}
 
 	@Bean
-	public MessageChannel sourceDataFileChannel() {
+	public DirectChannel sourceDataFileChannel() {
 		return new DirectChannel();
 	}
 
 	@Bean
-	public MessageChannel sourceDataFlowChannel() {
+	public DirectChannel sourceDataFlowChannel() {
 		return new DirectChannel();
 	}
 
 	@Bean
-	public MessageChannel sourceOptionsFileChannel() {
+	public DirectChannel sourceOptionsFileChannel() {
 		return new DirectChannel();
 	}
 
 	@Bean
-	public MessageChannel sourceOptionsFlowChannel() {
+	public DirectChannel sourceOptionsFlowChannel() {
 		return new DirectChannel();
 	}
 
 	@Bean
-	public MessageChannel unprocessableFileChannel() {
+	public DirectChannel unprocessableFileChannel() {
 		return new DirectChannel();
 	}
 

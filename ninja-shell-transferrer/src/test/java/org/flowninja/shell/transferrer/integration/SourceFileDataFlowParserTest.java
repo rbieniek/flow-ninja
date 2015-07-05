@@ -23,8 +23,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.integration.dsl.IntegrationFlow;
+import org.springframework.integration.dsl.IntegrationFlows;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageHandler;
@@ -43,6 +46,30 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @ContextConfiguration(classes=IntegrationTestConfig.class)
 @DirtiesContext(classMode=ClassMode.AFTER_EACH_TEST_METHOD)
 public class SourceFileDataFlowParserTest {
+	
+	@Configuration
+	public static class TestConfiguration {
+		@Autowired
+		private SourceFileDataFlowParser parser;
+		
+		@Autowired
+		private SetFileNameHeaderTransformer fileNameHeader;
+		
+		@Autowired
+		private SubscribableChannel sourceDataFileChannel;
+
+		@Autowired
+		private SubscribableChannel sourceDataFlowChannel;
+
+		@Bean
+		public IntegrationFlow dataFlow() {
+			return IntegrationFlows.from(sourceDataFileChannel)
+					.transform(fileNameHeader)
+					.<File, List<NetworkFlow>>transform(parser::parseSingleDataFlowFile)
+					.channel(sourceDataFlowChannel)
+					.get();
+		}
+	}
 
 	public static class DataFlowHandler implements MessageHandler {
 
@@ -73,11 +100,9 @@ public class SourceFileDataFlowParserTest {
 	}
 	
 	@Autowired
-	@Qualifier("sourceDataFileChannel")
 	private SubscribableChannel sourceDataFileChannel;
 
 	@Autowired
-	@Qualifier("sourceDataFlowChannel")
 	private SubscribableChannel sourceDataFlowChannel;
 	
 	@Autowired
