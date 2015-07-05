@@ -42,7 +42,7 @@ public class IntegrationTestConfig {
 	}
 
 	@Bean
-	public DirectChannel sourceOptionsFlowChannel() {
+	public DirectChannel headerFileOutputChannel() {
 		return new DirectChannel();
 	}
 
@@ -51,4 +51,13 @@ public class IntegrationTestConfig {
 		return new DirectChannel();
 	}
 
+	@Bean
+	public DirectChannel headerFileInputChannel() {
+		return new DirectChannel();
+	}
+
+	@Bean
+	public DirectChannel sourceOptionsFlowChannel() {
+		return new DirectChannel();
+	}
 }
