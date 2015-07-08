@@ -193,12 +193,12 @@
 
     <version.org.apache.derby>10.11.1.1</version.org.apache.derby>
 
-    <version.org.springframework>4.1.6.RELEASE</version.org.springframework>
-    <version.org.springframework.data.mongodb>1.7.0.RELEASE</version.org.springframework.data.mongodb>
-    <version.org.springframework.data.redis>1.5.0.RELEASE</version.org.springframework.data.redis>
-    <version.org.springframework.data.commons>1.10.0.RELEASE</version.org.springframework.data.commons>
-    <version.org.springframework.data.hadoop>2.1.2.RELEASE</version.org.springframework.data.hadoop>
-    <version.org.springframework.integration>4.1.5.RELEASE</version.org.springframework.integration>
+    <version.org.springframework>4.1.7.RELEASE</version.org.springframework>
+    <version.org.springframework.data.mongodb>1.7.1.RELEASE</version.org.springframework.data.mongodb>
+    <version.org.springframework.data.redis>1.5.1.RELEASE</version.org.springframework.data.redis>
+    <version.org.springframework.data.commons>1.10.1.RELEASE</version.org.springframework.data.commons>
+    <version.org.springframework.data.hadoop>2.2.0.RELEASE</version.org.springframework.data.hadoop>
+    <version.org.springframework.integration>4.1.6.RELEASE</version.org.springframework.integration>
     <version.org.springframework.integration.dsl>1.0.2.RELEASE</version.org.springframework.integration.dsl>
     <version.org.springframework.batch>3.0.4.RELEASE</version.org.springframework.batch>
     <version.org.springframework.security>4.0.1.RELEASE</version.org.springframework.security>
