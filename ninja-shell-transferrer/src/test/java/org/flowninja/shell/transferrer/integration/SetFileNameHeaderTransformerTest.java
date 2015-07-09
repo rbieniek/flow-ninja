@@ -34,7 +34,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes=IntegrationTestConfig.class)
-@DirtiesContext(classMode=ClassMode.AFTER_EACH_TEST_METHOD)public class SetFileNameHeaderTransformerTest {
+@DirtiesContext(classMode=ClassMode.AFTER_EACH_TEST_METHOD)
+public class SetFileNameHeaderTransformerTest {
 	@Configuration
 	public static class TestConfiguration {
 		

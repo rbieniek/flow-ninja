@@ -5,8 +5,14 @@ package org.flowninja.shell.transferrer;
 
 import java.io.File;
 
+import org.flowninja.shell.transferrer.integration.CorrelationKeyBuilderHeaderTransformer;
+import org.flowninja.shell.transferrer.integration.DataOrOptionsFlowRouter;
 import org.flowninja.shell.transferrer.integration.IgnoreCurrentHourFileFilter;
 import org.flowninja.shell.transferrer.integration.SetFileNameHeaderTransformer;
+import org.flowninja.shell.transferrer.integration.SourceFileDataFlowParser;
+import org.flowninja.shell.transferrer.integration.SourceFileOptionsFlowParser;
+import org.flowninja.shell.transferrer.integration.TransferrerConstants;
+import org.flowninja.shell.transferrer.integration.UnprocessableFileHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -41,6 +47,21 @@ public class TransferrerConfig {
 	@Autowired
 	private SetFileNameHeaderTransformer fileNameHeaderTransformer;
 	
+	@Autowired
+	private CorrelationKeyBuilderHeaderTransformer correlationKeyTransformer;
+	
+	@Autowired
+	private SourceFileDataFlowParser dataFileParser;
+	
+	@Autowired
+	private SourceFileOptionsFlowParser optionsFileParser;
+
+	@Autowired
+	private UnprocessableFileHandler unprocessableHandler;
+	
+	@Autowired
+	private DataOrOptionsFlowRouter dataOrOptionsRouter;
+	
 	@Bean
 	public FileReadingMessageSource collectorFileSource() {		
 		FileReadingMessageSource source = new FileReadingMessageSource();
@@ -64,8 +85,41 @@ public class TransferrerConfig {
 	@Bean
 	public IntegrationFlow fileScannerFlow() {
 		return IntegrationFlows.from(collectorFileSource())
+				.transform(correlationKeyTransformer)
 				.transform(fileNameHeaderTransformer)
+				.<File, String>route(dataOrOptionsRouter::routeDataOrOptionsFlow, 
+							m -> m.subFlowMapping("data", dataFileProcessingFlow())
+							.subFlowMapping("options", optionsFileProcessingFlow())
+							.subFlowMapping("unprocessable", unprocessableFileProcessingFlow()))
 				.get();
+	}
+
+	@Bean
+	public IntegrationFlow dataFileProcessingFlow() {
+		return f -> f
+				.transform(dataFileParser::parseSingleDataFlowFile)
+				.aggregate(a -> a.correlationStrategy(m -> m.getHeaders().get(TransferrerConstants.CORRELATION_HEADER))
+						.releaseStrategy(g -> g.size() >= 60)
+						.groupTimeout(5*60*1000L)
+						.sendPartialResultOnExpiry(true)
+						.expireGroupsUponCompletion(true), 
+						null);
+	}
+
+	@Bean
+	public IntegrationFlow optionsFileProcessingFlow() {
+		return f -> f.transform(optionsFileParser::parseSingleOptionsFlowFile)
+				.aggregate(a -> a.correlationStrategy(m -> m.getHeaders().get(TransferrerConstants.CORRELATION_HEADER))
+						.releaseStrategy(g -> g.size() >= 60)
+						.groupTimeout(5*60*1000L)
+						.sendPartialResultOnExpiry(true)
+						.expireGroupsUponCompletion(true), 
+						null);
+	}
+	
+	@Bean
+	public IntegrationFlow unprocessableFileProcessingFlow() {
+		return f -> f.handle(unprocessableHandler::handleUnprocessableFile);
 	}
 	
 	@Bean

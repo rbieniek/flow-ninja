@@ -60,4 +60,15 @@ public class IntegrationTestConfig {
 	public DirectChannel sourceOptionsFlowChannel() {
 		return new DirectChannel();
 	}
+	
+	@Bean
+	public DirectChannel correlatorInputChannel() {
+		return new DirectChannel();
+	}
+
+	@Bean
+	public DirectChannel correlatorOutputChannel() {
+		return new DirectChannel();
+	}
+
 }

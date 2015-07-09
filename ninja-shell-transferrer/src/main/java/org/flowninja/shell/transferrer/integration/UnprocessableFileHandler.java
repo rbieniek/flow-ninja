@@ -32,18 +32,26 @@ public class UnprocessableFileHandler implements InitializingBean {
 	
 	private File deadMessagesDirectory;
 	
-	@ServiceActivator(inputChannel="sourceUnprocessableFileChannel")
-	public void handleUnprocessableFile(Message<File> file) {
-		logger.error("Unprocessable file encountered: {}", file.getPayload().getAbsolutePath());
+	public void handleUnprocessableFile(Message<?> message) {
+		if(message.getPayload() instanceof File) {
+			File file = (File)message.getPayload();
+			
+			logger.error("Unprocessable file encountered: {}", file.getAbsolutePath());
+			
+			moveFile(file);			
+		}
 		
-		moveFile(file.getPayload());
 	}
 
 	@ServiceActivator(inputChannel=IntegrationContextUtils.ERROR_CHANNEL_BEAN_NAME)
-	public void handleErrorMessages(Message<File> file) {
-		logger.error("Unprocessable file encountered: {}", file.getPayload().getAbsolutePath());
-		
-		moveFile(file.getPayload());
+	public void handleErrorMessages(Message<?> message) {
+		if(message.getPayload() instanceof File) {
+			File file = (File)message.getPayload();
+			
+			logger.error("Unprocessable file encountered: {}", file.getAbsolutePath());
+			
+			moveFile(file);
+		}
 	}
 
 	@Override
