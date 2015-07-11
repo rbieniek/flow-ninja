@@ -6,6 +6,8 @@ package org.flowninja.shell.transferrer.integration;
 import java.io.File;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.integration.transformer.Transformer;
 import org.springframework.messaging.Message;
@@ -18,6 +20,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class CorrelationKeyBuilderHeaderTransformer implements Transformer {
+	private static final Logger logger = LoggerFactory.getLogger(CorrelationKeyBuilderHeaderTransformer.class);
 
 	private static final String DATA_FLOW_PREFIX = "data-flow-";
 	private static final int DATA_FLOW_PREFIX_LEN = 10;
@@ -50,6 +53,8 @@ public class CorrelationKeyBuilderHeaderTransformer implements Transformer {
 			throw new MessagingException("Unsupported payload type: " + payload.getClass().getName());
 		}
 		
+		logger.info("transformed message {}", message);
+
 		return message;
 	}
 
