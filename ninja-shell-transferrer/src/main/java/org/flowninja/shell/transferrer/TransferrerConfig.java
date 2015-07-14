@@ -6,10 +6,10 @@ package org.flowninja.shell.transferrer;
 import java.io.File;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 import org.flowninja.shell.transferrer.integration.CorrelationKeyBuilderHeaderTransformer;
 import org.flowninja.shell.transferrer.integration.DataOrOptionsFlowRouter;
+import org.flowninja.shell.transferrer.integration.FlowCollectionBuildingTransformer;
 import org.flowninja.shell.transferrer.integration.IgnoreCurrentHourFileFilter;
 import org.flowninja.shell.transferrer.integration.SetFileNameHeaderTransformer;
 import org.flowninja.shell.transferrer.integration.SourceFileDataFlowParser;
@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.integration.aggregator.MessageGroupProcessor;
 import org.springframework.integration.annotation.IntegrationComponentScan;
 import org.springframework.integration.config.EnableIntegration;
 import org.springframework.integration.context.IntegrationContextUtils;
@@ -33,6 +34,8 @@ import org.springframework.integration.file.DefaultDirectoryScanner;
 import org.springframework.integration.file.DirectoryScanner;
 import org.springframework.integration.file.FileReadingMessageSource;
 import org.springframework.integration.scheduling.PollerMetadata;
+import org.springframework.integration.store.MessageGroup;
+import org.springframework.integration.support.MessageBuilder;
 
 /**
  * @author rainer
@@ -66,6 +69,9 @@ public class TransferrerConfig {
 	
 	@Autowired
 	private DataOrOptionsFlowRouter dataOrOptionsRouter;
+	
+	@Autowired
+	private FlowCollectionBuildingTransformer collectionBuildingTransformer;
 	
 	@Bean
 	public FileReadingMessageSource collectorFileSource() {		
@@ -112,15 +118,18 @@ public class TransferrerConfig {
 		return f -> f
 				.<File, List<NetworkFlow>>transform(dataFileParser::parseSingleDataFlowFile)
 				.aggregate(a -> a
-						.outputProcessor(g -> g.getMessages()
-								.stream()
-								.collect(Collectors.toList()))
+						.outputProcessor(new MessageGroupProcessor() {
+							@Override
+							public Object processMessageGroup(MessageGroup group) {
+								return MessageBuilder.withPayload(group.getMessages()).build();
+							}
+						})
 						.correlationStrategy(m -> m.getHeaders().get(TransferrerConstants.CORRELATION_HEADER))
 						.releaseStrategy(g -> g.size() >= 60)
 						.groupTimeout(5*60*1000L)
 						.sendPartialResultOnExpiry(true)
 						.expireGroupsUponCompletion(true), null)
-//				.<List<NetworkFlow>, NetworkFlowCollection>transform(n -> new NetworkFlowCollection(n))
+				.transform(collectionBuildingTransformer::collectNetworkFlows)
 				// .handle((p, h) -> { System.out.println(p); return p; })
 				;
 	}
@@ -130,9 +139,12 @@ public class TransferrerConfig {
 		return f -> f
 				.<File, List<OptionsFlow>>transform(optionsFileParser::parseSingleOptionsFlowFile)
 				.aggregate(a -> a
-						.outputProcessor(g -> g.getMessages()
-								.stream()
-								.collect(Collectors.toList()))
+						.outputProcessor(new MessageGroupProcessor() {
+							@Override
+							public Object processMessageGroup(MessageGroup group) {
+								return MessageBuilder.withPayload(group.getMessages()).build();
+							}
+						})
 						.correlationStrategy(m -> m.getHeaders().get(TransferrerConstants.CORRELATION_HEADER))
 						.releaseStrategy(g -> g.size() >= 60)
 						.groupTimeout(5*60*1000L)
