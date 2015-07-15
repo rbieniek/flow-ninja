@@ -72,19 +72,22 @@ public class SmartEmbeddedOrExternalDataSourceFactory implements FactoryBean<Dat
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		this.embeddedDatabaseDirectory= new File(env.getProperty("embeddedDatabaseDirectory"));
+		Properties props = new Properties();
+		
 		this.connectURI = env.getProperty("dbConnectURI");
 		this.userName = env.getProperty("dbUserName");
 		this.password = env.getProperty("dbPassword");
 		
-		if(this.embeddedDatabaseDirectory != null) {
+		if(env.getProperty("embeddedDatabaseDirectory") != null) {
+			this.embeddedDatabaseDirectory= new File(env.getProperty("embeddedDatabaseDirectory"));
+			
 			if(!this.embeddedDatabaseDirectory.isDirectory()) {
-				if(!this.embeddedDatabaseDirectory.mkdirs()) {
-					throw new IllegalStateException("cannot create embedded database directory: " + this.embeddedDatabaseDirectory);
-				}
+				logger.info("database will be created at location {}", this.embeddedDatabaseDirectory);
+				
+				props.setProperty("create", "true");
 			}
 			
-			this.connectURI = "jdbc:derby:directory:" + this.embeddedDatabaseDirectory.getAbsolutePath() + ";create=true";
+			this.connectURI = "jdbc:derby:directory:" + this.embeddedDatabaseDirectory.getAbsolutePath();
 			
 			logger.info("usinged embedded database connect URI {}", connectURI);
 			
@@ -103,8 +106,6 @@ public class SmartEmbeddedOrExternalDataSourceFactory implements FactoryBean<Dat
 		
 		if(StringUtils.isBlank(this.connectURI))
 			throw new IllegalArgumentException("Either emebedded database work directory (-DembeddedDatabaseDirectory=) or databsae connect URI (-DdbConnectURI=) must be specified");
-		
-		Properties props = new Properties();
 		
 		if(StringUtils.isNotBlank(userName)) {
 			props.setProperty("user", userName);

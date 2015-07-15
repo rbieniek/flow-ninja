@@ -7,8 +7,11 @@ import java.io.File;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import javax.sql.DataSource;
+
 import org.flowninja.shell.transferrer.integration.CorrelationKeyBuilderHeaderTransformer;
 import org.flowninja.shell.transferrer.integration.DataOrOptionsFlowRouter;
+import org.flowninja.shell.transferrer.integration.DatabaseBackedAcceptOnceFileListFilter;
 import org.flowninja.shell.transferrer.integration.FlowCollectionBuildingTransformer;
 import org.flowninja.shell.transferrer.integration.IgnoreCurrentHourFileFilter;
 import org.flowninja.shell.transferrer.integration.SetFileNameHeaderTransformer;
@@ -36,6 +39,8 @@ import org.springframework.integration.file.FileReadingMessageSource;
 import org.springframework.integration.scheduling.PollerMetadata;
 import org.springframework.integration.store.MessageGroup;
 import org.springframework.integration.support.MessageBuilder;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.transaction.PlatformTransactionManager;
 
 /**
  * @author rainer
@@ -72,13 +77,24 @@ public class TransferrerConfig {
 	
 	@Autowired
 	private FlowCollectionBuildingTransformer collectionBuildingTransformer;
+
+	@Autowired
+	private DataSource dataSource;
 	
+	@Autowired
+	private DatabaseBackedAcceptOnceFileListFilter acceptOnceFilter;
+	
+	@Bean
+	public PlatformTransactionManager transactionManager() {
+		return new DataSourceTransactionManager(dataSource);
+	}
+
 	@Bean
 	public FileReadingMessageSource collectorFileSource() {		
 		FileReadingMessageSource source = new FileReadingMessageSource();
 		
 		source.setDirectory(sourceDirectory);
-		// source.setFilter(ignoreCurrentHourFilter);
+		source.setFilter(acceptOnceFilter);
 		source.setScanner(collectorDirectoryScanner());
 		
 		return source;

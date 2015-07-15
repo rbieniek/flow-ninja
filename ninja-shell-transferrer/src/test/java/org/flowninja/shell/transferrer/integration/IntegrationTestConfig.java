@@ -71,4 +71,13 @@ public class IntegrationTestConfig {
 		return new DirectChannel();
 	}
 
+	@Bean
+	public DirectChannel acceptOnceInputChannel() {
+		return new DirectChannel();
+	}
+
+	@Bean
+	public DirectChannel acceptOnceOutputChannel() {
+		return new DirectChannel();
+	}
 }
