@@ -36,6 +36,7 @@ import org.springframework.integration.dsl.core.Pollers;
 import org.springframework.integration.file.DefaultDirectoryScanner;
 import org.springframework.integration.file.DirectoryScanner;
 import org.springframework.integration.file.FileReadingMessageSource;
+import org.springframework.integration.file.filters.CompositeFileListFilter;
 import org.springframework.integration.scheduling.PollerMetadata;
 import org.springframework.integration.store.MessageGroup;
 import org.springframework.integration.support.MessageBuilder;
@@ -94,7 +95,6 @@ public class TransferrerConfig {
 		FileReadingMessageSource source = new FileReadingMessageSource();
 		
 		source.setDirectory(sourceDirectory);
-		source.setFilter(acceptOnceFilter);
 		source.setScanner(collectorDirectoryScanner());
 		
 		return source;
@@ -103,8 +103,12 @@ public class TransferrerConfig {
 	@Bean
 	public DirectoryScanner collectorDirectoryScanner() {
 		DefaultDirectoryScanner scanner = new DefaultDirectoryScanner();
+		CompositeFileListFilter<File> filter = new CompositeFileListFilter<File>();
 		
-		scanner.setFilter(ignoreCurrentHourFilter);
+		filter.addFilter(ignoreCurrentHourFilter);
+		filter.addFilter(acceptOnceFilter);
+		
+		scanner.setFilter(filter);
 		
 		return scanner;
 	}

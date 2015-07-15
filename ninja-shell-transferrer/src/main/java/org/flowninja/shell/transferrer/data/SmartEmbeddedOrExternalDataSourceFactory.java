@@ -79,12 +79,15 @@ public class SmartEmbeddedOrExternalDataSourceFactory implements FactoryBean<Dat
 		this.password = env.getProperty("dbPassword");
 		
 		if(env.getProperty("embeddedDatabaseDirectory") != null) {
+			boolean createDb = false;
+
 			this.embeddedDatabaseDirectory= new File(env.getProperty("embeddedDatabaseDirectory"));
 			
 			if(!this.embeddedDatabaseDirectory.isDirectory()) {
 				logger.info("database will be created at location {}", this.embeddedDatabaseDirectory);
 				
 				props.setProperty("create", "true");
+				createDb = true;
 			}
 			
 			this.connectURI = "jdbc:derby:directory:" + this.embeddedDatabaseDirectory.getAbsolutePath();
@@ -94,14 +97,16 @@ public class SmartEmbeddedOrExternalDataSourceFactory implements FactoryBean<Dat
 			// clear user name and password since not supported by embedded database
 			this.userName = null;
 			this.password = null;
-			
-			Connection con = DriverManager.getConnection(connectURI);
-			Statement stmt = con.createStatement();
-			
-			stmt.execute("create table source_files (fname varchar(256) primary key)");
-			
-			stmt.close();
-			con.close();
+
+			if(createDb) {
+				Connection con = DriverManager.getConnection(connectURI);
+				Statement stmt = con.createStatement();
+				
+				stmt.execute("create table source_files (fname varchar(256) primary key)");
+				
+				stmt.close();
+				con.close();
+			}
 		}
 		
 		if(StringUtils.isBlank(this.connectURI))
