@@ -14,6 +14,7 @@ import org.flowninja.shell.transferrer.integration.DataOrOptionsFlowRouter;
 import org.flowninja.shell.transferrer.integration.DatabaseBackedAcceptOnceFileListFilter;
 import org.flowninja.shell.transferrer.integration.FlowCollectionBuildingTransformer;
 import org.flowninja.shell.transferrer.integration.IgnoreCurrentHourFileFilter;
+import org.flowninja.shell.transferrer.integration.ProcessedFileMover;
 import org.flowninja.shell.transferrer.integration.SetFileNameHeaderTransformer;
 import org.flowninja.shell.transferrer.integration.SourceFileDataFlowParser;
 import org.flowninja.shell.transferrer.integration.SourceFileOptionsFlowParser;
@@ -85,6 +86,9 @@ public class TransferrerConfig {
 	@Autowired
 	private DatabaseBackedAcceptOnceFileListFilter acceptOnceFilter;
 	
+	@Autowired
+	private ProcessedFileMover processedMover;
+	
 	@Bean
 	public PlatformTransactionManager transactionManager() {
 		return new DataSourceTransactionManager(dataSource);
@@ -92,7 +96,7 @@ public class TransferrerConfig {
 
 	@Bean
 	public FileReadingMessageSource collectorFileSource() {		
-		FileReadingMessageSource source = new FileReadingMessageSource();
+		FileReadingMessageSource source = new FileReadingMessageSource(14400);
 		
 		source.setDirectory(sourceDirectory);
 		source.setScanner(collectorDirectoryScanner());
@@ -115,7 +119,7 @@ public class TransferrerConfig {
 	
 	@Bean(name = PollerMetadata.DEFAULT_POLLER)
 	public PollerMetadata poller() {                               // 11
-	  	return Pollers.fixedDelay(100, TimeUnit.MILLISECONDS).get();
+	  	return Pollers.fixedDelay(500, TimeUnit.MILLISECONDS).get();
 	}
 	
 	@Bean
@@ -129,7 +133,8 @@ public class TransferrerConfig {
 							.subFlowMapping("options", optionsFileProcessingFlow())
 							.channelMapping("unprocessable", IntegrationContextUtils.ERROR_CHANNEL_BEAN_NAME)
 							)
-				.handle(n -> System.out.println(n))
+				.handle(processedMover)
+//				.handle(n -> System.out.println(n))
 				.get();
 	}
 	
@@ -146,7 +151,7 @@ public class TransferrerConfig {
 						})
 						.correlationStrategy(m -> m.getHeaders().get(TransferrerConstants.CORRELATION_HEADER))
 						.releaseStrategy(g -> g.size() >= 60)
-						.groupTimeout(5*60*1000L)
+						.groupTimeout(2*60*1000L)
 						.sendPartialResultOnExpiry(true)
 						.expireGroupsUponCompletion(true), null)
 				.transform(collectionBuildingTransformer::collectNetworkFlows)
