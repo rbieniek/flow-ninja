@@ -32,7 +32,9 @@ import org.springframework.integration.annotation.IntegrationComponentScan;
 import org.springframework.integration.config.EnableIntegration;
 import org.springframework.integration.context.IntegrationContextUtils;
 import org.springframework.integration.dsl.IntegrationFlow;
+import org.springframework.integration.dsl.IntegrationFlowBuilder;
 import org.springframework.integration.dsl.IntegrationFlows;
+import org.springframework.integration.dsl.channel.MessageChannels;
 import org.springframework.integration.dsl.core.Pollers;
 import org.springframework.integration.file.DefaultDirectoryScanner;
 import org.springframework.integration.file.DirectoryScanner;
@@ -42,6 +44,7 @@ import org.springframework.integration.scheduling.PollerMetadata;
 import org.springframework.integration.store.MessageGroup;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.messaging.MessageChannel;
 import org.springframework.transaction.PlatformTransactionManager;
 
 /**
@@ -119,7 +122,7 @@ public class TransferrerConfig {
 	
 	@Bean(name = PollerMetadata.DEFAULT_POLLER)
 	public PollerMetadata poller() {                               // 11
-	  	return Pollers.fixedDelay(500, TimeUnit.MILLISECONDS).get();
+	  	return Pollers.fixedDelay(100, TimeUnit.MILLISECONDS).get();
 	}
 	
 	@Bean
@@ -134,7 +137,6 @@ public class TransferrerConfig {
 							.channelMapping("unprocessable", IntegrationContextUtils.ERROR_CHANNEL_BEAN_NAME)
 							)
 				.handle(processedMover)
-//				.handle(n -> System.out.println(n))
 				.get();
 	}
 	
@@ -155,10 +157,24 @@ public class TransferrerConfig {
 						.sendPartialResultOnExpiry(true)
 						.expireGroupsUponCompletion(true), null)
 				.transform(collectionBuildingTransformer::collectNetworkFlows)
-				// .handle((p, h) -> { System.out.println(p); return p; })
+				.channel(dataTransferChannel())
 				;
 	}
+
+	@Bean
+	public MessageChannel dataTransferChannel() {
+		return MessageChannels.direct().get();
+	}
 	
+	@Bean
+	public IntegrationFlow dataFileTransferFlow() {
+		
+		return IntegrationFlows.from(dataTransferChannel())
+				.handle(n -> System.out.println(n))
+				.get();
+	}
+	
+
 	@Bean
 	public IntegrationFlow optionsFileProcessingFlow() {
 		return f -> f

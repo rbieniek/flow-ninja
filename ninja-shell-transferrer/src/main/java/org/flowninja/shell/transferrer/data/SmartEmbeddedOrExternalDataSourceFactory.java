@@ -86,11 +86,16 @@ public class SmartEmbeddedOrExternalDataSourceFactory implements FactoryBean<Dat
 			if(!this.embeddedDatabaseDirectory.isDirectory()) {
 				logger.info("database will be created at location {}", this.embeddedDatabaseDirectory);
 				
-				props.setProperty("create", "true");
 				createDb = true;
 			}
+	
+			StringBuilder uriBuilder = new StringBuilder("jdbc:derby:directory:");
 			
-			this.connectURI = "jdbc:derby:directory:" + this.embeddedDatabaseDirectory.getAbsolutePath();
+			uriBuilder.append(this.embeddedDatabaseDirectory.getAbsolutePath());
+			if(createDb)
+				uriBuilder.append(";create=true");
+			
+			this.connectURI = uriBuilder.toString();
 			
 			logger.info("usinged embedded database connect URI {}", connectURI);
 			
