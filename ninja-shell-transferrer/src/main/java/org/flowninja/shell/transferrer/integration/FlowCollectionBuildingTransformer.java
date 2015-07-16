@@ -5,6 +5,7 @@ package org.flowninja.shell.transferrer.integration;
 
 import java.io.File;
 import java.util.Collection;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -54,11 +55,30 @@ public class FlowCollectionBuildingTransformer {
 					throw new MessagingException(m, "Message has payload of type " + f.getClass().getName() 
 							+ " but " + NetworkFlow.class.getName() + " was expected");
 				}
-				flows.add((NetworkFlow)f);
+				NetworkFlow flow = (NetworkFlow)f;
+				
+				flows.add(flow);
 			});
 		});
+
+		Date firstStamp = null;
+		Date lastStamp = null;
 		
-		return MessageBuilder.withPayload(new NetworkFlowCollection(flows))
+		for(NetworkFlow f : flows) {
+			Date stamp = f.getHeader().getTimestamp();
+			
+			if(firstStamp == null)
+				firstStamp = stamp;
+			else if(stamp.before(firstStamp))
+				firstStamp = stamp;
+			
+			if(lastStamp == null)
+				lastStamp = stamp;
+			else if(stamp.after(lastStamp))
+				lastStamp = stamp;
+		}
+		
+		return MessageBuilder.withPayload(new NetworkFlowCollection(firstStamp, lastStamp, flows))
 				.setHeader(TransferrerConstants.SOURCE_FILE_LIST_HEADER, sourceFiles)
 				.build();
 	}

@@ -488,7 +488,7 @@ public class FlowData implements Serializable {
 	@JsonProperty(value="ipv6SrcMask")
 	private Integer ipv6SourceMask;
 	
-	@JsonProperty(value="ipv6SrcMask")
+	@JsonProperty(value="ipv6DstMask")
 	private Integer ipv6DestinationMask;
 	
 	@JsonProperty(value="ipv6FlowLabel")

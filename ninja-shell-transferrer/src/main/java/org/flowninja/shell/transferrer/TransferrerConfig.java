@@ -11,9 +11,10 @@ import javax.sql.DataSource;
 
 import org.flowninja.shell.transferrer.integration.CorrelationKeyBuilderHeaderTransformer;
 import org.flowninja.shell.transferrer.integration.DataOrOptionsFlowRouter;
-import org.flowninja.shell.transferrer.integration.DatabaseBackedAcceptOnceFileListFilter;
 import org.flowninja.shell.transferrer.integration.FlowCollectionBuildingTransformer;
+import org.flowninja.shell.transferrer.integration.FlowCollectionStorer;
 import org.flowninja.shell.transferrer.integration.IgnoreCurrentHourFileFilter;
+import org.flowninja.shell.transferrer.integration.IgnoreDuplicateFileFilter;
 import org.flowninja.shell.transferrer.integration.ProcessedFileMover;
 import org.flowninja.shell.transferrer.integration.SetFileNameHeaderTransformer;
 import org.flowninja.shell.transferrer.integration.SourceFileDataFlowParser;
@@ -32,14 +33,12 @@ import org.springframework.integration.annotation.IntegrationComponentScan;
 import org.springframework.integration.config.EnableIntegration;
 import org.springframework.integration.context.IntegrationContextUtils;
 import org.springframework.integration.dsl.IntegrationFlow;
-import org.springframework.integration.dsl.IntegrationFlowBuilder;
 import org.springframework.integration.dsl.IntegrationFlows;
 import org.springframework.integration.dsl.channel.MessageChannels;
 import org.springframework.integration.dsl.core.Pollers;
 import org.springframework.integration.file.DefaultDirectoryScanner;
 import org.springframework.integration.file.DirectoryScanner;
 import org.springframework.integration.file.FileReadingMessageSource;
-import org.springframework.integration.file.filters.CompositeFileListFilter;
 import org.springframework.integration.scheduling.PollerMetadata;
 import org.springframework.integration.store.MessageGroup;
 import org.springframework.integration.support.MessageBuilder;
@@ -87,10 +86,13 @@ public class TransferrerConfig {
 	private DataSource dataSource;
 	
 	@Autowired
-	private DatabaseBackedAcceptOnceFileListFilter acceptOnceFilter;
+	private ProcessedFileMover processedMover;
 	
 	@Autowired
-	private ProcessedFileMover processedMover;
+	private FlowCollectionStorer flowCollectionStorer;
+	
+	@Autowired
+	private IgnoreDuplicateFileFilter duplicateFilter;
 	
 	@Bean
 	public PlatformTransactionManager transactionManager() {
@@ -110,12 +112,8 @@ public class TransferrerConfig {
 	@Bean
 	public DirectoryScanner collectorDirectoryScanner() {
 		DefaultDirectoryScanner scanner = new DefaultDirectoryScanner();
-		CompositeFileListFilter<File> filter = new CompositeFileListFilter<File>();
 		
-		filter.addFilter(ignoreCurrentHourFilter);
-		filter.addFilter(acceptOnceFilter);
-		
-		scanner.setFilter(filter);
+		scanner.setFilter(ignoreCurrentHourFilter);
 		
 		return scanner;
 	}
@@ -129,6 +127,7 @@ public class TransferrerConfig {
 	public IntegrationFlow fileScannerFlow() {
 		return IntegrationFlows.from(collectorFileSource(), 
 					c -> c.poller(poller()).autoStartup(true))
+				.filter(duplicateFilter::canFilePass)
 				.transform(correlationKeyTransformer)
 				.transform(fileNameHeaderTransformer)
 				.<File, String>route(dataOrOptionsRouter::routeDataOrOptionsFlow, 
@@ -170,6 +169,7 @@ public class TransferrerConfig {
 	public IntegrationFlow dataFileTransferFlow() {
 		
 		return IntegrationFlows.from(dataTransferChannel())
+				.transform(flowCollectionStorer::storeNetworkFlowCollection)
 				.handle(n -> System.out.println(n))
 				.get();
 	}

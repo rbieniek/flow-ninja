@@ -56,7 +56,7 @@ public class UnprocessableFileHandler implements InitializingBean {
 
 	@Override
 	public void afterPropertiesSet() throws Exception {		
-		deadMessagesDirectory = new File(env.getProperty("deadMessagesDirectory"));
+		deadMessagesDirectory = new File(env.getRequiredProperty("deadMessagesDirectory"));
 		
 		if(!deadMessagesDirectory.isDirectory()) {
 			if(!deadMessagesDirectory.mkdirs()) {
