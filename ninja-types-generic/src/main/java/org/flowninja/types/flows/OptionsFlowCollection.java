@@ -9,23 +9,21 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 
 /**
  * @author rainer
  *
  */
-public class NetworkFlowCollection implements Serializable {
-	
+public class OptionsFlowCollection implements Serializable {
+
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -7591401731013361923L;
-	
+	private static final long serialVersionUID = 5533883281986165999L;
+
 	@JsonProperty(value="first", required=true)
 	@JsonFormat(shape=Shape.STRING)
 	private Date firstStamp;
@@ -35,34 +33,16 @@ public class NetworkFlowCollection implements Serializable {
 	private Date lastStamp;
 
 	@JsonProperty(value="flows", required=true)
-	private List<NetworkFlow> flows = new LinkedList<NetworkFlow>();
-
-
-	public NetworkFlowCollection() {}
+	private List<OptionsFlow> flows = new LinkedList<OptionsFlow>();
 	
-	public NetworkFlowCollection(Date fistStamp, Date lastStamp, Collection<NetworkFlow> flows) {
-		this.firstStamp = fistStamp;
+	public OptionsFlowCollection() {}
+	
+	public OptionsFlowCollection(Date firstStamp, Date lastStamp, Collection<OptionsFlow> flows) {
+		this.firstStamp = firstStamp;
 		this.lastStamp = lastStamp;
-		this.flows.addAll(flows);
-	}
-	
-	/**
-	 * @return the flows
-	 */
-	public List<NetworkFlow> getFlows() {
-		return flows;
-	}
-
-	/**
-	 * @param flows the flows to set
-	 */
-	public void setFlows(List<NetworkFlow> flows) {
-		this.flows = flows;
-	}
-	
-	@Override
-	public String toString() {
-		return ToStringBuilder.reflectionToString(this);
+		
+		if(flows != null)
+			this.flows.addAll(flows);
 	}
 
 	/**
@@ -91,5 +71,19 @@ public class NetworkFlowCollection implements Serializable {
 	 */
 	public void setLastStamp(Date lastStamp) {
 		this.lastStamp = lastStamp;
+	}
+
+	/**
+	 * @return the flows
+	 */
+	public List<OptionsFlow> getFlows() {
+		return flows;
+	}
+
+	/**
+	 * @param flows the flows to set
+	 */
+	public void setFlows(List<OptionsFlow> flows) {
+		this.flows = flows;
 	}
 }

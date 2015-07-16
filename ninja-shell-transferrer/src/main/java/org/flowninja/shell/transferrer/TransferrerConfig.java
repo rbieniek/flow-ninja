@@ -162,7 +162,7 @@ public class TransferrerConfig {
 
 	@Bean
 	public MessageChannel dataTransferChannel() {
-		return MessageChannels.direct().get();
+		return MessageChannels.direct("dataTransferChannel").get();
 	}
 	
 	@Bean
@@ -174,7 +174,6 @@ public class TransferrerConfig {
 				.get();
 	}
 	
-
 	@Bean
 	public IntegrationFlow optionsFileProcessingFlow() {
 		return f -> f
@@ -188,11 +187,26 @@ public class TransferrerConfig {
 						})
 						.correlationStrategy(m -> m.getHeaders().get(TransferrerConstants.CORRELATION_HEADER))
 						.releaseStrategy(g -> g.size() >= 60)
-						.groupTimeout(5*60*1000L)
+						.groupTimeout(2*60*1000L)
 						.sendPartialResultOnExpiry(true)
 						.expireGroupsUponCompletion(true), null)
-				// .handle((p, h) -> { System.out.println(p); return p; })
+				.transform(collectionBuildingTransformer::collectOptionFlows)
+				.channel(optionsTransferChannel())
 				;
+	}
+
+	@Bean
+	public MessageChannel optionsTransferChannel() {
+		return MessageChannels.direct("optionsTransferChannel").get();
+	}
+	
+	@Bean
+	public IntegrationFlow optionsFileTransferFlow() {
+		
+		return IntegrationFlows.from(optionsTransferChannel())
+				.transform(flowCollectionStorer::storeOptionsFlowCollection)
+				.handle(n -> System.out.println(n))
+				.get();
 	}
 
 	@Bean

@@ -34,11 +34,18 @@ public class FlowCollectionStorer implements InitializingBean {
 	private File batchTempDir;
 	private ObjectMapper mapper;
 	
-	@SuppressWarnings("deprecation")
 	public File storeNetworkFlowCollection(NetworkFlowCollection flowCollection) {
+		return storeFlowCollection("network-flow-", flowCollection.getFirstStamp(), flowCollection);
+	}
+
+	public File storeOptionsFlowCollection(NetworkFlowCollection flowCollection) {
+		return storeFlowCollection("options-flow-", flowCollection.getFirstStamp(), flowCollection);
+	}
+
+	@SuppressWarnings("deprecation")
+	private File storeFlowCollection(String prefix, Date stamp, Object flowCollection) {
 		File collectionFile = null;
-		StringBuilder fnameBuilder = new StringBuilder("network-flows-");
-		Date stamp = flowCollection.getFirstStamp();
+		StringBuilder fnameBuilder = new StringBuilder(prefix);
 
 		fnameBuilder.append(String.format("%04d%02d%02d%02d-", stamp.getYear()+1900, stamp.getMonth()+1, stamp.getDate(), stamp.getHours()));
 		fnameBuilder.append(UUID.randomUUID().toString());
@@ -46,7 +53,7 @@ public class FlowCollectionStorer implements InitializingBean {
 		
 		collectionFile = new File(batchTempDir, fnameBuilder.toString());
 		
-		logger.info("writing network flows to file {}", collectionFile);
+		logger.info("writing flows to file {}", collectionFile);
 		
 		try {
 			FileOutputStream fos = new FileOutputStream(collectionFile);
@@ -57,9 +64,9 @@ public class FlowCollectionStorer implements InitializingBean {
 				fos.close();
 			} catch(IOException ioe) {}
 		} catch(IOException e) {
-			logger.warn("failed to write JSON network flow collection file at {}", collectionFile, e);
+			logger.warn("failed to write JSON flow collection file at {}", collectionFile, e);
 			
-			throw new MessagingException("failed to write JSON network flow collection file at " + collectionFile, e);
+			throw new MessagingException("failed to write JSON flow collection file at " + collectionFile, e);
 		}
 		
 		return collectionFile;
