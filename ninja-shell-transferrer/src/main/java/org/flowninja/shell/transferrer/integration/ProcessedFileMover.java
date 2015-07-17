@@ -49,9 +49,6 @@ public class ProcessedFileMover implements MessageHandler, InitializingBean {
 	@Autowired
 	private Environment env;
 	
-	@Autowired
-	private JdbcTemplate jdbcTemplate;
-	
 	private File atticDirectory;
 	
 	@Override
@@ -81,25 +78,7 @@ public class ProcessedFileMover implements MessageHandler, InitializingBean {
 					
 					try {
 						Files.move(Paths.get(sourceFile.toURI()), Paths.get(target.toURI()), 
-								StandardCopyOption.REPLACE_EXISTING);
-						
-						jdbcTemplate.execute(new PreparedStatementCreator() {
-							
-							@Override
-							public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
-								return con.prepareStatement("delete from source_files where fname=?");
-							}
-						}, new PreparedStatementCallback<Object>() {
-
-							@Override
-							public Object doInPreparedStatement(PreparedStatement ps) throws SQLException, DataAccessException {
-								ps.setString(1, sourceFile.getName());
-								
-								ps.execute();
-								
-								return null;
-							}
-						});
+								StandardCopyOption.REPLACE_EXISTING);						
 					} catch (IOException e) {
 						logger.error("file to move data file {} to {}", sourceFile, target, e);
 					}

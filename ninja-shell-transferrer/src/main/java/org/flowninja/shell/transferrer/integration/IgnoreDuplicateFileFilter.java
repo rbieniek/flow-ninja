@@ -19,6 +19,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCallback;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.StatementCallback;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
 
 /**
@@ -32,6 +34,8 @@ public class IgnoreDuplicateFileFilter implements InitializingBean {
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
+	private SimpleJdbcInsert insert;
+	
 	public boolean canFilePass(File dataFile) {
 		boolean fileKnown = jdbcTemplate.execute(new PreparedStatementCreator() {
 			
@@ -63,6 +67,10 @@ public class IgnoreDuplicateFileFilter implements InitializingBean {
 
 		logger.info("data file {} is already known: {}", dataFile, fileKnown);
 		
+		if(!fileKnown) {
+			insert.execute(new MapSqlParameterSource("fname", dataFile.getName()));
+		}
+		
 		return !fileKnown;
 	}
 
@@ -77,5 +85,7 @@ public class IgnoreDuplicateFileFilter implements InitializingBean {
 				return null;
 			}
 		});
+		
+		insert = new SimpleJdbcInsert(jdbcTemplate).withTableName("source_files");
 	}
 }

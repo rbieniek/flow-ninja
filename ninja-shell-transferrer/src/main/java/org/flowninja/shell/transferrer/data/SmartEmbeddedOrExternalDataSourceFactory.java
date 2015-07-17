@@ -26,6 +26,8 @@ import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.stereotype.Component;
 
 /**
@@ -38,7 +40,11 @@ public class SmartEmbeddedOrExternalDataSourceFactory implements FactoryBean<Dat
 	
 	@Autowired
 	private Environment env;
+	
+	@Autowired
+	private ResourceLoader resourceLoader;
 
+	
 	private File embeddedDatabaseDirectory;
 	private String connectURI;
 	private String userName;
@@ -73,13 +79,13 @@ public class SmartEmbeddedOrExternalDataSourceFactory implements FactoryBean<Dat
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		Properties props = new Properties();
+		boolean createDb = false;
 		
 		this.connectURI = env.getProperty("dbConnectURI");
 		this.userName = env.getProperty("dbUserName");
 		this.password = env.getProperty("dbPassword");
 		
 		if(env.getProperty("embeddedDatabaseDirectory") != null) {
-			boolean createDb = false;
 
 			this.embeddedDatabaseDirectory= new File(env.getProperty("embeddedDatabaseDirectory"));
 			
@@ -103,15 +109,15 @@ public class SmartEmbeddedOrExternalDataSourceFactory implements FactoryBean<Dat
 			this.userName = null;
 			this.password = null;
 
-			if(createDb) {
-				Connection con = DriverManager.getConnection(connectURI);
-				Statement stmt = con.createStatement();
-				
-				stmt.execute("create table source_files (fname varchar(256) primary key)");
-				
-				stmt.close();
-				con.close();
-			}
+//			if(createDb) {
+//				Connection con = DriverManager.getConnection(connectURI);
+//				Statement stmt = con.createStatement();
+//				
+//				stmt.execute("create table source_files (fname varchar(256) primary key)");
+//				
+//				stmt.close();
+//				con.close();
+//			}
 		}
 		
 		if(StringUtils.isBlank(this.connectURI))
@@ -131,6 +137,15 @@ public class SmartEmbeddedOrExternalDataSourceFactory implements FactoryBean<Dat
 		poolableConnectionFactory.setPool(connectionPool);
 		
 		dataSource = new PoolingDataSource<PoolableConnection>(connectionPool);
+		
+		if(createDb) {
+			ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
+			
+			populator.addScript(resourceLoader.getResource("classpath:/org/springframework/integration/jdbc/schema-derby.sql"));
+			populator.addScript(resourceLoader.getResource("classpath:/org/flowninja/shell/transferrer/integration/schema-derby.sql"));
+			
+			populator.execute(dataSource);
+		}
 	}
 
 	@Override

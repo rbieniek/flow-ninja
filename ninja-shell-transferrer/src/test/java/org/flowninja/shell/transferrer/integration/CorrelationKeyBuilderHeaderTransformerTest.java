@@ -107,7 +107,7 @@ public class CorrelationKeyBuilderHeaderTransformerTest {
 		correlatorInputChannel.send(MessageBuilder.withPayload(data).build());
 		
 		assertThat(handler.getFiles()).containsExactly(data);
-		assertThat(handler.getHeaders()).containsExactly("2015090709");
+		assertThat(handler.getHeaders()).containsExactly("dataflow2015090709");
 	}
 
 	@Test
@@ -117,7 +117,7 @@ public class CorrelationKeyBuilderHeaderTransformerTest {
 		correlatorInputChannel.send(MessageBuilder.withPayload(options).build());
 		
 		assertThat(handler.getFiles()).containsExactly(options);
-		assertThat(handler.getHeaders()).containsExactly("2015090709");
+		assertThat(handler.getHeaders()).containsExactly("optionsflow2015090709");
 	}
 
 	@Test

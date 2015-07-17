@@ -6,12 +6,14 @@ package org.flowninja.shell.transferrer.integration;
 import static org.fest.assertions.api.Assertions.assertThat;
 
 import java.io.File;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.sql.DataSource;
 
+import org.fest.assertions.data.MapEntry;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -79,20 +81,31 @@ public class IgnoreDuplicateFileFilterTest {
 	}
 
 	public static class FileFlowHandler implements MessageHandler {
-		private List<File> files = new LinkedList<>();
+		private Map<File, AtomicInteger> files = new HashMap<File, AtomicInteger>();
 
 		@Override
 		public void handleMessage(Message<?> message) throws MessagingException {
 			if(message.getPayload() instanceof File) {
-				files.add((File)message.getPayload());
+				File file = (File)message.getPayload();
+				
+				synchronized (files) {
+					if(!files.containsKey(file))
+						files.put(file, new AtomicInteger(1));
+					else
+						files.get(file).incrementAndGet();
+				}
 			}			
 		}
 
 		/**
 		 * @return the files
 		 */
-		public List<File> getFiles() {
-			return files;
+		public Map<File, Integer> getFiles() {
+			Map<File, Integer> map = new HashMap<File, Integer>();
+			
+			files.forEach((k,v) -> map.put(k, v.intValue()));
+			
+			return map;
 		}
 	}
 
@@ -116,7 +129,7 @@ public class IgnoreDuplicateFileFilterTest {
 		File file = new File("file-" + UUID.randomUUID().toString());
 		
 		acceptOnceInputChannel.send(MessageBuilder.withPayload(file).build());
-		assertThat(handler.getFiles()).contains(file);
+		assertThat(handler.getFiles()).contains(MapEntry.entry(file, 1));
 	}
 	
 	@Test
@@ -124,10 +137,10 @@ public class IgnoreDuplicateFileFilterTest {
 		File file = new File("file-" + UUID.randomUUID().toString());
 		
 		acceptOnceInputChannel.send(MessageBuilder.withPayload(file).build());
-		assertThat(handler.getFiles()).contains(file);
+		assertThat(handler.getFiles()).contains(MapEntry.entry(file, 1));
 
 		acceptOnceInputChannel.send(MessageBuilder.withPayload(file).build());
-		assertThat(handler.getFiles()).contains(file);
+		assertThat(handler.getFiles()).contains(MapEntry.entry(file, 1));
 	}
 
 	@Test
@@ -136,10 +149,10 @@ public class IgnoreDuplicateFileFilterTest {
 		File fileTwo = new File("file-" + UUID.randomUUID().toString());
 		
 		acceptOnceInputChannel.send(MessageBuilder.withPayload(fileOne).build());
-		assertThat(handler.getFiles()).contains(fileOne);
+		assertThat(handler.getFiles()).contains(MapEntry.entry(fileOne, 1));
 
 		acceptOnceInputChannel.send(MessageBuilder.withPayload(fileTwo).build());
-		assertThat(handler.getFiles()).contains(fileOne, fileTwo);
+		assertThat(handler.getFiles()).contains(MapEntry.entry(fileOne, 1), MapEntry.entry(fileTwo, 1));
 	}
 	
 	@Test
@@ -148,15 +161,15 @@ public class IgnoreDuplicateFileFilterTest {
 		File fileTwo = new File("file-" + UUID.randomUUID().toString());
 		
 		acceptOnceInputChannel.send(MessageBuilder.withPayload(fileOne).build());
-		assertThat(handler.getFiles()).contains(fileOne);
+		assertThat(handler.getFiles()).contains(MapEntry.entry(fileOne, 1));
 
 		acceptOnceInputChannel.send(MessageBuilder.withPayload(fileTwo).build());
-		assertThat(handler.getFiles()).contains(fileOne, fileTwo);
+		assertThat(handler.getFiles()).contains(MapEntry.entry(fileOne, 1), MapEntry.entry(fileTwo, 1));
 
 		acceptOnceInputChannel.send(MessageBuilder.withPayload(fileOne).build());
-		assertThat(handler.getFiles()).contains(fileOne, fileTwo);
+		assertThat(handler.getFiles()).contains(MapEntry.entry(fileOne, 1), MapEntry.entry(fileTwo, 1));
 
 		acceptOnceInputChannel.send(MessageBuilder.withPayload(fileTwo).build());
-		assertThat(handler.getFiles()).contains(fileOne, fileTwo);
+		assertThat(handler.getFiles()).contains(MapEntry.entry(fileOne, 1), MapEntry.entry(fileTwo, 1));
 	}
 }

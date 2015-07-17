@@ -37,14 +37,12 @@ public class CorrelationKeyBuilderHeaderTransformer implements Transformer {
 			String fname = ((File)payload).getName();
 			
 			if(StringUtils.startsWith(fname, DATA_FLOW_PREFIX) && StringUtils.endsWith(fname, JSON_SUFFIX)) {
-				fname = StringUtils.substring(fname, DATA_FLOW_PREFIX_LEN);
-				fname = StringUtils.substring(fname, 0, STAMP_LEN);
+				fname = StringUtils.substring(fname, 0, DATA_FLOW_PREFIX_LEN + STAMP_LEN);
 				fname = StringUtils.remove(fname, '-');
 				message = MessageBuilder.fromMessage(message).setHeader(TransferrerConstants.CORRELATION_HEADER, fname).build();
 				
 			} else if(StringUtils.startsWith(fname, OPTIONS_FLOW_PREFIX) && StringUtils.endsWith(fname, JSON_SUFFIX)) {
-				fname = StringUtils.substring(fname, OPTIONS_FLOW_PREFIX_LEN);
-				fname = StringUtils.substring(fname, 0, STAMP_LEN);
+				fname = StringUtils.substring(fname, 0, OPTIONS_FLOW_PREFIX_LEN+STAMP_LEN);
 				fname = StringUtils.remove(fname, '-');
 				
 				message = MessageBuilder.fromMessage(message).setHeader(TransferrerConstants.CORRELATION_HEADER, fname).build();

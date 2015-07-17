@@ -39,8 +39,10 @@ import org.springframework.integration.dsl.core.Pollers;
 import org.springframework.integration.file.DefaultDirectoryScanner;
 import org.springframework.integration.file.DirectoryScanner;
 import org.springframework.integration.file.FileReadingMessageSource;
+import org.springframework.integration.jdbc.JdbcMessageStore;
 import org.springframework.integration.scheduling.PollerMetadata;
 import org.springframework.integration.store.MessageGroup;
+import org.springframework.integration.store.MessageGroupStore;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.messaging.MessageChannel;
@@ -140,6 +142,11 @@ public class TransferrerConfig {
 	}
 	
 	@Bean
+	public MessageGroupStore messageStore() {
+		return new JdbcMessageStore(dataSource);
+	}
+	
+	@Bean
 	public IntegrationFlow dataFileProcessingFlow() {
 		return f -> f
 				.<File, List<NetworkFlow>>transform(dataFileParser::parseSingleDataFlowFile)
@@ -153,6 +160,7 @@ public class TransferrerConfig {
 						.correlationStrategy(m -> m.getHeaders().get(TransferrerConstants.CORRELATION_HEADER))
 						.releaseStrategy(g -> g.size() >= 60)
 						.groupTimeout(2*60*1000L)
+						.messageStore(messageStore())
 						.sendPartialResultOnExpiry(true)
 						.expireGroupsUponCompletion(true), null)
 				.transform(collectionBuildingTransformer::collectNetworkFlows)
@@ -188,6 +196,7 @@ public class TransferrerConfig {
 						.correlationStrategy(m -> m.getHeaders().get(TransferrerConstants.CORRELATION_HEADER))
 						.releaseStrategy(g -> g.size() >= 60)
 						.groupTimeout(2*60*1000L)
+						.messageStore(messageStore())
 						.sendPartialResultOnExpiry(true)
 						.expireGroupsUponCompletion(true), null)
 				.transform(collectionBuildingTransformer::collectOptionFlows)
