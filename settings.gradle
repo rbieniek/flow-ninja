@@ -1,0 +1,4 @@
+rootProject.name = 'flow-ninja'
+
+include 'common'
+include 'netflow9-collectord'
