@@ -1,5 +1,5 @@
 def appProjects = [
-    project('flow-ninja')
+    project('netflow9-collectord')
 ]
 
 wrapper.gradleVersion = '3.2.1'
