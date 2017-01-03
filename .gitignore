@@ -8,3 +8,7 @@ target
 bin
 *.log
 .buildpath
+
+.gradle
+*~
+*#
