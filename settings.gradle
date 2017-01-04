@@ -1,4 +1,6 @@
 rootProject.name = 'flow-ninja'
 
 include 'common'
+include 'netflow9-collector-server'
+include 'netflow9-common'
 include 'netflow9-collectord'

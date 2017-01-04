@@ -43,6 +43,8 @@ configure(allprojects) {
     buildDir = 'target'
 
     ext {
+    	slf4jVersion = '1.7.21'
+    	
         thymeleafVersion = '3.0.1.RELEASE'
         thymeleafLayoutDialectVersion = '2.0.0'
 
@@ -54,8 +56,13 @@ configure(allprojects) {
         commonsCollections4Version = '4.1'
         httpCommonsVersion = '4.5.2'
 
+		nettyVersion = '4.0.26.Final'
+
       	akkaVersion = '2.4.14'
        	scalaJava8CompatVersion = '0.8.0'
+       	
+       	c3p0Version = '0.9.5'
+       	quartzSchedulerVersion = '2.2.1'
 
         lombokVersion = '1.16.12'
 
@@ -63,6 +70,7 @@ configure(allprojects) {
         assertjVersion = '3.5.2'
         junitVersion = '4.12'
         mockitoVersion = '1.10.19'
+        festAssertVersion = '2.0M10'
 
         pmdVersion = '5.4.2'
         checkstyleVersion = '7.1.1'
@@ -152,11 +160,14 @@ configure(allprojects) {
 
     dependencies {
 	// Spring Boot
-        compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator', version: springBootVersion
-        compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: springBootVersion
-        compile group: 'org.springframework.boot', name: 'spring-boot-starter-thymeleaf', version: springBootVersion
-        compile group: 'org.springframework.boot', name: 'spring-boot-devtools', version: springBootVersion
-        compile group: 'nz.net.ultraq.thymeleaf', name: 'thymeleaf-layout-dialect', version: thymeleafLayoutDialectVersion
+   compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator', version: springBootVersion
+   compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: springBootVersion
+   compile group: 'org.springframework.boot', name: 'spring-boot-starter-thymeleaf', version: springBootVersion
+   compile group: 'org.springframework.boot', name: 'spring-boot-starter-hateoas', version: springBootVersion
+   compile group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: springBootVersion
+   compile group: 'org.springframework.boot', name: 'spring-boot-starter-validation', version: springBootVersion
+   compile group: 'org.springframework.boot', name: 'spring-boot-devtools', version: springBootVersion
+   compile group: 'nz.net.ultraq.thymeleaf', name: 'thymeleaf-layout-dialect', version: thymeleafLayoutDialectVersion
 
 	// Akka
    	compile group: 'com.typesafe.akka', name: 'akka-actor_2.11', version: akkaVersion
@@ -168,17 +179,17 @@ configure(allprojects) {
    	compile group: 'org.scala-lang.modules', name: 'scala-java8-compat_2.11', version: scalaJava8CompatVersion 
 
 	// Utilities
-        compile group: 'javax.annotation', name: 'jsr250-api', version: javaxAnnotationVersion
-        compile group: 'org.projectlombok', name: 'lombok', version: lombokVersion
-        compile group: 'org.apache.commons', name: 'commons-lang3', version: commonsLang3Version
-        compile group: 'commons-io', name: 'commons-io', version: commonsIoVersion
-        compile group: 'commons-codec', name: 'commons-codec', version: commonsCodecVersion
-        compile group: 'org.apache.commons', name: 'commons-collections4', version: commonsCollections4Version
+    compile group: 'javax.annotation', name: 'jsr250-api', version: javaxAnnotationVersion
+    compile group: 'org.projectlombok', name: 'lombok', version: lombokVersion
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: commonsLang3Version
+    compile group: 'commons-io', name: 'commons-io', version: commonsIoVersion
+    compile group: 'commons-codec', name: 'commons-codec', version: commonsCodecVersion
+    compile group: 'org.apache.commons', name: 'commons-collections4', version: commonsCollections4Version
 
-        // Testing
-        testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: springBootVersion
-        testCompile group: 'nl.jqno.equalsverifier', name: 'equalsverifier', version: equalsVerifierVersion
-        testCompile group: 'org.assertj', name: 'assertj-core', version: assertjVersion
+    // Testing
+    testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: springBootVersion
+    testCompile group: 'nl.jqno.equalsverifier', name: 'equalsverifier', version: equalsVerifierVersion
+    testCompile group: 'org.assertj', name: 'assertj-core', version: assertjVersion
 	testCompile group: 'junit', name: 'junit', version: junitVersion
    	testCompile group: 'com.typesafe.akka', name: 'akka-stream-testkit_2.11', version: akkaVersion
    	testCompile group: 'com.typesafe.akka', name: 'akka-testkit_2.11', version: akkaVersion

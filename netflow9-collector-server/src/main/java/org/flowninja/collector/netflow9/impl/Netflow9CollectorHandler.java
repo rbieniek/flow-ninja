@@ -12,7 +12,6 @@ import org.flowninja.collector.common.netflow9.types.DataFlow;
 import org.flowninja.collector.common.netflow9.types.OptionsFlow;
 import org.flowninja.collector.netflow9.packet.InetSocketAddressPeerAddressMapper;
 import org.flowninja.collector.netflow9.packet.PeerAddressMapper;
-import org.osgi.service.blueprint.container.ServiceUnavailableException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,7 +50,7 @@ public class Netflow9CollectorHandler extends ChannelInboundHandlerAdapter {
 		for(FlowStoreService service : flowStorers) {
 			try {
 				service.activateFlowStorer();
-			} catch(ServiceUnavailableException e) {
+			} catch(RuntimeException e) {
 				logger.error("falied to activate flow storer", e);
 			}
 		}
@@ -65,7 +64,7 @@ public class Netflow9CollectorHandler extends ChannelInboundHandlerAdapter {
 		for(FlowStoreService service : flowStorers) {
 			try {
 				service.passivateFlowStorer();
-			} catch(ServiceUnavailableException e) {
+			} catch(RuntimeException e) {
 				logger.error("falied to activate flow storer", e);
 			}
 		}
@@ -89,7 +88,7 @@ public class Netflow9CollectorHandler extends ChannelInboundHandlerAdapter {
 			for(FlowStoreService service : flowStorers) {
 				try {
 					service.storeDataFlow(flow);
-				} catch(ServiceUnavailableException e) {
+				} catch(RuntimeException e) {
 					logger.error("falied to store data flow", e);
 				}
 			}			
@@ -101,7 +100,7 @@ public class Netflow9CollectorHandler extends ChannelInboundHandlerAdapter {
 			for(FlowStoreService service : flowStorers) {
 				try {
 					service.storeOptionsFlow(flow);
-				} catch(ServiceUnavailableException e) {
+				} catch(RuntimeException e) {
 					logger.error("falied to store options flow", e);
 				}
 			}			

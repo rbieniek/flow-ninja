@@ -1,4 +1,6 @@
 
 dependencies {
+	compile project(':netflow9-common')
+	compile project(':netflow9-collector-server')
 	compile project(':common')
 }

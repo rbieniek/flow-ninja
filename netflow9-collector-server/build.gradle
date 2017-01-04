@@ -1,0 +1,17 @@
+
+dependencies {
+	compile project(':netflow9-common')
+
+	compile group: 'org.slf4j', name: 'slf4j-api', version: slf4jVersion
+
+	compile group: 'com.mchange', name: 'c3p0', version:  c3p0Version
+	compile group: 'org.quartz-scheduler', name: 'quartz', version: quartzSchedulerVersion
+	
+	compile group: 'io.netty', name: 'netty-buffer', version: nettyVersion
+	compile group: 'io.netty', name: 'netty-codec', version: nettyVersion
+	compile group: 'io.netty', name: 'netty-common', version: nettyVersion
+	compile group: 'io.netty', name: 'netty-transport', version: nettyVersion
+	
+	testCompile group: 'org.easytesting', name: 'fest-assert-core', version: festAssertVersion
+	testCompile group: 'org.mockito', name: 'mockito-all', version: mockitoVersion
+}
