@@ -1,7 +1,4 @@
-/**
- *
- */
-package org.flowninja.collector.netflow9.packet;
+package org.flowninja.collector.netflow9.components;
 
 import java.net.Inet4Address;
 import java.net.Inet6Address;
@@ -12,15 +9,13 @@ import java.util.Base64;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import org.flowninja.collector.common.netflow9.types.DataFlow;
 import org.flowninja.collector.common.netflow9.types.DataFlowRecord;
 import org.flowninja.collector.common.netflow9.types.EngineType;
 import org.flowninja.collector.common.netflow9.types.FieldType;
 import org.flowninja.collector.common.netflow9.types.FlowDirection;
-import org.flowninja.collector.common.netflow9.types.Header;
 import org.flowninja.collector.common.netflow9.types.IPv6OptionHeaders;
 import org.flowninja.collector.common.netflow9.types.OptionField;
 import org.flowninja.collector.common.netflow9.types.OptionsFlow;
@@ -29,7 +24,6 @@ import org.flowninja.collector.common.netflow9.types.OptionsTemplate;
 import org.flowninja.collector.common.netflow9.types.SamplingAlgorithm;
 import org.flowninja.collector.common.netflow9.types.ScopeField;
 import org.flowninja.collector.common.netflow9.types.ScopeFlowRecord;
-import org.flowninja.collector.common.netflow9.types.ScopeType;
 import org.flowninja.collector.common.netflow9.types.Template;
 import org.flowninja.collector.common.netflow9.types.TemplateField;
 import org.flowninja.collector.common.protocol.types.ForwardingStatus;
@@ -44,203 +38,26 @@ import org.flowninja.collector.common.types.Counter;
 import org.flowninja.collector.common.types.CounterFactory;
 import org.flowninja.collector.common.types.EncodedData;
 import org.flowninja.collector.common.types.EnumCodeValue;
-import org.flowninja.collector.netflow9.components.InetSocketAddressPeerAddressMapper;
-import org.flowninja.collector.netflow9.components.PeerAddressMapper;
+import org.flowninja.collector.netflow9.packet.FlowBuffer;
 
 import io.netty.buffer.ByteBuf;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.handler.codec.ByteToMessageDecoder;
 
-/**
- * Netwflow9 datagram packet decoder implementation.
- *
- * This decoder receives a byte-encoded netflow 9 packet
- * and sents a decoded packet object upstream.
- *
- * The packet decoder temporarily stores received flow packet if a matching template record has not been received yet
- *
- * @author rainer
- *
- */
-public class Netflow9PacketDecoder extends ByteToMessageDecoder {
-    private static final Logger logger = LoggerFactory.getLogger(Netflow9PacketDecoder.class);
+import lombok.extern.slf4j.Slf4j;
 
-    private static final int PACKET_HEADER_LENGTH = 20;
-    private static final int VERSION_NUMBER = 9;
-    private static final int TEMPLATE_FLOWSET_ID = 0;
-    private static final int OPTIONS_TEMPLATE_FLOWSET_ID = 1;
-
-    private PeerRegistry peerRegistry;
-    private PeerAddressMapper peerAddressMapper = new InetSocketAddressPeerAddressMapper();
-
-    /**
-     * @param peerFlowRegistry the peerFlowRegistry to set
-     */
-    public void setPeerRegistry(final PeerRegistry peerFlowRegistry) {
-        this.peerRegistry = peerFlowRegistry;
-    }
-
-    /* (non-Javadoc)
-     * @see io.netty.channel.ChannelInboundHandlerAdapter#channelActive(io.netty.channel.ChannelHandlerContext)
-     */
-    @Override
-    public void channelActive(final ChannelHandlerContext ctx) throws Exception {
-        logger.info("netflow 9 collector server channel is active");
-    }
-
-    /* (non-Javadoc)
-     * @see io.netty.channel.ChannelInboundHandlerAdapter#channelInactive(io.netty.channel.ChannelHandlerContext)
-     */
-    @Override
-    public void channelInactive(final ChannelHandlerContext ctx) throws Exception {
-        logger.info("netflow 9 collector server channel is inactive");
-    }
-
-    /**
-     * main packet decoder routine.
-     */
-    @Override
-    protected void decode(final ChannelHandlerContext ctx, final ByteBuf in, final List<Object> out) throws Exception {
-        final InetAddress peerAddress = peerAddressMapper.mapRemoteAddress(ctx.channel().remoteAddress());
-
-        logger.info("received flow packet from peer {}", peerAddress);
-
-        if(in.readableBytes() > PACKET_HEADER_LENGTH) {
-            final int versionNumber = in.readUnsignedShort();
-
-            if(versionNumber == VERSION_NUMBER) {
-                final Header header = new Header(in.readUnsignedShort(),
-                        in.readUnsignedInt(),
-                        in.readUnsignedInt(),
-                        in.readUnsignedInt(),
-                        in.readUnsignedInt());
-
-                final List<Template> templates = new LinkedList<>();
-                final List<OptionsTemplate> optionsTemplates = new LinkedList<>();
-                final List<FlowBuffer> flows = new LinkedList<>();
-
-                int recordNumber = 0;
-                while(in.readableBytes() > 4) {
-                    final int flowSetId = in.readUnsignedShort();
-                    final int length = in.readUnsignedShort();
-                    final int remainingOctets = length - 4; // subtract length of flowset ID and flowset length
-
-                    if(in.readableBytes() < remainingOctets) {
-                        logger.error("packet short to {} bytes when {} bytes required in record {}",
-                                in.readableBytes(), remainingOctets, recordNumber);
-
-                        return;
-                    }
-
-                    final ByteBuf workBuf = in.readSlice(remainingOctets);
-
-                    switch(flowSetId) {
-                    case TEMPLATE_FLOWSET_ID:
-                        logger.info("received data template flowset from peer", peerAddress);
-
-                        while(workBuf.readableBytes() > 4) {
-                            final int flowSetID = workBuf.readUnsignedShort();
-                            final int fieldCount = workBuf.readUnsignedShort();
-                            final List<TemplateField> fields = new LinkedList<>();
-
-                            if(workBuf.readableBytes() < fieldCount * 4) {
-                                logger.error("packet short to {} bytes when {} bytes required in record {}",
-                                        workBuf.readableBytes(), fieldCount * 4, recordNumber);
-
-                                return;
-                            }
-
-                            for(int fieldNumber=0; fieldNumber < fieldCount; fieldNumber++) {
-                                fields.add(new TemplateField(FieldType.fromCode(workBuf.readUnsignedShort()),
-                                        workBuf.readUnsignedShort()));
-                            }
-
-                            templates.add(new Template(flowSetID, fields));
-                            recordNumber++;
-                        }
-                        break;
-                    case OPTIONS_TEMPLATE_FLOWSET_ID:
-                        logger.info("received options template flowset from peer", peerAddress);
-
-                        {
-                            final int flowSetID = workBuf.readUnsignedShort();
-                            int scopeLength = workBuf.readUnsignedShort();
-                            int optionsLength = workBuf.readUnsignedShort();
-                            final List<ScopeField> scopeFields = new LinkedList<>();
-                            final List<OptionField> optionFields = new LinkedList<>();
-
-                            while(scopeLength >= 4) {
-                                scopeFields.add(new ScopeField(ScopeType.fromCode(workBuf.readUnsignedShort()),
-                                        workBuf.readUnsignedShort()));
-                                scopeLength -= 4;
-                            }
-
-                            while(optionsLength >= 4) {
-                                optionFields.add(new OptionField(FieldType.fromCode(workBuf.readUnsignedShort()),
-                                        workBuf.readUnsignedShort()));
-                                optionsLength -= 4;
-                            }
-
-                            optionsTemplates.add(new OptionsTemplate(flowSetID, scopeFields, optionFields));
-
-                            recordNumber++;
-                        }
-                        break;
-                    default:
-                        logger.info("received flowset with ID {} from peer", flowSetId, peerAddress);
-
-                        flows.add(new FlowBuffer(header, flowSetId, workBuf));
-                    }
-                }
-
-                final FlowRegistry flowRegistry = peerRegistry.registryForPeerAddress(peerAddress, header.getSourceId());
-
-                flowRegistry.addFlowTemplates(templates);
-                flowRegistry.addOptionTemplates(optionsTemplates);
-
-                flows.addAll(flowRegistry.backlogFlows());
-
-
-                final List<FlowBuffer> backlogFlows = new LinkedList<>();
-
-                for(final FlowBuffer flowBuffer : flows) {
-                    Template template = null;
-                    OptionsTemplate optionsTemplate = null;
-
-                    logger.info("decoding flow buffer for flowset ID {}", flowBuffer.getFlowSetId());
-
-                    if((template = flowRegistry.templateForFlowsetID(flowBuffer.getFlowSetId())) != null) {
-                        logger.info("decoding flow buffer using data template for flowset ID {}", flowBuffer.getFlowSetId());
-
-                        out.addAll(decodeDataTemplate(peerAddress, flowBuffer, template));
-                    } else if((optionsTemplate = flowRegistry.optionTemplateForFlowsetID(flowBuffer.getFlowSetId())) != null) {
-                        logger.info("decoding flow buffer using options template for flowset ID {}", flowBuffer.getFlowSetId());
-
-                        out.addAll(decodeOptionsTemplate(peerAddress, flowBuffer, optionsTemplate));
-                    } else {
-                        logger.info("no template found for flowset ID {}, putting flowset to backlog", flowBuffer.getFlowSetId());
-
-                        backlogFlows.add(flowBuffer);
-                    }
-                }
-
-                flowRegistry.backlogFlows(backlogFlows);
-            }
-        } else {
-            logger.error("dropping received packet with {} bytes size but expected at least {} bytes",
-                    in.readableBytes(), PACKET_HEADER_LENGTH);
-        }
-    }
+@Component
+@Slf4j
+public class TemplateDecoder {
 
     /**
      * Decode a data flow from a data buffer and a given template
+     * @param peerAddress
      *
      * @param header
      * @param flowBuffer
      * @param template
      * @return
      */
-    private List<DataFlow> decodeDataTemplate(final InetAddress peerAddress, final FlowBuffer flowBuffer, final Template template) {
+    public List<DataFlow> decodeDataTemplate(final InetAddress peerAddress, final FlowBuffer flowBuffer, final Template template) {
         final ByteBuf buffer = flowBuffer.getBuffer();
         final List<DataFlow> flows = new LinkedList<>();
         final int dataLength = template.getTemplateLength();
@@ -260,13 +77,14 @@ public class Netflow9PacketDecoder extends ByteToMessageDecoder {
 
     /**
      * Decode a data flow from a data buffer and a given template
+     * @param peerAddress
      *
      * @param header
      * @param flowBuffer
      * @param template
      * @return
      */
-    private List<OptionsFlow> decodeOptionsTemplate(final InetAddress peerAddress, final FlowBuffer flowBuffer, final OptionsTemplate template) {
+    public List<OptionsFlow> decodeOptionsTemplate(final InetAddress peerAddress, final FlowBuffer flowBuffer, final OptionsTemplate template) {
         final ByteBuf buffer = flowBuffer.getBuffer();
         final int dataLength = template.getTemplateLength();
         final List<OptionsFlow> optionsFlows = new LinkedList<>();
@@ -354,7 +172,7 @@ public class Netflow9PacketDecoder extends ByteToMessageDecoder {
                 value = TCPFLags.fromCode(buffer.readUnsignedShort());
             } else {
                 buffer.skipBytes(length);
-                logger.warn("recieved type {} field with unsupported length {}", type, length);
+                log.warn("recieved type {} field with unsupported length {}", type, length);
             }
             break;
         case L4_SRC_PORT:
@@ -382,7 +200,7 @@ public class Netflow9PacketDecoder extends ByteToMessageDecoder {
             try {
                 value = Inet4Address.getByAddress(tmp);
             } catch(final UnknownHostException e) {
-                logger.warn("cannot handle IP address for type {} field", e);
+                log.warn("cannot handle IP address for type {} field", e);
             }
         }
         break;
@@ -406,7 +224,7 @@ public class Netflow9PacketDecoder extends ByteToMessageDecoder {
                 value = new Long(buffer.readUnsignedInt());
             } else {
                 buffer.skipBytes(length);
-                logger.warn("recieved type {} field with unsupported length {}", type, length);
+                log.warn("recieved type {} field with unsupported length {}", type, length);
             }
             break;
         case LAST_SWITCHED:
@@ -428,7 +246,7 @@ public class Netflow9PacketDecoder extends ByteToMessageDecoder {
             try {
                 value = Inet6Address.getByAddress(tmp);
             } catch(final UnknownHostException e) {
-                logger.warn("cannot handle IP address for type {} field", e);
+                log.warn("cannot handle IP address for type {} field", e);
             }
         }
         break;
@@ -519,7 +337,7 @@ public class Netflow9PacketDecoder extends ByteToMessageDecoder {
             try {
                 value = new String(tmp, Charset.forName("UTF-8"));
             } catch(final Exception e) {
-                logger.warn("Cannot string of length {} for type {}", length, type, e);
+                log.warn("Cannot string of length {} for type {}", length, type, e);
             }
         }
         break;
@@ -549,10 +367,4 @@ public class Netflow9PacketDecoder extends ByteToMessageDecoder {
         return value;
     }
 
-    /**
-     * @param peerAddressMapper the peerAddressMapper to set
-     */
-    public void setPeerAddressMapper(final PeerAddressMapper peerAddressMapper) {
-        this.peerAddressMapper = peerAddressMapper;
-    }
 }

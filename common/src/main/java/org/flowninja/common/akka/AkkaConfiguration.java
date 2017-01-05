@@ -9,15 +9,15 @@ import akka.actor.ActorSystem;
 
 @Configuration
 public class AkkaConfiguration {
-	@Autowired
-	private ApplicationContext applicationContext;
+    @Autowired
+    private ApplicationContext applicationContext;
 
-	@Bean
-	public ActorSystem actorSystem() {
-		ActorSystem system = ActorSystem.create("md-openapi-generator");
+    @Bean
+    public ActorSystem actorSystem() {
+        final ActorSystem system = ActorSystem.create("flow-ninja");
 
-		AkkaSpringExtension.SPRING_EXTENSION_PROVIDER.get(system).initialize(applicationContext);
+        AkkaSpringExtension.SPRING_EXTENSION_PROVIDER.get(system).initialize(applicationContext);
 
-		return system;
-	}
+        return system;
+    }
 }

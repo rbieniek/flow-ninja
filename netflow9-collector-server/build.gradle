@@ -1,5 +1,6 @@
 
 dependencies {
+	compile project(':common')
 	compile project(':netflow9-common')
 
 	compile group: 'org.slf4j', name: 'slf4j-api', version: slf4jVersion

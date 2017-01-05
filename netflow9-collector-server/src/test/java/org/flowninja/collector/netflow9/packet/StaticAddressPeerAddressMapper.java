@@ -6,6 +6,8 @@ package org.flowninja.collector.netflow9.packet;
 import java.net.InetAddress;
 import java.net.SocketAddress;
 
+import org.flowninja.collector.netflow9.components.PeerAddressMapper;
+
 /**
  * @author rainer
  *
