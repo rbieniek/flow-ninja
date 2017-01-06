@@ -186,7 +186,7 @@ public class Netflow9DatagramDecoder extends ChannelInboundHandlerAdapter {
                 optionsLength -= 4;
             }
 
-            decodedDatagram.getOptionsTemplates().add(new OptionsTemplate(flowSetID, scopeFields, optionFields));
+            decodedDatagram.getOptionsTemplates().add(new OptionsTemplate(flowSetID, optionFields, scopeFields));
 
         }
     }
