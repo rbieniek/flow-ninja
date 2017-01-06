@@ -25,7 +25,6 @@ import org.flowninja.collector.netflow9.components.Netflow9DecodedDatagram;
 import org.flowninja.collector.netflow9.components.PeerAddressMapper;
 import org.flowninja.common.TestConfig;
 import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +34,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.embedded.EmbeddedChannel;
@@ -407,24 +407,17 @@ public class Netflow9DatagramDecoderIntegrationTest {
 	};
 
 	@Autowired
-	private Netflow9DatagramDecoder packetDecoder;
-
 	private EmbeddedChannel channel;
+
+	@Autowired
 	private DatagramSinkChannel datagramSinkChannel;
 
-	@Before
-	public void initTest() {
-		datagramSinkChannel = new DatagramSinkChannel();
-
-		channel = new EmbeddedChannel(packetDecoder, datagramSinkChannel);
-	}
-
 	@After
-	public void destroyTest() throws Exception {
-		channel.close().await();
+	public void clearSink() {
+		datagramSinkChannel.getDecodedDatagrams().clear();
 	}
 
-	public DatagramPacket buildPacket(final Channel ch, final byte[] data) {
+	private DatagramPacket buildPacket(final Channel ch, final byte[] data) {
 		return new DatagramPacket(channel.alloc().buffer().writeBytes(data), new InetSocketAddress(LOCALHOST, 2055),
 				new InetSocketAddress(LOCALHOST, 49152));
 	}
@@ -567,7 +560,7 @@ public class Netflow9DatagramDecoderIntegrationTest {
 		assertThat(fields.next()).has(new TemplateFieldCondition(FieldType.SRC_AS, 2));
 		assertThat(fields.hasNext()).isFalse();
 
-		assertThat(datagramSinkChannel.getDecodedDatagrams().get(0).getFlows()).hasSize(2);
+		assertThat(datagramSinkChannel.getDecodedDatagrams().get(0).getFlows()).hasSize(1);
 
 		FlowBuffer flowBuffer = datagramSinkChannel.getDecodedDatagrams().get(0).getFlows().get(0);
 
@@ -580,18 +573,6 @@ public class Netflow9DatagramDecoderIntegrationTest {
 		assertThat(header.getSequenceNumber()).isEqualTo(31);
 		assertThat(header.getSourceId()).isEqualTo(0);
 
-		assertThat(datagramSinkChannel.getDecodedDatagrams().get(0).getFlows()).hasSize(1);
-
-		flowBuffer = datagramSinkChannel.getDecodedDatagrams().get(0).getFlows().get(1);
-
-		header = flowBuffer.getHeader();
-
-		assertThat(header).isNotNull();
-		assertThat(header.getRecordCount()).isEqualTo(2);
-		assertThat(header.getSysUpTime()).isEqualTo(1976904);
-		assertThat(header.getUnixSeconds()).isEqualTo(1427139251);
-		assertThat(header.getSequenceNumber()).isEqualTo(31);
-		assertThat(header.getSourceId()).isEqualTo(0);
 	}
 
 	@Test
@@ -729,7 +710,7 @@ public class Netflow9DatagramDecoderIntegrationTest {
 		assertThat(dataFields.next()).has(new TemplateFieldCondition(FieldType.SRC_AS, 2));
 		assertThat(dataFields.hasNext()).isFalse();
 
-		assertThat(datagramSinkChannel.getDecodedDatagrams().get(0).getFlows()).hasSize(1);
+		assertThat(datagramSinkChannel.getDecodedDatagrams().get(0).getFlows()).hasSize(2);
 
 		final FlowBuffer flowBuffer = datagramSinkChannel.getDecodedDatagrams().get(0).getFlows().get(0);
 
@@ -744,6 +725,7 @@ public class Netflow9DatagramDecoderIntegrationTest {
 	}
 
 	@Getter
+	@Sharable
 	public static class DatagramSinkChannel extends ChannelInboundHandlerAdapter {
 
 		private List<Netflow9DecodedDatagram> decodedDatagrams = new LinkedList<>();
@@ -759,6 +741,18 @@ public class Netflow9DatagramDecoderIntegrationTest {
 
 	@TestConfig
 	public static class TestConfiguration {
+		@Bean
+		@Autowired
+		public EmbeddedChannel embeddedChannel(final Netflow9DatagramDecoder netflow9DatagramDecoder,
+				final DatagramSinkChannel datagramSinkChannel) {
+			return new EmbeddedChannel(netflow9DatagramDecoder, datagramSinkChannel);
+		}
+
+		@Bean
+		public DatagramSinkChannel datagramSinkChannel() {
+			return new DatagramSinkChannel();
+		}
+
 		@Bean
 		public PeerAddressMapper peerAddressMapper() {
 			return new InetSocketAddressPeerAddressMapper();
