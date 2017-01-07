@@ -16,8 +16,7 @@ import org.flowninja.collector.common.netflow9.types.ScopeType;
 import org.flowninja.collector.common.netflow9.types.Template;
 import org.flowninja.collector.common.netflow9.types.TemplateField;
 import org.flowninja.collector.netflow9.packet.FlowBuffer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.flowninja.collector.netflow9.packet.Netflow9DecodedDatagram;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -27,6 +26,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.socket.DatagramPacket;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Netwflow9 datagram packet decoder implementation.
@@ -43,9 +43,8 @@ import lombok.RequiredArgsConstructor;
 @Component
 @RequiredArgsConstructor(onConstructor = @__({ @Autowired }))
 @Sharable
+@Slf4j
 public class Netflow9DatagramDecoder extends ChannelInboundHandlerAdapter {
-	private static final Logger logger = LoggerFactory.getLogger(Netflow9DatagramDecoder.class);
-
 	private final PeerAddressMapper peerAddressMapper;
 
 	private static final int PACKET_HEADER_LENGTH = 20;
@@ -62,7 +61,7 @@ public class Netflow9DatagramDecoder extends ChannelInboundHandlerAdapter {
 	 */
 	@Override
 	public void channelActive(final ChannelHandlerContext ctx) throws Exception {
-		logger.info("netflow 9 collector server channel is active");
+		log.info("netflow 9 collector server channel is active");
 	}
 
 	/*
@@ -74,7 +73,7 @@ public class Netflow9DatagramDecoder extends ChannelInboundHandlerAdapter {
 	 */
 	@Override
 	public void channelInactive(final ChannelHandlerContext ctx) throws Exception {
-		logger.info("netflow 9 collector server channel is inactive");
+		log.info("netflow 9 collector server channel is inactive");
 	}
 
 	@Override
@@ -84,7 +83,7 @@ public class Netflow9DatagramDecoder extends ChannelInboundHandlerAdapter {
 			final InetAddress peerAddress = peerAddressMapper.mapRemoteAddress(msg.sender());
 			final ByteBuf in = msg.content();
 
-			logger.info("received flow packet from peer {}", peerAddress);
+			log.info("received flow packet from peer {}", peerAddress);
 
 			if (in.readableBytes() > PACKET_HEADER_LENGTH) {
 				final int versionNumber = in.readUnsignedShort();
@@ -105,7 +104,7 @@ public class Netflow9DatagramDecoder extends ChannelInboundHandlerAdapter {
 					ctx.fireChannelReadComplete();
 				}
 			} else {
-				logger.error("dropping received packet with {} bytes size but expected at least {} bytes",
+				log.error("dropping received packet with {} bytes size but expected at least {} bytes",
 						in.readableBytes(), PACKET_HEADER_LENGTH);
 			}
 		}
@@ -123,7 +122,7 @@ public class Netflow9DatagramDecoder extends ChannelInboundHandlerAdapter {
 			// length
 
 			if (in.readableBytes() < remainingOctets) {
-				logger.error("packet short to {} bytes when {} bytes required in record {}", in.readableBytes(),
+				log.error("packet short to {} bytes when {} bytes required in record {}", in.readableBytes(),
 						remainingOctets, recordNumber);
 
 				return;
@@ -138,20 +137,21 @@ public class Netflow9DatagramDecoder extends ChannelInboundHandlerAdapter {
 				break;
 			case OPTIONS_TEMPLATE_FLOWSET_ID:
 				recordNumber++;
-				processOptionsTemplateFlowset(decodedDatagram, peerAddress, recordNumber, workBuf);
+				processOptionsTemplateFlowset(decodedDatagram, peerAddress, workBuf);
 				break;
 			default:
-				logger.info("received flowset with ID {} from peer", flowSetId, peerAddress);
+				log.info("received flowset with ID {} from peer", flowSetId, peerAddress);
 
 				decodedDatagram.getFlows()
 						.add(FlowBuffer.builder().header(header).flowSetId(flowSetId).buffer(workBuf).build());
+				break;
 			}
 		}
 	}
 
 	private void processTemplateFlowset(final Netflow9DecodedDatagram decodedDatagram, final InetAddress peerAddress,
 			final int recordNumber, final ByteBuf workBuf) {
-		logger.info("received data template flowset from peer", peerAddress);
+		log.info("received data template flowset from peer", peerAddress);
 
 		while (workBuf.readableBytes() > 4) {
 			final int flowSetID = workBuf.readUnsignedShort();
@@ -159,7 +159,7 @@ public class Netflow9DatagramDecoder extends ChannelInboundHandlerAdapter {
 			final List<TemplateField> fields = new LinkedList<>();
 
 			if (workBuf.readableBytes() < fieldCount * 4) {
-				logger.error("packet short to {} bytes when {} bytes required in record {}", workBuf.readableBytes(),
+				log.error("packet short to {} bytes when {} bytes required in record {}", workBuf.readableBytes(),
 						fieldCount * 4, recordNumber);
 
 				return;
@@ -175,8 +175,8 @@ public class Netflow9DatagramDecoder extends ChannelInboundHandlerAdapter {
 	}
 
 	private void processOptionsTemplateFlowset(final Netflow9DecodedDatagram decodedDatagram,
-			final InetAddress peerAddress, final int recordNumber, final ByteBuf workBuf) {
-		logger.info("received options template flowset from peer", peerAddress);
+			final InetAddress peerAddress, final ByteBuf workBuf) {
+		log.info("received options template flowset from peer", peerAddress);
 
 		{
 			final int flowSetID = workBuf.readUnsignedShort();

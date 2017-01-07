@@ -1,7 +1,7 @@
 /**
  *
  */
-package org.flowninja.collector.netflow9.packet;
+package org.flowninja.collector.netflow9.components;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -11,6 +11,7 @@ import java.util.Map;
 
 import org.flowninja.collector.common.netflow9.types.OptionsTemplate;
 import org.flowninja.collector.common.netflow9.types.Template;
+import org.flowninja.collector.netflow9.packet.FlowBuffer;
 import org.springframework.stereotype.Component;
 
 /**

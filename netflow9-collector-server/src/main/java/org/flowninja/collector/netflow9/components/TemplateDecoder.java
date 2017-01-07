@@ -355,6 +355,9 @@ public class TemplateDecoder {
 			value = EncodedData.builder().data(data).encodedData(Base64.getEncoder().encodeToString(data)).build();
 		}
 			break;
+		default:
+			log.info("Unknown type code {}", type);
+			break;
 		}
 
 		return value;

@@ -16,5 +16,5 @@ public interface PeerAddressMapper {
 	 * @param address
 	 * @return
 	 */
-	public InetAddress mapRemoteAddress(SocketAddress address) throws Exception;
+	InetAddress mapRemoteAddress(SocketAddress address) throws Exception;
 }
