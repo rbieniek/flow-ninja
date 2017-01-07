@@ -19,8 +19,7 @@ public class ActorUtils {
 		private final Object message;
 
 		@SuppressWarnings("unchecked")
-		public <T> MessageHandler onType(final Class<T> messageType, final Consumer<T> messageHandler)
-				throws Throwable {
+		public <T> MessageHandler onType(final Class<T> messageType, final Consumer<T> messageHandler) {
 			log.info("Checking match for type {} on message {}", messageType.getName(),
 					message != null ? message.getClass().getName() : "null");
 
@@ -28,6 +27,20 @@ public class ActorUtils {
 				log.info("Match for type {} on message {}", messageType.getName(), message.getClass().getName());
 
 				messageHandler.accept((T) message);
+
+				return new MessageHandler(null);
+			}
+
+			return new MessageHandler(message);
+		}
+
+		public <T> MessageHandler ignoreType(final Class<T> messageType) {
+			log.info("Checking match for type {} on message {} for ignore", messageType.getName(),
+					message != null ? message.getClass().getName() : "null");
+
+			if (message != null && messageType.isInstance(message)) {
+				log.info("Match for type {} on message {} to ignore", messageType.getName(),
+						message.getClass().getName());
 
 				return new MessageHandler(null);
 			}
