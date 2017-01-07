@@ -7,7 +7,7 @@ import org.flowninja.collector.common.netflow9.actors.OptionsFlowMessage;
 import org.flowninja.collector.common.netflow9.actors.TemplateDecodingFailureMessage;
 import org.flowninja.collector.common.netflow9.components.SinkActorsProvider;
 import org.flowninja.collector.common.netflow9.types.OptionsTemplate;
-import org.flowninja.collector.common.netflow9.types.Template;
+import org.flowninja.collector.common.netflow9.types.DataTemplate;
 import org.flowninja.collector.netflow9.components.TemplateDecoder;
 import org.flowninja.collector.netflow9.packet.FlowBuffer;
 import org.flowninja.common.akka.ActorUtils;
@@ -70,7 +70,7 @@ public class TemplateDecoderActor extends UntypedActor {
 	}
 
 	private TemplateDecodingFailureMessage createFailureMessage(final OptionsTemplate optionsTemplate,
-			final Template template, final InetAddress peerAddres, final FlowBuffer flowbuffer,
+			final DataTemplate template, final InetAddress peerAddres, final FlowBuffer flowbuffer,
 			final Throwable reason) {
 		final ByteBuf buf = flowbuffer.getBuffer();
 
@@ -90,7 +90,7 @@ public class TemplateDecoderActor extends UntypedActor {
 	@ToString
 	public static class DataTemplateDecoderRequest {
 		private InetAddress peerAddress;
-		private Template dataTemplate;
+		private DataTemplate dataTemplate;
 		private FlowBuffer flowBuffer;
 	}
 

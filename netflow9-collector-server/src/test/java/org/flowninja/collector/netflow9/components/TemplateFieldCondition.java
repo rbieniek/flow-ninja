@@ -6,13 +6,13 @@ package org.flowninja.collector.netflow9.components;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.fest.assertions.core.Condition;
 import org.flowninja.collector.common.netflow9.types.FieldType;
-import org.flowninja.collector.common.netflow9.types.TemplateField;
+import org.flowninja.collector.common.netflow9.types.DataTemplateField;
 
 /**
  * @author rainer
  *
  */
-public class TemplateFieldCondition extends Condition<TemplateField> {
+public class TemplateFieldCondition extends Condition<DataTemplateField> {
 
 	private FieldType type;
 	private int length;
@@ -28,7 +28,7 @@ public class TemplateFieldCondition extends Condition<TemplateField> {
 	 * @see org.fest.assertions.core.Condition#matches(java.lang.Object)
 	 */
 	@Override
-	public boolean matches(final TemplateField value) {
+	public boolean matches(final DataTemplateField value) {
 		return value.getLength() == length && value.getType() == type;
 	}
 

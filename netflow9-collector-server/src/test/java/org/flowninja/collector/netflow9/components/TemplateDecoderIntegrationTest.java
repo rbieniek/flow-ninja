@@ -26,7 +26,7 @@ import org.flowninja.collector.common.netflow9.types.OptionsFlowRecord;
 import org.flowninja.collector.common.netflow9.types.OptionsTemplate;
 import org.flowninja.collector.common.netflow9.types.ScopeFlowRecord;
 import org.flowninja.collector.common.netflow9.types.ScopeType;
-import org.flowninja.collector.common.netflow9.types.Template;
+import org.flowninja.collector.common.netflow9.types.DataTemplate;
 import org.flowninja.collector.common.protocol.types.IPProtocol;
 import org.flowninja.collector.common.protocol.types.IPTypeOfService;
 import org.flowninja.collector.common.protocol.types.TCPFLags;
@@ -883,7 +883,7 @@ public class TemplateDecoderIntegrationTest {
 
 		private final TemplateDecoder templateDecoder;
 
-		private Map<Integer, Template> dataTemplates = new HashMap<>();
+		private Map<Integer, DataTemplate> dataTemplates = new HashMap<>();
 		private Map<Integer, OptionsTemplate> optionsTemplates = new HashMap<>();
 		private Set<Integer> unknownFlowsetIds = new HashSet<>();
 		private Deque<DataFlow> dataFlows = new LinkedList<>();

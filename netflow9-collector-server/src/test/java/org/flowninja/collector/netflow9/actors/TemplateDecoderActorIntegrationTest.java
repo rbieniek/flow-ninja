@@ -30,7 +30,7 @@ import org.flowninja.collector.common.netflow9.types.DataFlow;
 import org.flowninja.collector.common.netflow9.types.Header;
 import org.flowninja.collector.common.netflow9.types.OptionsFlow;
 import org.flowninja.collector.common.netflow9.types.OptionsTemplate;
-import org.flowninja.collector.common.netflow9.types.Template;
+import org.flowninja.collector.common.netflow9.types.DataTemplate;
 import org.flowninja.collector.netflow9.actors.support.ActorsTestConfiguration;
 import org.flowninja.collector.netflow9.actors.support.MessageSinkActor;
 import org.flowninja.collector.netflow9.components.TemplateDecoder;
@@ -83,14 +83,14 @@ public class TemplateDecoderActorIntegrationTest {
 
     @Test
     public void shouldCreateOneDataFlowMessageOnOneDecodedBuffer() {
-        when(templateDecoder.decodeDataTemplate(any(InetAddress.class), any(FlowBuffer.class), any(Template.class)))
+        when(templateDecoder.decodeDataTemplate(any(InetAddress.class), any(FlowBuffer.class), any(DataTemplate.class)))
                 .thenReturn(Arrays.asList(DataFlow.builder().build()));
         when(templateDecoder.decodeOptionsTemplate(any(InetAddress.class), any(FlowBuffer.class), any(OptionsTemplate.class)))
                 .thenThrow(new RuntimeException("should not reach this"));
 
         templateDecoderActor.tell(
                 TemplateDecoderActor.DataTemplateDecoderRequest.builder()
-                        .dataTemplate(Template.builder().build())
+                        .dataTemplate(DataTemplate.builder().build())
                         .flowBuffer(
                                 FlowBuffer.builder()
                                         .flowSetId(256)
@@ -122,7 +122,7 @@ public class TemplateDecoderActorIntegrationTest {
 
     @Test
     public void shouldCreateOneOptionsFlowMessageOnOneDecodedBuffer() {
-        when(templateDecoder.decodeDataTemplate(any(InetAddress.class), any(FlowBuffer.class), any(Template.class)))
+        when(templateDecoder.decodeDataTemplate(any(InetAddress.class), any(FlowBuffer.class), any(DataTemplate.class)))
                 .thenThrow(new RuntimeException("should not reach this"));
         when(templateDecoder.decodeOptionsTemplate(any(InetAddress.class), any(FlowBuffer.class), any(OptionsTemplate.class)))
                 .thenReturn(Arrays.asList(OptionsFlow.builder().build()));
@@ -161,14 +161,14 @@ public class TemplateDecoderActorIntegrationTest {
 
     @Test
     public void shouldCreateOneFailureMessageOnFailedDataTemplate() {
-        when(templateDecoder.decodeDataTemplate(any(InetAddress.class), any(FlowBuffer.class), any(Template.class)))
+        when(templateDecoder.decodeDataTemplate(any(InetAddress.class), any(FlowBuffer.class), any(DataTemplate.class)))
                 .thenThrow(new RuntimeException("expected failure"));
         when(templateDecoder.decodeOptionsTemplate(any(InetAddress.class), any(FlowBuffer.class), any(OptionsTemplate.class)))
                 .thenThrow(new RuntimeException("should not reach this"));
 
         templateDecoderActor.tell(
                 TemplateDecoderActor.DataTemplateDecoderRequest.builder()
-                        .dataTemplate(Template.builder().build())
+                        .dataTemplate(DataTemplate.builder().build())
                         .flowBuffer(
                                 FlowBuffer.builder()
                                         .flowSetId(256)
@@ -215,7 +215,7 @@ public class TemplateDecoderActorIntegrationTest {
 
     @Test
     public void shouldCreateOneFailureMessageOnFailedOptionsTemplate() {
-        when(templateDecoder.decodeDataTemplate(any(InetAddress.class), any(FlowBuffer.class), any(Template.class)))
+        when(templateDecoder.decodeDataTemplate(any(InetAddress.class), any(FlowBuffer.class), any(DataTemplate.class)))
                 .thenThrow(new RuntimeException("should not reach this"));
         when(templateDecoder.decodeOptionsTemplate(any(InetAddress.class), any(FlowBuffer.class), any(OptionsTemplate.class)))
                 .thenThrow(new RuntimeException("expected failure"));

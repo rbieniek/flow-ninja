@@ -3,7 +3,6 @@
  */
 package org.flowninja.collector.common.netflow9.types;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import lombok.AccessLevel;
@@ -20,22 +19,18 @@ import lombok.ToString;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
 @ToString
-public class OptionsTemplate implements NetflowTemplate {
+public class DataTemplate implements NetflowTemplate {
     private final int flowsetId;
-    private List<OptionField> optionFields = new LinkedList<>();
-    private List<ScopeField> scopeFields = new LinkedList<>();
+    private final List<DataTemplateField> fields;
 
     public int getTemplateLength() {
         int length = 0;
 
-        for (final ScopeField field : scopeFields) {
-            length += field.getLength();
-        }
-
-        for (final OptionField field : optionFields) {
+        for (final DataTemplateField field : fields) {
             length += field.getLength();
         }
 
         return length;
     }
+
 }

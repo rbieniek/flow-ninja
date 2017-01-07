@@ -4,7 +4,7 @@ import java.net.InetAddress;
 
 import org.flowninja.collector.common.netflow9.types.Header;
 import org.flowninja.collector.common.netflow9.types.OptionsTemplate;
-import org.flowninja.collector.common.netflow9.types.Template;
+import org.flowninja.collector.common.netflow9.types.DataTemplate;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -12,7 +12,7 @@ import lombok.Getter;
 @Builder
 @Getter
 public class TemplateDecodingFailureMessage {
-	private Template dataTemplate;
+	private DataTemplate dataTemplate;
 	private OptionsTemplate optionsTemplate;
 	private Header header;
 	private InetAddress peerAddress;

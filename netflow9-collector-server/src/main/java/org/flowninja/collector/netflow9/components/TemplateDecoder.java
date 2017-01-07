@@ -22,8 +22,8 @@ import org.flowninja.collector.common.netflow9.types.OptionsTemplate;
 import org.flowninja.collector.common.netflow9.types.SamplingAlgorithm;
 import org.flowninja.collector.common.netflow9.types.ScopeField;
 import org.flowninja.collector.common.netflow9.types.ScopeFlowRecord;
-import org.flowninja.collector.common.netflow9.types.Template;
-import org.flowninja.collector.common.netflow9.types.TemplateField;
+import org.flowninja.collector.common.netflow9.types.DataTemplate;
+import org.flowninja.collector.common.netflow9.types.DataTemplateField;
 import org.flowninja.collector.common.protocol.types.ForwardingStatus;
 import org.flowninja.collector.common.protocol.types.ICMPTypeCode;
 import org.flowninja.collector.common.protocol.types.IGMPType;
@@ -57,7 +57,7 @@ public class TemplateDecoder {
 	 * @return
 	 */
 	public List<DataFlow> decodeDataTemplate(final InetAddress peerAddress, final FlowBuffer flowBuffer,
-			final Template template) {
+			final DataTemplate template) {
 		final ByteBuf buffer = flowBuffer.getBuffer();
 		final List<DataFlow> flows = new LinkedList<>();
 		final int dataLength = template.getTemplateLength();
@@ -67,7 +67,7 @@ public class TemplateDecoder {
 		while (buffer.readableBytes() >= dataLength) {
 			final List<DataFlowRecord> flowRecords = new LinkedList<>();
 
-			for (final TemplateField field : template.getFields()) {
+			for (final DataTemplateField field : template.getFields()) {
 				flowRecords.add(DataFlowRecord.builder().type(field.getType())
 						.value(decodeValue(field.getType(), field.getLength(), buffer)).build());
 			}

@@ -13,8 +13,8 @@ import org.flowninja.collector.common.netflow9.types.OptionField;
 import org.flowninja.collector.common.netflow9.types.OptionsTemplate;
 import org.flowninja.collector.common.netflow9.types.ScopeField;
 import org.flowninja.collector.common.netflow9.types.ScopeType;
-import org.flowninja.collector.common.netflow9.types.Template;
-import org.flowninja.collector.common.netflow9.types.TemplateField;
+import org.flowninja.collector.common.netflow9.types.DataTemplate;
+import org.flowninja.collector.common.netflow9.types.DataTemplateField;
 import org.flowninja.collector.netflow9.packet.FlowBuffer;
 import org.flowninja.collector.netflow9.packet.Netflow9DecodedDatagram;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -156,7 +156,7 @@ public class Netflow9DatagramDecoder extends ChannelInboundHandlerAdapter {
 		while (workBuf.readableBytes() > 4) {
 			final int flowSetID = workBuf.readUnsignedShort();
 			final int fieldCount = workBuf.readUnsignedShort();
-			final List<TemplateField> fields = new LinkedList<>();
+			final List<DataTemplateField> fields = new LinkedList<>();
 
 			if (workBuf.readableBytes() < fieldCount * 4) {
 				log.error("packet short to {} bytes when {} bytes required in record {}", workBuf.readableBytes(),
@@ -166,11 +166,11 @@ public class Netflow9DatagramDecoder extends ChannelInboundHandlerAdapter {
 			}
 
 			for (int fieldNumber = 0; fieldNumber < fieldCount; fieldNumber++) {
-				fields.add(TemplateField.builder().type(FieldType.fromCode(workBuf.readUnsignedShort()))
+				fields.add(DataTemplateField.builder().type(FieldType.fromCode(workBuf.readUnsignedShort()))
 						.length(workBuf.readUnsignedShort()).build());
 			}
 
-			decodedDatagram.getTemplates().add(Template.builder().flowsetId(flowSetID).fields(fields).build());
+			decodedDatagram.getTemplates().add(DataTemplate.builder().flowsetId(flowSetID).fields(fields).build());
 		}
 	}
 

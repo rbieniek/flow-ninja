@@ -17,8 +17,8 @@ import org.flowninja.collector.common.netflow9.types.OptionField;
 import org.flowninja.collector.common.netflow9.types.OptionsTemplate;
 import org.flowninja.collector.common.netflow9.types.ScopeField;
 import org.flowninja.collector.common.netflow9.types.ScopeType;
-import org.flowninja.collector.common.netflow9.types.Template;
-import org.flowninja.collector.common.netflow9.types.TemplateField;
+import org.flowninja.collector.common.netflow9.types.DataTemplate;
+import org.flowninja.collector.common.netflow9.types.DataTemplateField;
 import org.flowninja.collector.netflow9.components.InetSocketAddressPeerAddressMapper;
 import org.flowninja.collector.netflow9.components.Netflow9DatagramDecoder;
 import org.flowninja.collector.netflow9.components.PeerAddressMapper;
@@ -430,11 +430,11 @@ public class Netflow9DatagramDecoderIntegrationTest {
 		assertThat(datagramSinkChannel.getDecodedDatagrams()).hasSize(1);
 		assertThat(datagramSinkChannel.getDecodedDatagrams().get(0).getTemplates()).hasSize(1);
 
-		final Template template = datagramSinkChannel.getDecodedDatagrams().get(0).getTemplates().get(0);
+		final DataTemplate template = datagramSinkChannel.getDecodedDatagrams().get(0).getTemplates().get(0);
 
 		assertThat(template.getFlowsetId()).isEqualTo(256);
 
-		final Iterator<TemplateField> fields = template.getFields().iterator();
+		final Iterator<DataTemplateField> fields = template.getFields().iterator();
 
 		assertThat(fields.next()).has(new TemplateFieldCondition(FieldType.LAST_SWITCHED, 4));
 		assertThat(fields.next()).has(new TemplateFieldCondition(FieldType.FIRST_SWITCHED, 4));
@@ -490,9 +490,9 @@ public class Netflow9DatagramDecoderIntegrationTest {
 		assertThat(datagramSinkChannel.getDecodedDatagrams()).hasSize(1);
 		assertThat(datagramSinkChannel.getDecodedDatagrams().get(0).getTemplates()).hasSize(1);
 
-		final Template template = datagramSinkChannel.getDecodedDatagrams().get(0).getTemplates().get(0);
+		final DataTemplate template = datagramSinkChannel.getDecodedDatagrams().get(0).getTemplates().get(0);
 
-		final Iterator<TemplateField> fields = template.getFields().iterator();
+		final Iterator<DataTemplateField> fields = template.getFields().iterator();
 
 		assertThat(fields.next()).has(new TemplateFieldCondition(FieldType.LAST_SWITCHED, 4));
 		assertThat(fields.next()).has(new TemplateFieldCondition(FieldType.FIRST_SWITCHED, 4));
@@ -538,9 +538,9 @@ public class Netflow9DatagramDecoderIntegrationTest {
 		assertThat(datagramSinkChannel.getDecodedDatagrams()).hasSize(1);
 		assertThat(datagramSinkChannel.getDecodedDatagrams().get(0).getTemplates()).hasSize(1);
 
-		final Template template = datagramSinkChannel.getDecodedDatagrams().get(0).getTemplates().get(0);
+		final DataTemplate template = datagramSinkChannel.getDecodedDatagrams().get(0).getTemplates().get(0);
 
-		final Iterator<TemplateField> fields = template.getFields().iterator();
+		final Iterator<DataTemplateField> fields = template.getFields().iterator();
 
 		assertThat(fields.next()).has(new TemplateFieldCondition(FieldType.LAST_SWITCHED, 4));
 		assertThat(fields.next()).has(new TemplateFieldCondition(FieldType.FIRST_SWITCHED, 4));
@@ -637,9 +637,9 @@ public class Netflow9DatagramDecoderIntegrationTest {
 
 		assertThat(datagramSinkChannel.getDecodedDatagrams().get(0).getTemplates()).hasSize(1);
 
-		final Template dataTemplate = datagramSinkChannel.getDecodedDatagrams().get(0).getTemplates().get(0);
+		final DataTemplate dataTemplate = datagramSinkChannel.getDecodedDatagrams().get(0).getTemplates().get(0);
 
-		final Iterator<TemplateField> dataFields = dataTemplate.getFields().iterator();
+		final Iterator<DataTemplateField> dataFields = dataTemplate.getFields().iterator();
 
 		assertThat(dataFields.next()).has(new TemplateFieldCondition(FieldType.LAST_SWITCHED, 4));
 		assertThat(dataFields.next()).has(new TemplateFieldCondition(FieldType.FIRST_SWITCHED, 4));
@@ -688,9 +688,9 @@ public class Netflow9DatagramDecoderIntegrationTest {
 
 		assertThat(datagramSinkChannel.getDecodedDatagrams().get(0).getTemplates()).hasSize(1);
 
-		final Template dataTemplate = datagramSinkChannel.getDecodedDatagrams().get(0).getTemplates().get(0);
+		final DataTemplate dataTemplate = datagramSinkChannel.getDecodedDatagrams().get(0).getTemplates().get(0);
 
-		final Iterator<TemplateField> dataFields = dataTemplate.getFields().iterator();
+		final Iterator<DataTemplateField> dataFields = dataTemplate.getFields().iterator();
 
 		assertThat(dataFields.next()).has(new TemplateFieldCondition(FieldType.LAST_SWITCHED, 4));
 		assertThat(dataFields.next()).has(new TemplateFieldCondition(FieldType.FIRST_SWITCHED, 4));
