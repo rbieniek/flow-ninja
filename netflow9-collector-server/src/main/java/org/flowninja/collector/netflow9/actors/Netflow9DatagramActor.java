@@ -21,10 +21,12 @@ public class Netflow9DatagramActor extends UntypedActor {
     private final SpringActorProducer springActorProducer;
 
     private ActorRef templateDecoderActor;
+    private ActorRef templateRegistryActor;
 
     @Override
     public void preStart() throws Exception {
         templateDecoderActor = springActorProducer.createActor(TemplateDecoderActor.class);
+        templateRegistryActor = springActorProducer.createActor(TemplateRegistryActor.class);
     }
 
     @Override
