@@ -62,6 +62,8 @@ public class TemplateDecoder {
 		final List<DataFlow> flows = new LinkedList<>();
 		final int dataLength = template.getTemplateLength();
 
+		buffer.markReaderIndex();
+
 		while (buffer.readableBytes() >= dataLength) {
 			final List<DataFlowRecord> flowRecords = new LinkedList<>();
 
@@ -92,6 +94,8 @@ public class TemplateDecoder {
 		final ByteBuf buffer = flowBuffer.getBuffer();
 		final int dataLength = template.getTemplateLength();
 		final List<OptionsFlow> optionsFlows = new LinkedList<>();
+
+		buffer.markReaderIndex();
 
 		while (buffer.readableBytes() >= dataLength) {
 			final List<OptionsFlowRecord> flowRecords = new LinkedList<>();

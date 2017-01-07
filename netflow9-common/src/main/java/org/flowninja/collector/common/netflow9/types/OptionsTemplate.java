@@ -10,6 +10,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 
 /**
  * @author rainer
@@ -18,6 +19,7 @@ import lombok.Getter;
 @Builder
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
+@ToString
 public class OptionsTemplate {
 	private int flowsetId;
 	private List<OptionField> optionFields = new LinkedList<>();

@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.flowninja.collector.netflow9.actors.Netflow9DatagramActor;
+import org.flowninja.collector.netflow9.actors.NetworkServerShutdownMessage;
 import org.flowninja.collector.netflow9.packet.Netflow9DecodedDatagram;
 import org.flowninja.common.akka.SpringActorProducer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,7 +54,8 @@ public class Netflow9DecodedDatagramHandler extends ChannelInboundHandlerAdapter
 	 */
 	@Override
 	public void channelInactive(final ChannelHandlerContext ctx) throws Exception {
-		// intentionally left blank
+		this.datagramHandlerActors.entrySet().stream().map(e -> e.getValue())
+				.forEach(a -> a.tell(new NetworkServerShutdownMessage(), null));
 	}
 
 	/*

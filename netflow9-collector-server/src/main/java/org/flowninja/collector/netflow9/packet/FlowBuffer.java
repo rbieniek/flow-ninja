@@ -12,6 +12,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 
 /**
  * @author rainer
@@ -20,6 +21,7 @@ import lombok.Getter;
 @Getter
 @Builder
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
+@ToString
 public class FlowBuffer implements Closeable {
 	private Header header;
 	private int flowSetId;

@@ -1,6 +1,7 @@
 package org.flowninja.collector.netflow9.actors;
 
 import org.flowninja.collector.netflow9.packet.Netflow9DecodedDatagram;
+import org.flowninja.common.akka.ActorUtils;
 import org.flowninja.common.akka.AkkaComponent;
 
 import akka.actor.UntypedActor;
@@ -12,7 +13,11 @@ public class Netflow9DatagramActor extends UntypedActor {
 
 	@Override
 	public void onReceive(final Object message) throws Throwable {
-		// Intentionally left blank
+		ActorUtils.withMessage(message).onType(ProcessNetflowDatagramRequest.class, m -> {
+			// intentionally left blank
+		}).onType(NetworkServerShutdownMessage.class, m -> {
+			// intentionally left blank
+		}).unhandled(m -> unhandled(m));
 	}
 
 	@Builder
