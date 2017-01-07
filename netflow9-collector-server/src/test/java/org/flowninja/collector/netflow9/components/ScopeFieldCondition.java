@@ -1,7 +1,7 @@
 /**
  *
  */
-package org.flowninja.collector.netflow9.packet;
+package org.flowninja.collector.netflow9.components;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.fest.assertions.core.Condition;

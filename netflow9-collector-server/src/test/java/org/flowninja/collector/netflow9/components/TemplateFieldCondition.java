@@ -1,23 +1,23 @@
 /**
  *
  */
-package org.flowninja.collector.netflow9.packet;
+package org.flowninja.collector.netflow9.components;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.fest.assertions.core.Condition;
 import org.flowninja.collector.common.netflow9.types.FieldType;
-import org.flowninja.collector.common.netflow9.types.OptionField;
+import org.flowninja.collector.common.netflow9.types.TemplateField;
 
 /**
  * @author rainer
  *
  */
-public class OptionFieldCondition extends Condition<OptionField> {
+public class TemplateFieldCondition extends Condition<TemplateField> {
 
 	private FieldType type;
 	private int length;
 
-	public OptionFieldCondition(final FieldType type, final int length) {
+	public TemplateFieldCondition(final FieldType type, final int length) {
 		this.length = length;
 		this.type = type;
 	}
@@ -28,7 +28,7 @@ public class OptionFieldCondition extends Condition<OptionField> {
 	 * @see org.fest.assertions.core.Condition#matches(java.lang.Object)
 	 */
 	@Override
-	public boolean matches(final OptionField value) {
+	public boolean matches(final TemplateField value) {
 		return value.getLength() == length && value.getType() == type;
 	}
 
