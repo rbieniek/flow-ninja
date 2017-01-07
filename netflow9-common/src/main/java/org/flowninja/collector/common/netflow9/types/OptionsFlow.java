@@ -1,70 +1,28 @@
 /**
- * 
+ *
  */
 package org.flowninja.collector.common.netflow9.types;
 
 import java.net.InetAddress;
-import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
+
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
 
 /**
  * @author rainer
  *
  */
+@Getter
+@Builder
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class OptionsFlow {
-
 	private InetAddress peerAddress;
 	private Header header;
-	private UUID uuid = UUID.randomUUID();
-	private List<ScopeFlowRecord> scopes = new LinkedList<ScopeFlowRecord>();
-	private List<OptionsFlowRecord> records = new LinkedList<OptionsFlowRecord>();
-	
-	public OptionsFlow(InetAddress peerAddress, Header header, List<ScopeFlowRecord> scopes, List<OptionsFlowRecord> records) {
-		this.peerAddress = peerAddress;
-		this.header = header;
-		
-		if(scopes != null)
-			this.scopes.addAll(scopes);
-		
-		if(records != null) 
-			this.records.addAll(records);
-	}
-
-	/**
-	 * @return the header
-	 */
-	public Header getHeader() {
-		return header;
-	}
-
-	/**
-	 * @return the records
-	 */
-	public List<OptionsFlowRecord> getRecords() {
-		return Collections.unmodifiableList(records);
-	}
-
-	/**
-	 * @return the scopes
-	 */
-	public List<ScopeFlowRecord> getScopes() {
-		return scopes;
-	}
-
-	/**
-	 * @return the peerAddress
-	 */
-	public InetAddress getPeerAddress() {
-		return peerAddress;
-	}
-
-	/**
-	 * @return the uuid
-	 */
-	public UUID getUuid() {
-		return uuid;
-	}
-
+	private UUID uuid;
+	private List<ScopeFlowRecord> scopes;
+	private List<OptionsFlowRecord> records;
 }

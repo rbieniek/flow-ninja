@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.flowninja.collector.netflow9.packet;
 
@@ -17,16 +17,18 @@ public class OptionFieldCondition extends Condition<OptionField> {
 	private FieldType type;
 	private int length;
 
-	public OptionFieldCondition(FieldType type, int length) {
+	public OptionFieldCondition(final FieldType type, final int length) {
 		this.length = length;
 		this.type = type;
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.fest.assertions.core.Condition#matches(java.lang.Object)
 	 */
 	@Override
-	public boolean matches(OptionField value) {
+	public boolean matches(final OptionField value) {
 		return value.getLength() == length && value.getType() == type;
 	}
 

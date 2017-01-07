@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.flowninja.collector.netflow9.packet;
 
@@ -24,22 +24,21 @@ import org.quartz.Trigger;
 import org.quartz.TriggerBuilder;
 import org.quartz.impl.StdSchedulerFactory;
 import org.quartz.listeners.TriggerListenerSupport;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
- * This class provides a mapping between peer network addresses 
- * and per-peer flow registries.
- * 
+ * This class provides a mapping between peer network addresses and per-peer
+ * flow registries.
+ *
  * @author rainer
  *
  */
+@Slf4j
 public class PeerRegistry {
-	private static final Logger logger = LoggerFactory.getLogger(PeerRegistry.class);
-	
 	/**
 	 * Container modeling a single peer
-	 * 
+	 *
 	 * @author rainer
 	 *
 	 */
@@ -48,19 +47,19 @@ public class PeerRegistry {
 			this.flowRegistry = new FlowRegistry();
 			this.lastUsedStamp = LocalDateTime.now();
 		}
-		
+
 		private FlowRegistry flowRegistry;
 		private LocalDateTime lastUsedStamp;
-		
+
 		/**
 		 * @return the flowRegistry
 		 */
 		public FlowRegistry getFlowRegistry() {
 			this.lastUsedStamp = LocalDateTime.now();
-			
+
 			return flowRegistry;
 		}
-		
+
 		/**
 		 * @return the lastUsedStamp
 		 */
@@ -72,11 +71,11 @@ public class PeerRegistry {
 	public static class PeerExpiryJob implements Job {
 
 		@Override
-		public void execute(JobExecutionContext context) throws JobExecutionException {
+		public void execute(final JobExecutionContext context) throws JobExecutionException {
 		}
-		
+
 	}
-	
+
 	private class PeerExpiryListener extends TriggerListenerSupport {
 
 		@Override
@@ -84,107 +83,109 @@ public class PeerRegistry {
 			return "peer-expiry-listener";
 		}
 
-		/* (non-Javadoc)
-		 * @see org.quartz.listeners.TriggerListenerSupport#triggerFired(org.quartz.Trigger, org.quartz.JobExecutionContext)
+		/*
+		 * (non-Javadoc)
+		 *
+		 * @see
+		 * org.quartz.listeners.TriggerListenerSupport#triggerFired(org.quartz.
+		 * Trigger, org.quartz.JobExecutionContext)
 		 */
 		@Override
-		public void triggerFired(Trigger trigger, JobExecutionContext context) {
+		public void triggerFired(final Trigger trigger, final JobExecutionContext context) {
 			LocalDateTime expiryDate = LocalDateTime.now().minus(peerTtl, ChronoUnit.SECONDS);
 
-			logger.info("peer expiry trigger fired, checking for peer expired before {}", expiryDate);
-			
-			synchronized (PeerRegistry.this) {
-				List<PeerKey> removeable = new LinkedList<PeerKey>();
+			log.info("peer expiry trigger fired, checking for peer expired before {}", expiryDate);
 
-				for(Entry<PeerKey, PeerEntry> entry : peers.entrySet()) {
-					if(entry.getValue().getLastUsedStamp().isBefore(expiryDate))
+			synchronized (PeerRegistry.this) {
+				List<PeerKey> removeable = new LinkedList<>();
+
+				for (Entry<PeerKey, PeerEntry> entry : peers.entrySet()) {
+					if (entry.getValue().getLastUsedStamp().isBefore(expiryDate)) {
 						removeable.add(entry.getKey());
+					}
 				}
-				
-				for(PeerKey key : removeable) {
-					logger.info("Remove peer {}", key);
-					
+
+				for (PeerKey key : removeable) {
+					log.info("Remove peer {}", key);
+
 					peers.remove(key);
 				}
 			}
-			
+
 		}
 
-		
 	}
-	
+
 	private int peerTtl;
-	private Map<PeerKey, PeerEntry> peers = new HashMap<PeerKey, PeerRegistry.PeerEntry>();
+	private Map<PeerKey, PeerEntry> peers = new HashMap<>();
 	private Scheduler scheduler;
 
 	/**
-	 * @param peerTtl the peerTtl to set
+	 * @param peerTtl
+	 *            the peerTtl to set
 	 */
-	public void setPeerTtl(int peerTtl) {
+	public void setPeerTtl(final int peerTtl) {
 		this.peerTtl = peerTtl;
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public void init() throws Exception {
-		logger.info("Starting peer registry");
-		
-		Trigger jobTrigger = TriggerBuilder.newTrigger()
-				.withIdentity("expiryTrigger")
-				.startNow()
-				.withSchedule(SimpleScheduleBuilder.repeatMinutelyForever())
-				.build();
-		
+		log.info("Starting peer registry");
+
+		Trigger jobTrigger = TriggerBuilder.newTrigger().withIdentity("expiryTrigger").startNow()
+				.withSchedule(SimpleScheduleBuilder.repeatMinutelyForever()).build();
+
 		JobDetail jobDetail = JobBuilder.newJob(PeerExpiryJob.class).withIdentity("peerExpiryJob").build();
-		
+
 		try {
-			scheduler = (new StdSchedulerFactory()).getScheduler();
-			
+			scheduler = new StdSchedulerFactory().getScheduler();
+
 			scheduler.start();
 			scheduler.scheduleJob(jobDetail, jobTrigger);
 			scheduler.getListenerManager().addTriggerListener(new PeerExpiryListener());
-			
-		} catch(SchedulerException e) {
-			logger.error("failed to start scheduler", e);
-			
+
+		} catch (SchedulerException e) {
+			log.error("failed to start scheduler", e);
+
 			throw e;
 		}
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
-	public void destroy() throws Exception{
-		logger.info("Stopping peer registry");		
+	public void destroy() throws Exception {
+		log.info("Stopping peer registry");
 
 		try {
 			scheduler.shutdown();
-		} catch(SchedulerException e) {
-			logger.error("failed to start scheduler", e);
-			
+		} catch (SchedulerException e) {
+			log.error("failed to start scheduler", e);
+
 			throw e;
 		}
 	}
-	
-	public synchronized FlowRegistry registryForPeerAddress(InetAddress peerAddress, long sourceID) {
-		PeerKey key = new PeerKey(peerAddress, sourceID);
-		
-		logger.info("obtaing flow registry for peer address {} and source ID {}", peerAddress, sourceID);
-		
+
+	public synchronized FlowRegistry registryForPeerAddress(final InetAddress peerAddress, final long sourceID) {
+		PeerKey key = PeerKey.builder().peerAddress(peerAddress).sourceID(sourceID).build();
+
+		log.info("obtaing flow registry for peer address {} and source ID {}", peerAddress, sourceID);
+
 		PeerEntry peer = peers.get(key);
-		
-		if(peer == null) {
+
+		if (peer == null) {
 			peer = new PeerEntry();
-			
+
 			peers.put(key, peer);
 		}
- 		
+
 		return peer.getFlowRegistry();
 	}
 
-	public synchronized boolean hasRegistryForPeer(InetAddress peerAddress, long sourceID) {
-		return peers.containsKey(new PeerKey(peerAddress, sourceID));
+	public synchronized boolean hasRegistryForPeer(final InetAddress peerAddress, final long sourceID) {
+		return peers.containsKey(PeerKey.builder().peerAddress(peerAddress).sourceID(sourceID).build());
 	}
-	
+
 }

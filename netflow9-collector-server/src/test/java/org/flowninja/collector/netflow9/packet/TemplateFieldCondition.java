@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.flowninja.collector.netflow9.packet;
 
@@ -17,16 +17,18 @@ public class TemplateFieldCondition extends Condition<TemplateField> {
 	private FieldType type;
 	private int length;
 
-	public TemplateFieldCondition(FieldType type, int length) {
+	public TemplateFieldCondition(final FieldType type, final int length) {
 		this.length = length;
 		this.type = type;
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.fest.assertions.core.Condition#matches(java.lang.Object)
 	 */
 	@Override
-	public boolean matches(TemplateField value) {
+	public boolean matches(final TemplateField value) {
 		return value.getLength() == length && value.getType() == type;
 	}
 

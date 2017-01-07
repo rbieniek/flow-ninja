@@ -24,14 +24,12 @@ public class ActorUtils {
 			log.info("Checking match for type {} on message {}", messageType.getName(),
 					message != null ? message.getClass().getName() : "null");
 
-			if (message != null) {
-				if (messageType.isInstance(message)) {
-					log.info("Match for type {} on message {}", messageType.getName(), message.getClass().getName());
+			if (message != null && messageType.isInstance(message)) {
+				log.info("Match for type {} on message {}", messageType.getName(), message.getClass().getName());
 
-					messageHandler.accept((T) message);
+				messageHandler.accept((T) message);
 
-					return new MessageHandler(null);
-				}
+				return new MessageHandler(null);
 			}
 
 			return new MessageHandler(message);

@@ -17,10 +17,10 @@ import lombok.ToString;
 @Setter
 @ToString
 public class Netflow9DecodedDatagram {
-    private InetAddress peerAddress;
-    private Header header;
-    private List<Template> templates = new LinkedList<>();
-    private List<OptionsTemplate> optionsTemplates = new LinkedList<>();
-    private List<FlowBuffer> flows = new LinkedList<>();
+	private InetAddress peerAddress;
+	private Header header;
+	private List<Template> templates = new LinkedList<>();
+	private List<OptionsTemplate> optionsTemplates = new LinkedList<>();
+	private List<FlowBuffer> flows = new LinkedList<>();
 
 }

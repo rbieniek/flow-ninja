@@ -10,13 +10,13 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import lombok.Getter;
 import lombok.Setter;
 
-@ConfigurationProperties(prefix="netflow9.server")
+@ConfigurationProperties(prefix = "netflow9.server")
 @Getter
 @Setter
 public class Netflow9CollectorProperties {
-    @Min(value=1025)
-    @Max(value=65535)
-    private int port;
+	@Min(value = 1025)
+	@Max(value = 65535)
+	private int port;
 
-    private InetAddress address;
+	private InetAddress address;
 }

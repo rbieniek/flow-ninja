@@ -1,41 +1,30 @@
 /**
- * 
+ *
  */
 package org.flowninja.collector.common.protocol.types;
+
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
 
 /**
  * @author rainer
  *
  */
+@Builder
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Getter
 public class ICMPTypeCode {
 	private ICMPType type;
 	private ICMPCode code;
-	
-	private ICMPTypeCode(ICMPType type, ICMPCode code) {
-		this.code = code;
-		this.type = type;
-	}
 
-	/**
-	 * @return the type
-	 */
-	public ICMPType getType() {
-		return type;
-	}
-
-	/**
-	 * @return the code
-	 */
-	public ICMPCode getCode() {
-		return code;
-	}
-	
 	@SuppressWarnings("incomplete-switch")
-	public static ICMPTypeCode fromCodes(int typeValue, int codeValue) {
+	public static ICMPTypeCode fromCodes(final int typeValue, final int codeValue) {
 		ICMPType type = ICMPType.fromCode(typeValue);
 		ICMPCode code = ICMPCode.UNASSIGNED;
 
-		switch(type) {
+		switch (type) {
 		case DESTINATION_UNREACHABLE:
 			code = ICMPCode.fromCodeForType3(codeValue);
 			break;
@@ -58,7 +47,7 @@ public class ICMPTypeCode {
 			code = ICMPCode.fromCodeForType40(codeValue);
 			break;
 		}
-		
+
 		return new ICMPTypeCode(type, code);
 	}
 }

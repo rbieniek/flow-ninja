@@ -1,32 +1,21 @@
 /**
- * 
+ *
  */
 package org.flowninja.collector.common.types;
+
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
 
 /**
  * @author rainer
  *
  */
+@Builder
+@Getter
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class EncodedData {
 	private byte[] data;
 	private String encodedData;
-	
-	public EncodedData(byte[] data, String encodedData) {
-		this.data = data;
-		this.encodedData = encodedData;
-	}
-
-	/**
-	 * @return the data
-	 */
-	public byte[] getData() {
-		return data;
-	}
-
-	/**
-	 * @return the encodedData
-	 */
-	public String getEncodedData() {
-		return encodedData;
-	}
 }

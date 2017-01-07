@@ -1,11 +1,10 @@
 /**
- * 
+ *
  */
 package org.flowninja.collector.netflow9.components;
 
-import java.net.SocketAddress;
-
 import java.net.InetAddress;
+import java.net.SocketAddress;
 
 /**
  * @author rainer
@@ -13,7 +12,7 @@ import java.net.InetAddress;
  */
 public interface PeerAddressMapper {
 	/**
-	 * 
+	 *
 	 * @param address
 	 * @return
 	 */
