@@ -27,10 +27,10 @@ import org.flowninja.collector.common.netflow9.actors.OptionsFlowMessage;
 import org.flowninja.collector.common.netflow9.actors.TemplateDecodingFailureMessage;
 import org.flowninja.collector.common.netflow9.components.SinkActorsProvider;
 import org.flowninja.collector.common.netflow9.types.DataFlow;
+import org.flowninja.collector.common.netflow9.types.DataTemplate;
 import org.flowninja.collector.common.netflow9.types.Header;
 import org.flowninja.collector.common.netflow9.types.OptionsFlow;
 import org.flowninja.collector.common.netflow9.types.OptionsTemplate;
-import org.flowninja.collector.common.netflow9.types.DataTemplate;
 import org.flowninja.collector.netflow9.actors.support.ActorsTestConfiguration;
 import org.flowninja.collector.netflow9.actors.support.MessageSinkActor;
 import org.flowninja.collector.netflow9.components.TemplateDecoder;
@@ -82,7 +82,7 @@ public class TemplateDecoderActorIntegrationTest {
     }
 
     @Test
-    public void shouldCreateOneDataFlowMessageOnOneDecodedBuffer() {
+    public void shouldCreateOneDataFlowMessageOnOneDecodedBuffer() throws Exception {
         when(templateDecoder.decodeDataTemplate(any(InetAddress.class), any(FlowBuffer.class), any(DataTemplate.class)))
                 .thenReturn(Arrays.asList(DataFlow.builder().build()));
         when(templateDecoder.decodeOptionsTemplate(any(InetAddress.class), any(FlowBuffer.class), any(OptionsTemplate.class)))
@@ -111,7 +111,7 @@ public class TemplateDecoderActorIntegrationTest {
         completions.getDataFlowCompletion().whenComplete((l, t) -> {
             assertThat(l).hasSize(1);
             assertThat(t).isNull();
-        });
+        }).get();
         completions.getOptionsFlowCompletion().whenComplete((l, t) -> {
             Assert.fail();
         });
@@ -121,7 +121,7 @@ public class TemplateDecoderActorIntegrationTest {
     }
 
     @Test
-    public void shouldCreateOneOptionsFlowMessageOnOneDecodedBuffer() {
+    public void shouldCreateOneOptionsFlowMessageOnOneDecodedBuffer() throws Exception {
         when(templateDecoder.decodeDataTemplate(any(InetAddress.class), any(FlowBuffer.class), any(DataTemplate.class)))
                 .thenThrow(new RuntimeException("should not reach this"));
         when(templateDecoder.decodeOptionsTemplate(any(InetAddress.class), any(FlowBuffer.class), any(OptionsTemplate.class)))
@@ -153,14 +153,14 @@ public class TemplateDecoderActorIntegrationTest {
         completions.getOptionsFlowCompletion().whenComplete((l, t) -> {
             assertThat(l).hasSize(1);
             assertThat(t).isNull();
-        });
+        }).get();
         completions.getDecodingFailureCompletion().whenComplete((l, t) -> {
             Assert.fail();
         });
     }
 
     @Test
-    public void shouldCreateOneFailureMessageOnFailedDataTemplate() {
+    public void shouldCreateOneFailureMessageOnFailedDataTemplate() throws Exception {
         when(templateDecoder.decodeDataTemplate(any(InetAddress.class), any(FlowBuffer.class), any(DataTemplate.class)))
                 .thenThrow(new RuntimeException("expected failure"));
         when(templateDecoder.decodeOptionsTemplate(any(InetAddress.class), any(FlowBuffer.class), any(OptionsTemplate.class)))
@@ -210,7 +210,7 @@ public class TemplateDecoderActorIntegrationTest {
             }
             assertThat(msg.getPayload()).isEqualTo(new byte[] { 0x00, 0x01, 0x02, 0x04 });
             assertThat(msg.getReason().getMessage()).isEqualTo("expected failure");
-        });
+        }).get();
     }
 
     @Test
