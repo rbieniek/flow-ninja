@@ -48,7 +48,7 @@ public class TemplateDecoderActor extends UntypedActor {
                         sinkActorsProvider.getDataFlowActor().tell(DataFlowMessage.builder().dataFlow(df).build(), getSelf());
                     });
         } catch (Throwable t) {
-            log.warn("Failed to decode template, request {}", request, t);
+            log.warn("Failed to decode data template, request {}", request, t);
 
             sinkActorsProvider.getDecodingFailureActor().tell(
                     createFailureMessage(null, request.getDataTemplate(), request.getPeerAddress(), request.getFlowBuffer(), t),
@@ -65,7 +65,7 @@ public class TemplateDecoderActor extends UntypedActor {
                                 .tell(OptionsFlowMessage.builder().optionsFlow(of).build(), getSelf());
                     });
         } catch (Throwable t) {
-            log.warn("Failed to decode template, request {}", request, t);
+            log.warn("Failed to decode options template, request {}", request, t);
 
             sinkActorsProvider.getDecodingFailureActor().tell(
                     createFailureMessage(
@@ -82,7 +82,7 @@ public class TemplateDecoderActor extends UntypedActor {
     private TemplateDecodingFailureMessage createFailureMessage(
             final OptionsTemplate optionsTemplate,
             final DataTemplate template,
-            final InetAddress peerAddres,
+            final InetAddress peerAddress,
             final FlowBuffer flowbuffer,
             final Throwable reason) {
         final ByteBuf buf = flowbuffer.getBuffer();
@@ -99,6 +99,7 @@ public class TemplateDecoderActor extends UntypedActor {
                 .flowSetId(flowbuffer.getFlowSetId())
                 .header(flowbuffer.getHeader())
                 .payload(memoryBuffer)
+                .peerAddress(peerAddress)
                 .reason(reason)
                 .build();
     }
