@@ -215,6 +215,13 @@ public class Netflow9DatagramActorIntegrationTest {
 
         assertThat(m).isPresent();
 
+        assertThat(m.get().getDataFlow()).isNotNull();
+        assertThat(m.get().getDataFlow().getHeader())
+                .isEqualTo(Header.builder().recordCount(1).sequenceNumber(1).sourceId(1).sysUpTime(0).unixSeconds(0).build());
+
+        assertThat(m.get().getDataFlow().getUuid()).isNotNull();
+        assertThat(m.get().getDataFlow().getPeerAddress()).isEqualTo(InetAddress.getLoopbackAddress());
+        assertThat(m.get().getDataFlow().getRecords()).hasSize(21);
     }
 
     @Getter
