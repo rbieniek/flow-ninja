@@ -4,6 +4,7 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.net.InetAddress;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 import org.flowninja.collector.common.netflow9.types.DataTemplate;
@@ -11,7 +12,7 @@ import org.flowninja.collector.common.netflow9.types.Header;
 import org.flowninja.collector.common.netflow9.types.OptionsTemplate;
 import org.flowninja.collector.netflow9.actors.UnknownFlowsetProcessingActor.StoreUnknownFlowBufferRequest;
 import org.flowninja.collector.netflow9.actors.support.ActorsTestConfiguration;
-import org.flowninja.collector.netflow9.actors.support.SingleMessageSinkActor;
+import org.flowninja.collector.netflow9.actors.support.SingleMessageTimedSinkActor;
 import org.flowninja.collector.netflow9.packet.FlowBuffer;
 import org.flowninja.common.TestConfig;
 import org.flowninja.common.akka.AkkaConfiguration;
@@ -40,8 +41,8 @@ public class UnknownFlowsetProcessingActorIntegrationTest {
 	@Autowired
 	private SpringActorProducer springActorProducer;
 
-	private CompletableFuture<TemplateDecoderActor.DataTemplateDecoderRequest> dataTemplateCompletion;
-	private CompletableFuture<TemplateDecoderActor.OptionsTemplateDecoderRequest> optionsTemplateCompletion;
+	private CompletableFuture<Optional<TemplateDecoderActor.DataTemplateDecoderRequest>> dataTemplateCompletion;
+	private CompletableFuture<Optional<TemplateDecoderActor.OptionsTemplateDecoderRequest>> optionsTemplateCompletion;
 
 	private ActorRef dataUnkonwnFlowsetActor;
 	private ActorRef optionsUnkonwnFlowsetActor;
@@ -51,10 +52,10 @@ public class UnknownFlowsetProcessingActorIntegrationTest {
 		dataTemplateCompletion = new CompletableFuture<>();
 		optionsTemplateCompletion = new CompletableFuture<>();
 
-		final ActorRef dataTemplateDecoderActor = springActorProducer.createActor(SingleMessageSinkActor.class,
-				TemplateDecoderActor.DataTemplateDecoderRequest.class, dataTemplateCompletion);
-		final ActorRef optionsTemplateDecoderActor = springActorProducer.createActor(SingleMessageSinkActor.class,
-				TemplateDecoderActor.OptionsTemplateDecoderRequest.class, optionsTemplateCompletion);
+		final ActorRef dataTemplateDecoderActor = springActorProducer.createActor(SingleMessageTimedSinkActor.class,
+				TemplateDecoderActor.DataTemplateDecoderRequest.class, dataTemplateCompletion, 5);
+		final ActorRef optionsTemplateDecoderActor = springActorProducer.createActor(SingleMessageTimedSinkActor.class,
+				TemplateDecoderActor.OptionsTemplateDecoderRequest.class, optionsTemplateCompletion, 5);
 
 		dataUnkonwnFlowsetActor = springActorProducer.createActor(UnknownFlowsetProcessingActor.class,
 				dataTemplateDecoderActor);
@@ -74,14 +75,15 @@ public class UnknownFlowsetProcessingActorIntegrationTest {
 		dataUnkonwnFlowsetActor.tell(TemplateRegistryActor.DataTemplateAvailableRequest.builder()
 				.dataTemplate(DataTemplate.builder().flowsetId(256).build()).build(), null);
 
-		TemplateDecoderActor.DataTemplateDecoderRequest m = dataTemplateCompletion.get();
+		Optional<TemplateDecoderActor.DataTemplateDecoderRequest> m = dataTemplateCompletion.get();
 
-		assertThat(m.getDataTemplate()).isNotNull();
-		assertThat(m.getDataTemplate().getFlowsetId()).isEqualTo(256);
-		assertThat(m.getPeerAddress()).isEqualTo(InetAddress.getLoopbackAddress());
-		assertThat(m.getFlowBuffer()).isNotNull();
-		assertThat(m.getFlowBuffer().getFlowSetId()).isEqualTo(256);
-		assertThat(m.getFlowBuffer().getHeader()).isEqualTo(
+		assertThat(m).isPresent();
+		assertThat(m.get().getDataTemplate()).isNotNull();
+		assertThat(m.get().getDataTemplate().getFlowsetId()).isEqualTo(256);
+		assertThat(m.get().getPeerAddress()).isEqualTo(InetAddress.getLoopbackAddress());
+		assertThat(m.get().getFlowBuffer()).isNotNull();
+		assertThat(m.get().getFlowBuffer().getFlowSetId()).isEqualTo(256);
+		assertThat(m.get().getFlowBuffer().getHeader()).isEqualTo(
 				Header.builder().recordCount(1).sequenceNumber(1).sourceId(1).sysUpTime(0).unixSeconds(0).build());
 	}
 
@@ -97,7 +99,9 @@ public class UnknownFlowsetProcessingActorIntegrationTest {
 		optionsUnkonwnFlowsetActor.tell(TemplateRegistryActor.OptionsTemplateAvailableRequest.builder()
 				.optionsTemplate(OptionsTemplate.builder().flowsetId(256).build()).build(), null);
 
-		TemplateDecoderActor.OptionsTemplateDecoderRequest m = optionsTemplateCompletion.get();
+		assertThat(optionsTemplateCompletion.get()).isPresent();
+
+		TemplateDecoderActor.OptionsTemplateDecoderRequest m = optionsTemplateCompletion.get().get();
 
 		assertThat(m.getOptionsTemplate()).isNotNull();
 		assertThat(m.getOptionsTemplate().getFlowsetId()).isEqualTo(256);
