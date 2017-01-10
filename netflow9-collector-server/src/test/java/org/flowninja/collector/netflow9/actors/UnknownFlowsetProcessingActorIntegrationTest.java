@@ -112,6 +112,66 @@ public class UnknownFlowsetProcessingActorIntegrationTest {
 				Header.builder().recordCount(1).sequenceNumber(1).sourceId(1).sysUpTime(0).unixSeconds(0).build());
 	}
 
+	@Test
+	public void shouldNotDeliverUnknownFlowsetOnLaterMismatchingDataTemplateArrival() throws Exception {
+		dataUnkonwnFlowsetActor.tell(StoreUnknownFlowBufferRequest.builder()
+				.peerAddress(InetAddress.getLoopbackAddress())
+				.flowBuffer(FlowBuffer.builder()
+						.buffer(Unpooled.buffer()).flowSetId(256).header(Header.builder().recordCount(1)
+								.sequenceNumber(1).sourceId(1).sysUpTime(0).unixSeconds(0).build())
+						.build())
+				.build(), null);
+		dataUnkonwnFlowsetActor.tell(TemplateRegistryActor.DataTemplateAvailableRequest.builder()
+				.dataTemplate(DataTemplate.builder().flowsetId(257).build()).build(), null);
+
+		Optional<TemplateDecoderActor.DataTemplateDecoderRequest> m = dataTemplateCompletion.get();
+
+		assertThat(m).isNotPresent();
+	}
+
+	@Test
+	public void shouldNotDeliverUnknownFlowsetOnLaterMismatchOptionsTemplateArrival() throws Exception {
+		optionsUnkonwnFlowsetActor.tell(StoreUnknownFlowBufferRequest.builder()
+				.peerAddress(InetAddress.getLoopbackAddress())
+				.flowBuffer(FlowBuffer.builder()
+						.buffer(Unpooled.buffer()).flowSetId(256).header(Header.builder().recordCount(1)
+								.sequenceNumber(1).sourceId(1).sysUpTime(0).unixSeconds(0).build())
+						.build())
+				.build(), null);
+		optionsUnkonwnFlowsetActor.tell(TemplateRegistryActor.OptionsTemplateAvailableRequest.builder()
+				.optionsTemplate(OptionsTemplate.builder().flowsetId(257).build()).build(), null);
+
+		assertThat(optionsTemplateCompletion.get()).isNotPresent();
+	}
+
+	@Test
+	public void shouldNotDeliverUnknownFlowsetOnDataTemplateNotArriving() throws Exception {
+		dataUnkonwnFlowsetActor.tell(StoreUnknownFlowBufferRequest.builder()
+				.peerAddress(InetAddress.getLoopbackAddress())
+				.flowBuffer(FlowBuffer.builder()
+						.buffer(Unpooled.buffer()).flowSetId(256).header(Header.builder().recordCount(1)
+								.sequenceNumber(1).sourceId(1).sysUpTime(0).unixSeconds(0).build())
+						.build())
+				.build(), null);
+
+		Optional<TemplateDecoderActor.DataTemplateDecoderRequest> m = dataTemplateCompletion.get();
+
+		assertThat(m).isNotPresent();
+	}
+
+	@Test
+	public void shouldNotDeliverUnknownFlowsetOnOptionsTemplateNotArriving() throws Exception {
+		optionsUnkonwnFlowsetActor.tell(StoreUnknownFlowBufferRequest.builder()
+				.peerAddress(InetAddress.getLoopbackAddress())
+				.flowBuffer(FlowBuffer.builder()
+						.buffer(Unpooled.buffer()).flowSetId(256).header(Header.builder().recordCount(1)
+								.sequenceNumber(1).sourceId(1).sysUpTime(0).unixSeconds(0).build())
+						.build())
+				.build(), null);
+
+		assertThat(optionsTemplateCompletion.get()).isNotPresent();
+	}
+
 	@TestConfig
 	@Import({ AkkaConfiguration.class, ActorsTestConfiguration.class })
 	@ComponentScan(basePackageClasses = TemplateDecoderActor.class)
