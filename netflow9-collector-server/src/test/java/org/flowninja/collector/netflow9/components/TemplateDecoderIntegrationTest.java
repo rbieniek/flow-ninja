@@ -1331,6 +1331,9 @@ public class TemplateDecoderIntegrationTest {
         assertThat(datagramSinkChannel.getUnknownFlowsetIds()).isEmpty();
 
         final OptionsFlow flow = datagramSinkChannel.getOptionsFlows().remove();
+
+        assertThat(flow.getUuid()).isNotNull();
+
         final Header header = flow.getHeader();
 
         assertThat(header).isNotNull();

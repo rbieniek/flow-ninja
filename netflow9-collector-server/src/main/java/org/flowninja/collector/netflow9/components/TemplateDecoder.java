@@ -144,6 +144,7 @@ public class TemplateDecoder {
                             .header(flowBuffer.getHeader())
                             .scopes(scopeRecords)
                             .records(flowRecords)
+                            .uuid(UUID.randomUUID())
                             .build());
         }
 

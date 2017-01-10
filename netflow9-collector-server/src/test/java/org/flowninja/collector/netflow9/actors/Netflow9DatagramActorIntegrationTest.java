@@ -30,6 +30,10 @@ import org.flowninja.collector.common.netflow9.types.DataTemplate;
 import org.flowninja.collector.common.netflow9.types.DataTemplateField;
 import org.flowninja.collector.common.netflow9.types.FieldType;
 import org.flowninja.collector.common.netflow9.types.Header;
+import org.flowninja.collector.common.netflow9.types.OptionField;
+import org.flowninja.collector.common.netflow9.types.OptionsTemplate;
+import org.flowninja.collector.common.netflow9.types.ScopeField;
+import org.flowninja.collector.common.netflow9.types.ScopeType;
 import org.flowninja.collector.netflow9.actors.support.ActorsTestConfiguration;
 import org.flowninja.collector.netflow9.actors.support.SingleMessageTimedSinkActor;
 import org.flowninja.collector.netflow9.components.InetSocketAddressPeerAddressMapper;
@@ -222,6 +226,80 @@ public class Netflow9DatagramActorIntegrationTest {
         assertThat(m.get().getDataFlow().getUuid()).isNotNull();
         assertThat(m.get().getDataFlow().getPeerAddress()).isEqualTo(InetAddress.getLoopbackAddress());
         assertThat(m.get().getDataFlow().getRecords()).hasSize(21);
+    }
+
+    @Test
+    public void shouldDecodeOptionsFlowWhenTemplateAndFlowInOneDatagram() throws Exception {
+        netflowDatagramActor.tell(
+                Netflow9DatagramActor.ProcessNetflowDatagramRequest.builder()
+                        .datagram(Netflow9DecodedDatagram.builder()
+                                .peerAddress(InetAddress.getLoopbackAddress())
+                                .header(
+                                        Header.builder()
+                                                .recordCount(1)
+                                                .sequenceNumber(1)
+                                                .sourceId(1)
+                                                .sysUpTime(0)
+                                                .unixSeconds(0)
+                                                .build())
+                                .optionsTemplates(
+                                        Arrays.asList(
+                                                OptionsTemplate.builder()
+                                                        .flowsetId(260)
+                                                        .scopeFields(
+                                                                Arrays.asList(
+                                                                        ScopeField.builder()
+                                                                                .length(0)
+                                                                                .type(ScopeType.SYSTEM)
+                                                                                .build()))
+                                                        .optionFields(
+                                                                Arrays.asList(
+                                                                        OptionField.builder()
+                                                                                .length(4)
+                                                                                .type(FieldType.TOTAL_FLOWS_EXP)
+                                                                                .build(),
+                                                                        OptionField.builder()
+                                                                                .length(4)
+                                                                                .type(FieldType.TOTAL_PKTS_EXP)
+                                                                                .build()))
+                                                        .build()))
+                                .flows(
+                                        Arrays.asList(FlowBuffer.builder()
+                                                .flowSetId(260)
+                                                .header(
+                                                        Header.builder()
+                                                                .recordCount(1)
+                                                                .sequenceNumber(1)
+                                                                .sourceId(1)
+                                                                .sysUpTime(0)
+                                                                .unixSeconds(0)
+                                                                .build())
+                                                .buffer(Unpooled.wrappedBuffer(new byte[] {
+                                                        0x01,
+                                                        0x04, // Flow set ID: 260
+                                                        0x00,
+                                                        0x0c, // Length: 12 octets
+                                                        0x00,
+                                                        0x04,
+                                                        (byte) 0xbc,
+                                                        (byte) 0xd7, // Flows export 310487
+                                                        0x00,
+                                                        0x00,
+                                                        0x35,
+                                                        0x52, // packets exported 13560
+                                                })).build())).build()).build(), null);
+
+        Optional<OptionsFlowMessage> m = completions.getOptionsFlowCompletion().get();
+
+        assertThat(m).isPresent();
+
+        assertThat(m.get().getOptionsFlow()).isNotNull();
+        assertThat(m.get().getOptionsFlow().getHeader())
+                .isEqualTo(Header.builder().recordCount(1).sequenceNumber(1).sourceId(1).sysUpTime(0).unixSeconds(0).build());
+
+        assertThat(m.get().getOptionsFlow().getUuid()).isNotNull();
+        assertThat(m.get().getOptionsFlow().getPeerAddress()).isEqualTo(InetAddress.getLoopbackAddress());
+        assertThat(m.get().getOptionsFlow().getRecords()).hasSize(2);
     }
 
     @Getter
