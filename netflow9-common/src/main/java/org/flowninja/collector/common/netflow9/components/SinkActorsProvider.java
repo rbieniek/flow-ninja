@@ -10,4 +10,5 @@ public class SinkActorsProvider {
 	private ActorRef optionsFlowActor;
 	private ActorRef dataFlowActor;
 	private ActorRef decodingFailureActor;
+	private ActorRef serverEventActor;
 }

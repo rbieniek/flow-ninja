@@ -54,7 +54,7 @@ public class Netflow9CollectorServer implements InitializingBean, DisposableBean
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		log.info("starting netflow v9 collector server");
+		log.info("starting netflow v9 collector server on {}", collectorProperties);
 
 		group = new NioEventLoopGroup();
 

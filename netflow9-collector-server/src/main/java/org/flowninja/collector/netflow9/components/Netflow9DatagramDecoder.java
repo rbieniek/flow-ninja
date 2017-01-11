@@ -7,14 +7,14 @@ import java.net.InetAddress;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.flowninja.collector.common.netflow9.types.DataTemplate;
+import org.flowninja.collector.common.netflow9.types.DataTemplateField;
 import org.flowninja.collector.common.netflow9.types.FieldType;
 import org.flowninja.collector.common.netflow9.types.Header;
 import org.flowninja.collector.common.netflow9.types.OptionField;
 import org.flowninja.collector.common.netflow9.types.OptionsTemplate;
 import org.flowninja.collector.common.netflow9.types.ScopeField;
 import org.flowninja.collector.common.netflow9.types.ScopeType;
-import org.flowninja.collector.common.netflow9.types.DataTemplate;
-import org.flowninja.collector.common.netflow9.types.DataTemplateField;
 import org.flowninja.collector.netflow9.packet.FlowBuffer;
 import org.flowninja.collector.netflow9.packet.Netflow9DecodedDatagram;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,6 +62,8 @@ public class Netflow9DatagramDecoder extends ChannelInboundHandlerAdapter {
 	@Override
 	public void channelActive(final ChannelHandlerContext ctx) throws Exception {
 		log.info("netflow 9 collector server channel is active");
+
+		ctx.fireChannelActive();
 	}
 
 	/*
@@ -74,6 +76,8 @@ public class Netflow9DatagramDecoder extends ChannelInboundHandlerAdapter {
 	@Override
 	public void channelInactive(final ChannelHandlerContext ctx) throws Exception {
 		log.info("netflow 9 collector server channel is inactive");
+
+		ctx.fireChannelInactive();
 	}
 
 	@Override

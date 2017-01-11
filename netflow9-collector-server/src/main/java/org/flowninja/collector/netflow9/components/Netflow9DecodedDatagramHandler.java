@@ -7,18 +7,20 @@ import java.net.InetAddress;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.flowninja.collector.common.netflow9.components.SinkActorsProvider;
 import org.flowninja.collector.netflow9.actors.Netflow9DatagramActor;
 import org.flowninja.collector.netflow9.actors.NetworkServerShutdownMessage;
+import org.flowninja.collector.netflow9.actors.NetworkServerStartupMessage;
 import org.flowninja.collector.netflow9.packet.Netflow9DecodedDatagram;
 import org.flowninja.common.akka.SpringActorProducer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import akka.actor.ActorRef;
-import groovy.util.logging.Slf4j;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author rainer
@@ -30,6 +32,7 @@ import lombok.RequiredArgsConstructor;
 public class Netflow9DecodedDatagramHandler extends ChannelInboundHandlerAdapter {
 
 	private final SpringActorProducer springActorProducer;
+	private final SinkActorsProvider sinkActorsProvider;
 
 	private Map<InetAddress, ActorRef> datagramHandlerActors = new HashMap<>();
 
@@ -42,7 +45,10 @@ public class Netflow9DecodedDatagramHandler extends ChannelInboundHandlerAdapter
 	 */
 	@Override
 	public void channelActive(final ChannelHandlerContext ctx) throws Exception {
-		// intentionally left blank
+		log.info("Channel became active");
+
+		sinkActorsProvider.getServerEventActor().tell(new NetworkServerStartupMessage(), null);
+		ctx.fireChannelActive();
 	}
 
 	/*
@@ -54,8 +60,12 @@ public class Netflow9DecodedDatagramHandler extends ChannelInboundHandlerAdapter
 	 */
 	@Override
 	public void channelInactive(final ChannelHandlerContext ctx) throws Exception {
+		log.info("Channel became inactive");
+
 		this.datagramHandlerActors.entrySet().stream().map(e -> e.getValue())
 				.forEach(a -> a.tell(new NetworkServerShutdownMessage(), null));
+
+		ctx.fireChannelInactive();
 	}
 
 	/*
