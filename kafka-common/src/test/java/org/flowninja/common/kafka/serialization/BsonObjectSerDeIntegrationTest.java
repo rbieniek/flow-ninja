@@ -47,7 +47,7 @@ import lombok.extern.slf4j.Slf4j;
 public class BsonObjectSerDeIntegrationTest {
 
 	@Rule
-	public Timeout globalTimeout = new Timeout(60, SECONDS);
+	public Timeout globalTimeout = new Timeout(10, SECONDS);
 
 	@Autowired
 	private EmbeddedKafkaBroker kafkaBroker;
@@ -70,11 +70,11 @@ public class BsonObjectSerDeIntegrationTest {
 		final Producer<Integer, TestPayload> producer = new KafkaProducer<>(props, new IntegerSerializer(),
 				new BsonObjectSerializer(TestPayload.class));
 
-		for (int i = 0; i < 100; i++) {
+		for (int i = 0; i < 10; i++) {
 			producer.send(new ProducerRecord<>("write-only-topic", i,
 					TestPayload.builder().largeNumber(BigInteger.valueOf(i)).name("value#" + i).number(i).build()));
 		}
-
+		producer.flush();
 		producer.close();
 	}
 
@@ -95,13 +95,14 @@ public class BsonObjectSerDeIntegrationTest {
 		final Producer<Integer, TestPayload> producer = new KafkaProducer<>(producerProps, new IntegerSerializer(),
 				new BsonObjectSerializer(TestPayload.class));
 
-		for (int i = 0; i < 100; i++) {
+		for (int i = 0; i < 10; i++) {
 			final TestPayload payload = TestPayload.builder().largeNumber(BigInteger.valueOf(i)).name("value#" + i)
 					.number(i).build();
 			producer.send(new ProducerRecord<>("read-write-topic", i, payload));
 			payloads.put(i, payload);
 		}
 
+		producer.flush();
 		producer.close();
 
 		final Properties consumerProps = new Properties();
@@ -117,7 +118,7 @@ public class BsonObjectSerDeIntegrationTest {
 		consumer.subscribe(Arrays.asList("read-write-topic"));
 
 		while (!payloads.isEmpty()) {
-			ConsumerRecords<Integer, TestPayload> records = consumer.poll(100);
+			final ConsumerRecords<Integer, TestPayload> records = consumer.poll(100);
 
 			log.info("Retrieved {} records from broker", records.count());
 
