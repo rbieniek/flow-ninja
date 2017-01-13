@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class EmbeddedZookeeperProperties {
+public class ZookeeperHostProperties {
     private int portNumber;
     private InetAddress bindAddr;
 }

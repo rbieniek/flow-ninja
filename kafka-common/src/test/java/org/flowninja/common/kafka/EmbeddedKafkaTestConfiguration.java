@@ -13,8 +13,8 @@ import org.flowninja.common.TestConfig;
 public class EmbeddedKafkaTestConfiguration {
 
     @Bean
-    public EmbeddedZookeeperProperties embeddedZookeeperProperties() {
-        final EmbeddedZookeeperProperties properties = new EmbeddedZookeeperProperties();
+    public ZookeeperHostProperties zookeeperHostProperties() {
+        final ZookeeperHostProperties properties = new ZookeeperHostProperties();
 
         properties.setBindAddr(InetAddress.getLoopbackAddress());
         properties.setPortNumber(SocketUtils.findAvailableTcpPort(32768));
@@ -23,8 +23,8 @@ public class EmbeddedKafkaTestConfiguration {
     }
 
     @Bean
-    public EmbeddedKafkaBrokerProperties embeddedKafkaBrokerProperties() {
-        final EmbeddedKafkaBrokerProperties properties = new EmbeddedKafkaBrokerProperties();
+    public KafkaBrokerHostProperties kafkaBrokerHostProperties() {
+        final KafkaBrokerHostProperties properties = new KafkaBrokerHostProperties();
 
         properties.setBindAddr(InetAddress.getLoopbackAddress());
         properties.setPortNumber(SocketUtils.findAvailableTcpPort(32768));
@@ -35,13 +35,13 @@ public class EmbeddedKafkaTestConfiguration {
     @Bean
     @Autowired
     @DependsOn("embeddedZookeeper")
-    public EmbeddedKafkaBroker embeddedKafkaBroker(final EmbeddedKafkaBrokerProperties kafkaProperties,final EmbeddedZookeeperProperties zookeeperProperties) {
+    public EmbeddedKafkaBroker embeddedKafkaBroker(final KafkaBrokerHostProperties kafkaProperties,final ZookeeperHostProperties zookeeperProperties) {
         return new EmbeddedKafkaBroker(kafkaProperties, zookeeperProperties);
     }
 
     @Bean
     @Autowired
-    public EmbeddedZookeeper embeddedZookeeper(final EmbeddedZookeeperProperties zookeeperProperties) {
+    public EmbeddedZookeeper embeddedZookeeper(final ZookeeperHostProperties zookeeperProperties) {
         return new EmbeddedZookeeper(zookeeperProperties);
     }
 }

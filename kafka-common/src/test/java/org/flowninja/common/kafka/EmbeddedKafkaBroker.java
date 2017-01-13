@@ -15,8 +15,8 @@ import kafka.server.KafkaServerStartable;
 
 @RequiredArgsConstructor
 public class EmbeddedKafkaBroker implements InitializingBean, DisposableBean {
-    private final EmbeddedKafkaBrokerProperties kafkaProperties;
-    private final EmbeddedZookeeperProperties zookeeperProperties;
+    private final KafkaBrokerHostProperties kafkaProperties;
+    private final ZookeeperHostProperties zookeeperProperties;
 
     private KafkaServerStartable kafkaServer;
 

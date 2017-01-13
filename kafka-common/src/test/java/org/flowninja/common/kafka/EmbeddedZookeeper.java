@@ -16,7 +16,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class EmbeddedZookeeper implements InitializingBean, DisposableBean {
-    private final EmbeddedZookeeperProperties zookeeperProperties;
+    private final ZookeeperHostProperties zookeeperProperties;
 
     private ServerCnxnFactory cnxnFactory;
     private ZooKeeperServer zkServer;

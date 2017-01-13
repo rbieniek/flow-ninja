@@ -32,7 +32,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import org.flowninja.common.TestConfig;
 import org.flowninja.common.kafka.EmbeddedKafkaBroker;
-import org.flowninja.common.kafka.EmbeddedKafkaBrokerProperties;
+import org.flowninja.common.kafka.KafkaBrokerHostProperties;
 import org.flowninja.common.kafka.EmbeddedKafkaTestConfiguration;
 
 import lombok.AccessLevel;
@@ -60,7 +60,7 @@ public class BsonObjectSerDeIntegrationTest {
     private EmbeddedKafkaBroker kafkaBroker;
 
     @Autowired
-    private EmbeddedKafkaBrokerProperties brokerProperties;
+    private KafkaBrokerHostProperties brokerProperties;
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     @Test

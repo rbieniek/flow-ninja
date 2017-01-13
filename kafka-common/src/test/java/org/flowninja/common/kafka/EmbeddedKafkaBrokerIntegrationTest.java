@@ -22,7 +22,7 @@ public class EmbeddedKafkaBrokerIntegrationTest {
 	private EmbeddedKafkaBroker kafkaBroker;
 
 	@Autowired
-	private EmbeddedKafkaBrokerProperties brokerProperties;
+	private KafkaBrokerHostProperties brokerProperties;
 
 	@Test
 	public void shouldSendMessageToBroker() {
