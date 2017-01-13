@@ -50,6 +50,8 @@ configure(allprojects) {
 
         javaxAnnotationVersion = '1.0'
 
+		springKafkaVersion = '1.1.2.RELEASE'
+
         commonsCodecVersion = '1.10'
         commonsLang3Version = '3.4'
         commonsIoVersion = '2.5'
