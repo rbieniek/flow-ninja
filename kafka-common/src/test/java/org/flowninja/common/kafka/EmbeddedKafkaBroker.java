@@ -38,6 +38,7 @@ public class EmbeddedKafkaBroker implements InitializingBean, DisposableBean {
 
         props.put("log.dir", zookeeperLog.getAbsolutePath());
         props.put("listeners", "PLAINTEXT://" + kafkaProperties.getBindAddr().getHostAddress() + ":" + kafkaProperties.getPortNumber());
+        props.put("advertised.listeners", "PLAINTEXT://" + kafkaProperties.getBindAddr().getHostAddress() + ":" + kafkaProperties.getPortNumber());
         props.put("zookeeper.connect", zookeeperProperties.getBindAddr().getHostAddress() + ":" + zookeeperProperties.getPortNumber());
 
         kafkaServer = new KafkaServerStartable(new KafkaConfig(props));
