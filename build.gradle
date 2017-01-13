@@ -61,7 +61,8 @@ configure(allprojects) {
       	akkaVersion = '2.4.14'
        	scalaJava8CompatVersion = '0.8.0'
 
-	kafkaVersion = '0.10.1.1'
+		kafkaVersion = '0.10.1.1'
+		bson4jacksonVersion = '2.7.0'
        	
        	c3p0Version = '0.9.5'
        	quartzSchedulerVersion = '2.2.1'

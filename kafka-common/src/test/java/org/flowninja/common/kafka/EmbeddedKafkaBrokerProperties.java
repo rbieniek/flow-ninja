@@ -8,6 +8,10 @@ import lombok.Setter;
 @Getter
 @Setter
 public class EmbeddedKafkaBrokerProperties {
-    private int portNumber;
-    private InetAddress bindAddr;
+	private int portNumber;
+	private InetAddress bindAddr;
+
+	public String brokerAddress() {
+		return bindAddr.getHostAddress() + ":" + Integer.toString(portNumber);
+	}
 }

@@ -4,6 +4,8 @@ dependencies {
 	compile group: 'org.apache.kafka', name: 'kafka-clients', version: kafkaVersion
 	compile group: 'org.apache.kafka', name: 'kafka-streams', version: kafkaVersion
 	
+	compile group: 'de.undercouch', name: 'bson4jackson', version: bson4jacksonVersion
+	
 	testCompile group: 'org.apache.kafka', name: 'kafka_2.11', version: kafkaVersion
 
 	testCompile group: 'org.easytesting', name: 'fest-assert-core', version: festAssertVersion
