@@ -151,7 +151,7 @@ public enum IPProtocol {
 	ROHC,
 	RESERVED;
 	
-	public static IPProtocol fromCore(int code) {
+	public static IPProtocol fromCode(int code) {
 		switch(code) {
 		case 0:
 			return HOPOPT;

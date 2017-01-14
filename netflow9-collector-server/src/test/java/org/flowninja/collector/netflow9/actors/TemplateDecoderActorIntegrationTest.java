@@ -155,7 +155,7 @@ public class TemplateDecoderActorIntegrationTest {
         assertThat(completions.getDataFlowCompletion().isDone()).isFalse();
         assertThat(completions.getOptionsFlowCompletion().isDone()).isFalse();
 
-        TemplateDecodingFailureMessage msg = completions.getDecodingFailureCompletion().get();
+        final TemplateDecodingFailureMessage msg = completions.getDecodingFailureCompletion().get();
 
         assertThat(msg.getDataTemplate()).isNotNull();
         assertThat(msg.getOptionsTemplate()).isNull();
@@ -192,7 +192,7 @@ public class TemplateDecoderActorIntegrationTest {
         assertThat(completions.getDataFlowCompletion().isDone()).isFalse();
         assertThat(completions.getOptionsFlowCompletion().isDone()).isFalse();
 
-        TemplateDecodingFailureMessage msg = completions.getDecodingFailureCompletion().get();
+        final TemplateDecodingFailureMessage msg = completions.getDecodingFailureCompletion().get();
 
         assertThat(msg.getDataTemplate()).isNull();
         assertThat(msg.getOptionsTemplate()).isNotNull();

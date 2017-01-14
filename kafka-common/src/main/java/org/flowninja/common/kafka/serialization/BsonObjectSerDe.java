@@ -6,36 +6,41 @@ import org.apache.kafka.common.serialization.Deserializer;
 import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.common.serialization.Serializer;
 
-public class BsonObjectSerDe implements Serde<Object> {
+public class BsonObjectSerDe<T> implements Serde<T> {
 
-	private BsonObjectSerializer serializer;
-	private BsonObjectDeserializer deserializer;
+    private BsonObjectSerializer<T> serializer;
+    private BsonObjectDeserializer<T> deserializer;
 
-	public BsonObjectSerDe() {
-		serializer = new BsonObjectSerializer();
-		deserializer = new BsonObjectDeserializer();
-	}
+    public BsonObjectSerDe() {
+        serializer = new BsonObjectSerializer<>();
+        deserializer = new BsonObjectDeserializer<>();
+    }
 
-	@Override
-	public void configure(final Map<String, ?> configs, final boolean isKey) {
-		serializer.configure(configs, isKey);
-		deserializer.configure(configs, isKey);
-	}
+    public BsonObjectSerDe(final Class<T> clazz) {
+        serializer = new BsonObjectSerializer<>(clazz);
+        deserializer = new BsonObjectDeserializer<>(clazz);
+    }
 
-	@Override
-	public void close() {
-		serializer.close();
-		deserializer.close();
-	}
+    @Override
+    public void configure(final Map<String, ?> configs, final boolean isKey) {
+        serializer.configure(configs, isKey);
+        deserializer.configure(configs, isKey);
+    }
 
-	@Override
-	public Serializer<Object> serializer() {
-		return serializer;
-	}
+    @Override
+    public void close() {
+        serializer.close();
+        deserializer.close();
+    }
 
-	@Override
-	public Deserializer<Object> deserializer() {
-		return deserializer;
-	}
+    @Override
+    public Serializer<T> serializer() {
+        return serializer;
+    }
+
+    @Override
+    public Deserializer<T> deserializer() {
+        return deserializer;
+    }
 
 }

@@ -204,34 +204,32 @@ public class Netflow9DatagramDecoder extends ChannelInboundHandlerAdapter {
             final ByteBuf workBuf) {
         log.info("received options template flowset from peer", peerAddress);
 
-        {
-            final int flowSetID = workBuf.readUnsignedShort();
-            int scopeLength = workBuf.readUnsignedShort();
-            int optionsLength = workBuf.readUnsignedShort();
-            final List<ScopeField> scopeFields = new LinkedList<>();
-            final List<OptionField> optionFields = new LinkedList<>();
+        final int flowSetID = workBuf.readUnsignedShort();
+        int scopeLength = workBuf.readUnsignedShort();
+        int optionsLength = workBuf.readUnsignedShort();
+        final List<ScopeField> scopeFields = new LinkedList<>();
+        final List<OptionField> optionFields = new LinkedList<>();
 
-            while (scopeLength >= 4) {
-                scopeFields.add(
-                        ScopeField.builder()
-                                .type(ScopeType.fromCode(workBuf.readUnsignedShort()))
-                                .length(workBuf.readUnsignedShort())
-                                .build());
-                scopeLength -= 4;
-            }
-
-            while (optionsLength >= 4) {
-                optionFields.add(
-                        OptionField.builder()
-                                .type(FieldType.fromCode(workBuf.readUnsignedShort()))
-                                .length(workBuf.readUnsignedShort())
-                                .build());
-                optionsLength -= 4;
-            }
-
-            decodedDatagram.getOptionsTemplates().add(
-                    OptionsTemplate.builder().flowsetId(flowSetID).optionFields(optionFields).scopeFields(scopeFields).build());
-
+        while (scopeLength >= 4) {
+            scopeFields.add(
+                    ScopeField.builder()
+                            .type(ScopeType.fromCode(workBuf.readUnsignedShort()))
+                            .length(workBuf.readUnsignedShort())
+                            .build());
+            scopeLength -= 4;
         }
+
+        while (optionsLength >= 4) {
+            optionFields.add(
+                    OptionField.builder()
+                            .type(FieldType.fromCode(workBuf.readUnsignedShort()))
+                            .length(workBuf.readUnsignedShort())
+                            .build());
+            optionsLength -= 4;
+        }
+
+        decodedDatagram.getOptionsTemplates().add(
+                OptionsTemplate.builder().flowsetId(flowSetID).optionFields(optionFields).scopeFields(scopeFields).build());
+
     }
 }

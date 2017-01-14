@@ -62,17 +62,10 @@ import static org.fest.assertions.api.Assertions.assertThat;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.NONE, classes = TemplateDecoderIntegrationTest.TestConfiguration.class)
+@SuppressWarnings("checkstyle:JavaNCSS")
 public class TemplateDecoderIntegrationTest {
 
-    private static final InetAddress LOCALHOST;
-
-    static {
-        try {
-            LOCALHOST = InetAddress.getByName("127.0.0.1");
-        } catch (final Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
+    private static final InetAddress LOCALHOST = InetAddress.getLoopbackAddress();
 
     private static final byte[] dataTemplateOnlyDatagram = new byte[] {
             0x00,
@@ -1153,7 +1146,7 @@ public class TemplateDecoderIntegrationTest {
         assertThat(channel.inboundMessages()).isEmpty();
         assertThat(datagramSinkChannel.getDataFlows()).isEmpty();
         assertThat(datagramSinkChannel.getOptionsFlows()).isEmpty();
-        ;
+
         assertThat(datagramSinkChannel.getDataTemplates()).isEmpty();
         assertThat(datagramSinkChannel.getOptionsTemplates()).hasSize(1);
         assertThat(datagramSinkChannel.getUnknownFlowsetIds()).isEmpty();
@@ -1184,8 +1177,8 @@ public class TemplateDecoderIntegrationTest {
 
         final Iterator<DataFlowRecord> it = flow.getRecords().iterator();
 
-        assertDataFlowRecord(it, FieldType.LAST_SWITCHED, new Long(0x001ded18));
-        assertDataFlowRecord(it, FieldType.FIRST_SWITCHED, new Long(0x001ded18));
+        assertDataFlowRecord(it, FieldType.LAST_SWITCHED, Long.valueOf(0x001ded18));
+        assertDataFlowRecord(it, FieldType.FIRST_SWITCHED, Long.valueOf(0x001ded18));
         assertDataFlowRecord(it, FieldType.IN_BYTES, CounterFactory.decode(new byte[] { 0x00, 0x00, 0x00, 0x43 }));
         assertDataFlowRecord(it, FieldType.IN_PKTS, CounterFactory.decode(new byte[] { 0x00, 0x00, 0x00, 0x01 }));
         assertDataFlowRecord(it, FieldType.INPUT_SNMP, CounterFactory.decode(new byte[] { 0x00, 0x04 }));
@@ -1200,20 +1193,20 @@ public class TemplateDecoderIntegrationTest {
                 Inet4Address.getByAddress(new byte[] { (byte) 0xc0, 0x2b, (byte) 0xac, 0x1e }));
         assertDataFlowRecord(it, FieldType.PROTOCOL, EnumCodeValue.builder().value(IPProtocol.UDP).code(0x11).build());
         assertDataFlowRecord(it, FieldType.SRC_TOS, EnumCodeValue.builder().value(IPTypeOfService.CS0).code(0x00).build());
-        assertDataFlowRecord(it, FieldType.L4_SRC_PORT, new Integer(0xb3d5));
-        assertDataFlowRecord(it, FieldType.L4_DST_PORT, new Integer(53));
-        assertDataFlowRecord(it, FieldType.FLOW_SAMPLER_ID, new Integer(0));
-        assertDataFlowRecord(it, FieldType.FLOW_CLASS, new Integer(0));
+        assertDataFlowRecord(it, FieldType.L4_SRC_PORT, Integer.valueOf(0xb3d5));
+        assertDataFlowRecord(it, FieldType.L4_DST_PORT, Integer.valueOf(53));
+        assertDataFlowRecord(it, FieldType.FLOW_SAMPLER_ID, Integer.valueOf(0));
+        assertDataFlowRecord(it, FieldType.FLOW_CLASS, Integer.valueOf(0));
         assertDataFlowRecord(
                 it,
                 FieldType.IPV4_NEXT_HOP,
                 Inet4Address.getByAddress(new byte[] { (byte) 0xc0, (byte) 0xa8, 0x04, 0x04 }));
-        assertDataFlowRecord(it, FieldType.DST_MASK, new Integer(0));
-        assertDataFlowRecord(it, FieldType.SRC_MASK, new Integer(29));
+        assertDataFlowRecord(it, FieldType.DST_MASK, Integer.valueOf(0));
+        assertDataFlowRecord(it, FieldType.SRC_MASK, Integer.valueOf(29));
         assertDataFlowRecord(it, FieldType.TCP_FLAGS, TCPFLags.class, TCPFLags.ACK);
         assertDataFlowRecord(it, FieldType.DIRECTION, EnumCodeValue.builder().value(FlowDirection.EGRESS).code(0x01).build());
-        assertDataFlowRecord(it, FieldType.DST_AS, new Integer(0));
-        assertDataFlowRecord(it, FieldType.SRC_AS, new Integer(0));
+        assertDataFlowRecord(it, FieldType.DST_AS, Integer.valueOf(0));
+        assertDataFlowRecord(it, FieldType.SRC_AS, Integer.valueOf(0));
 
         assertThat(it.hasNext()).isFalse();
     }
@@ -1240,8 +1233,8 @@ public class TemplateDecoderIntegrationTest {
 
         Iterator<DataFlowRecord> it = flow.getRecords().iterator();
 
-        assertDataFlowRecord(it, FieldType.LAST_SWITCHED, new Long(0x001ded18));
-        assertDataFlowRecord(it, FieldType.FIRST_SWITCHED, new Long(0x001ded18));
+        assertDataFlowRecord(it, FieldType.LAST_SWITCHED, Long.valueOf(0x001ded18));
+        assertDataFlowRecord(it, FieldType.FIRST_SWITCHED, Long.valueOf(0x001ded18));
         assertDataFlowRecord(it, FieldType.IN_BYTES, CounterFactory.decode(new byte[] { 0x00, 0x00, 0x00, 0x43 }));
         assertDataFlowRecord(it, FieldType.IN_PKTS, CounterFactory.decode(new byte[] { 0x00, 0x00, 0x00, 0x01 }));
         assertDataFlowRecord(it, FieldType.INPUT_SNMP, CounterFactory.decode(new byte[] { 0x00, 0x04 }));
@@ -1256,20 +1249,20 @@ public class TemplateDecoderIntegrationTest {
                 Inet4Address.getByAddress(new byte[] { (byte) 0xc0, 0x2b, (byte) 0xac, 0x1e }));
         assertDataFlowRecord(it, FieldType.PROTOCOL, EnumCodeValue.builder().value(IPProtocol.UDP).code(0x11).build());
         assertDataFlowRecord(it, FieldType.SRC_TOS, EnumCodeValue.builder().value(IPTypeOfService.CS0).code(0x00).build());
-        assertDataFlowRecord(it, FieldType.L4_SRC_PORT, new Integer(0xb3d5));
-        assertDataFlowRecord(it, FieldType.L4_DST_PORT, new Integer(53));
-        assertDataFlowRecord(it, FieldType.FLOW_SAMPLER_ID, new Integer(0));
-        assertDataFlowRecord(it, FieldType.FLOW_CLASS, new Integer(0));
+        assertDataFlowRecord(it, FieldType.L4_SRC_PORT, Integer.valueOf(0xb3d5));
+        assertDataFlowRecord(it, FieldType.L4_DST_PORT, Integer.valueOf(53));
+        assertDataFlowRecord(it, FieldType.FLOW_SAMPLER_ID, Integer.valueOf(0));
+        assertDataFlowRecord(it, FieldType.FLOW_CLASS, Integer.valueOf(0));
         assertDataFlowRecord(
                 it,
                 FieldType.IPV4_NEXT_HOP,
                 Inet4Address.getByAddress(new byte[] { (byte) 0xc0, (byte) 0xa8, 0x04, 0x04 }));
-        assertDataFlowRecord(it, FieldType.DST_MASK, new Integer(0));
-        assertDataFlowRecord(it, FieldType.SRC_MASK, new Integer(29));
+        assertDataFlowRecord(it, FieldType.DST_MASK, Integer.valueOf(0));
+        assertDataFlowRecord(it, FieldType.SRC_MASK, Integer.valueOf(29));
         assertDataFlowRecord(it, FieldType.TCP_FLAGS, TCPFLags.class, TCPFLags.ACK);
         assertDataFlowRecord(it, FieldType.DIRECTION, EnumCodeValue.builder().value(FlowDirection.EGRESS).code(0x01).build());
-        assertDataFlowRecord(it, FieldType.DST_AS, new Integer(0));
-        assertDataFlowRecord(it, FieldType.SRC_AS, new Integer(0));
+        assertDataFlowRecord(it, FieldType.DST_AS, Integer.valueOf(0));
+        assertDataFlowRecord(it, FieldType.SRC_AS, Integer.valueOf(0));
 
         assertThat(it.hasNext()).isFalse();
 
@@ -1285,8 +1278,8 @@ public class TemplateDecoderIntegrationTest {
 
         it = flow.getRecords().iterator();
 
-        assertDataFlowRecord(it, FieldType.LAST_SWITCHED, new Long(0x001ded1c));
-        assertDataFlowRecord(it, FieldType.FIRST_SWITCHED, new Long(0x001ded1c));
+        assertDataFlowRecord(it, FieldType.LAST_SWITCHED, Long.valueOf(0x001ded1c));
+        assertDataFlowRecord(it, FieldType.FIRST_SWITCHED, Long.valueOf(0x001ded1c));
         assertDataFlowRecord(it, FieldType.IN_BYTES, CounterFactory.decode(new byte[] { 0x00, 0x00, 0x02, (byte) 0xfa }));
         assertDataFlowRecord(it, FieldType.IN_PKTS, CounterFactory.decode(new byte[] { 0x00, 0x00, 0x00, 0x01 }));
         assertDataFlowRecord(it, FieldType.INPUT_SNMP, CounterFactory.decode(new byte[] { 0x00, 0x05 }));
@@ -1301,20 +1294,20 @@ public class TemplateDecoderIntegrationTest {
                 Inet4Address.getByAddress(new byte[] { (byte) 0xc0, (byte) 0xa8, 0x04, 0x0a }));
         assertDataFlowRecord(it, FieldType.PROTOCOL, EnumCodeValue.builder().value(IPProtocol.UDP).code(0x11).build());
         assertDataFlowRecord(it, FieldType.SRC_TOS, EnumCodeValue.builder().value(IPTypeOfService.CS0).code(0x00).build());
-        assertDataFlowRecord(it, FieldType.L4_SRC_PORT, new Integer(53));
-        assertDataFlowRecord(it, FieldType.L4_DST_PORT, new Integer(0x20bf));
-        assertDataFlowRecord(it, FieldType.FLOW_SAMPLER_ID, new Integer(0));
-        assertDataFlowRecord(it, FieldType.FLOW_CLASS, new Integer(0));
+        assertDataFlowRecord(it, FieldType.L4_SRC_PORT, Integer.valueOf(53));
+        assertDataFlowRecord(it, FieldType.L4_DST_PORT, Integer.valueOf(0x20bf));
+        assertDataFlowRecord(it, FieldType.FLOW_SAMPLER_ID, Integer.valueOf(0));
+        assertDataFlowRecord(it, FieldType.FLOW_CLASS, Integer.valueOf(0));
         assertDataFlowRecord(
                 it,
                 FieldType.IPV4_NEXT_HOP,
                 Inet4Address.getByAddress(new byte[] { (byte) 0xc0, (byte) 0xa8, 0x04, 0x0a }));
-        assertDataFlowRecord(it, FieldType.DST_MASK, new Integer(29));
-        assertDataFlowRecord(it, FieldType.SRC_MASK, new Integer(0));
+        assertDataFlowRecord(it, FieldType.DST_MASK, Integer.valueOf(29));
+        assertDataFlowRecord(it, FieldType.SRC_MASK, Integer.valueOf(0));
         assertDataFlowRecord(it, FieldType.TCP_FLAGS, TCPFLags.class, TCPFLags.ACK);
         assertDataFlowRecord(it, FieldType.DIRECTION, EnumCodeValue.builder().value(FlowDirection.INGRESS).code(0x00).build());
-        assertDataFlowRecord(it, FieldType.DST_AS, new Integer(0));
-        assertDataFlowRecord(it, FieldType.SRC_AS, new Integer(0));
+        assertDataFlowRecord(it, FieldType.DST_AS, Integer.valueOf(0));
+        assertDataFlowRecord(it, FieldType.SRC_AS, Integer.valueOf(0));
 
         assertThat(it.hasNext()).isFalse();
     }
@@ -1397,8 +1390,8 @@ public class TemplateDecoderIntegrationTest {
 
         final Iterator<DataFlowRecord> dataIt = dataFlow.getRecords().iterator();
 
-        assertDataFlowRecord(dataIt, FieldType.LAST_SWITCHED, new Long(0x001ded18));
-        assertDataFlowRecord(dataIt, FieldType.FIRST_SWITCHED, new Long(0x001ded18));
+        assertDataFlowRecord(dataIt, FieldType.LAST_SWITCHED, Long.valueOf(0x001ded18));
+        assertDataFlowRecord(dataIt, FieldType.FIRST_SWITCHED, Long.valueOf(0x001ded18));
         assertDataFlowRecord(dataIt, FieldType.IN_BYTES, CounterFactory.decode(new byte[] { 0x00, 0x00, 0x00, 0x43 }));
         assertDataFlowRecord(dataIt, FieldType.IN_PKTS, CounterFactory.decode(new byte[] { 0x00, 0x00, 0x00, 0x01 }));
         assertDataFlowRecord(dataIt, FieldType.INPUT_SNMP, CounterFactory.decode(new byte[] { 0x00, 0x04 }));
@@ -1413,23 +1406,23 @@ public class TemplateDecoderIntegrationTest {
                 Inet4Address.getByAddress(new byte[] { (byte) 0xc0, 0x2b, (byte) 0xac, 0x1e }));
         assertDataFlowRecord(dataIt, FieldType.PROTOCOL, EnumCodeValue.builder().value(IPProtocol.UDP).code(0x11).build());
         assertDataFlowRecord(dataIt, FieldType.SRC_TOS, EnumCodeValue.builder().value(IPTypeOfService.CS0).code(0x00).build());
-        assertDataFlowRecord(dataIt, FieldType.L4_SRC_PORT, new Integer(0xb3d5));
-        assertDataFlowRecord(dataIt, FieldType.L4_DST_PORT, new Integer(53));
-        assertDataFlowRecord(dataIt, FieldType.FLOW_SAMPLER_ID, new Integer(0));
-        assertDataFlowRecord(dataIt, FieldType.FLOW_CLASS, new Integer(0));
+        assertDataFlowRecord(dataIt, FieldType.L4_SRC_PORT, Integer.valueOf(0xb3d5));
+        assertDataFlowRecord(dataIt, FieldType.L4_DST_PORT, Integer.valueOf(53));
+        assertDataFlowRecord(dataIt, FieldType.FLOW_SAMPLER_ID, Integer.valueOf(0));
+        assertDataFlowRecord(dataIt, FieldType.FLOW_CLASS, Integer.valueOf(0));
         assertDataFlowRecord(
                 dataIt,
                 FieldType.IPV4_NEXT_HOP,
                 Inet4Address.getByAddress(new byte[] { (byte) 0xc0, (byte) 0xa8, 0x04, 0x04 }));
-        assertDataFlowRecord(dataIt, FieldType.DST_MASK, new Integer(0));
-        assertDataFlowRecord(dataIt, FieldType.SRC_MASK, new Integer(29));
+        assertDataFlowRecord(dataIt, FieldType.DST_MASK, Integer.valueOf(0));
+        assertDataFlowRecord(dataIt, FieldType.SRC_MASK, Integer.valueOf(29));
         assertDataFlowRecord(dataIt, FieldType.TCP_FLAGS, TCPFLags.class, TCPFLags.ACK);
         assertDataFlowRecord(
                 dataIt,
                 FieldType.DIRECTION,
                 EnumCodeValue.builder().value(FlowDirection.EGRESS).code(0x01).build());
-        assertDataFlowRecord(dataIt, FieldType.DST_AS, new Integer(0));
-        assertDataFlowRecord(dataIt, FieldType.SRC_AS, new Integer(0));
+        assertDataFlowRecord(dataIt, FieldType.DST_AS, Integer.valueOf(0));
+        assertDataFlowRecord(dataIt, FieldType.SRC_AS, Integer.valueOf(0));
 
         assertThat(dataIt.hasNext()).isFalse();
 
@@ -1493,8 +1486,8 @@ public class TemplateDecoderIntegrationTest {
 
         final Iterator<DataFlowRecord> it = flow.getRecords().iterator();
 
-        assertDataFlowRecord(it, FieldType.LAST_SWITCHED, new Long(0x001ded18));
-        assertDataFlowRecord(it, FieldType.FIRST_SWITCHED, new Long(0x001ded18));
+        assertDataFlowRecord(it, FieldType.LAST_SWITCHED, Long.valueOf(0x001ded18));
+        assertDataFlowRecord(it, FieldType.FIRST_SWITCHED, Long.valueOf(0x001ded18));
         assertDataFlowRecord(it, FieldType.IN_BYTES, CounterFactory.decode(new byte[] { 0x00, 0x00, 0x00, 0x43 }));
         assertDataFlowRecord(it, FieldType.IN_PKTS, CounterFactory.decode(new byte[] { 0x00, 0x00, 0x00, 0x01 }));
         assertDataFlowRecord(it, FieldType.INPUT_SNMP, CounterFactory.decode(new byte[] { 0x00, 0x04 }));
@@ -1509,26 +1502,26 @@ public class TemplateDecoderIntegrationTest {
                 Inet4Address.getByAddress(new byte[] { (byte) 0xc0, 0x2b, (byte) 0xac, 0x1e }));
         assertDataFlowRecord(it, FieldType.PROTOCOL, EnumCodeValue.builder().value(IPProtocol.UDP).code(0x11).build());
         assertDataFlowRecord(it, FieldType.SRC_TOS, EnumCodeValue.builder().value(IPTypeOfService.CS0).code(0x00).build());
-        assertDataFlowRecord(it, FieldType.L4_SRC_PORT, new Integer(0xb3d5));
-        assertDataFlowRecord(it, FieldType.L4_DST_PORT, new Integer(53));
-        assertDataFlowRecord(it, FieldType.FLOW_SAMPLER_ID, new Integer(0));
-        assertDataFlowRecord(it, FieldType.FLOW_CLASS, new Integer(0));
+        assertDataFlowRecord(it, FieldType.L4_SRC_PORT, Integer.valueOf(0xb3d5));
+        assertDataFlowRecord(it, FieldType.L4_DST_PORT, Integer.valueOf(53));
+        assertDataFlowRecord(it, FieldType.FLOW_SAMPLER_ID, Integer.valueOf(0));
+        assertDataFlowRecord(it, FieldType.FLOW_CLASS, Integer.valueOf(0));
         assertDataFlowRecord(
                 it,
                 FieldType.IPV4_NEXT_HOP,
                 Inet4Address.getByAddress(new byte[] { (byte) 0xc0, (byte) 0xa8, 0x04, 0x04 }));
-        assertDataFlowRecord(it, FieldType.DST_MASK, new Integer(0));
-        assertDataFlowRecord(it, FieldType.SRC_MASK, new Integer(29));
+        assertDataFlowRecord(it, FieldType.DST_MASK, Integer.valueOf(0));
+        assertDataFlowRecord(it, FieldType.SRC_MASK, Integer.valueOf(29));
         assertDataFlowRecord(it, FieldType.TCP_FLAGS, TCPFLags.class, TCPFLags.ACK);
         assertDataFlowRecord(it, FieldType.DIRECTION, EnumCodeValue.builder().value(FlowDirection.EGRESS).code(0x01).build());
-        assertDataFlowRecord(it, FieldType.DST_AS, new Integer(0));
-        assertDataFlowRecord(it, FieldType.SRC_AS, new Integer(0));
+        assertDataFlowRecord(it, FieldType.DST_AS, Integer.valueOf(0));
+        assertDataFlowRecord(it, FieldType.SRC_AS, Integer.valueOf(0));
 
         assertThat(it.hasNext()).isFalse();
     }
 
     private void assertDataFlowRecord(final Iterator<DataFlowRecord> it, final FieldType type, final Object value) {
-        DataFlowRecord dfr;
+        final DataFlowRecord dfr;
 
         assertThat(it.hasNext()).isTrue();
         dfr = it.next();
@@ -1538,7 +1531,7 @@ public class TemplateDecoderIntegrationTest {
     }
 
     private void assertOptionsFlowRecord(final Iterator<OptionsFlowRecord> it, final FieldType type, final Object value) {
-        OptionsFlowRecord dfr;
+        final OptionsFlowRecord dfr;
 
         assertThat(it.hasNext()).isTrue();
         dfr = it.next();
@@ -1548,7 +1541,7 @@ public class TemplateDecoderIntegrationTest {
     }
 
     private void assertScopeFlowRecord(final Iterator<ScopeFlowRecord> it, final ScopeType type, final Counter value) {
-        ScopeFlowRecord dfr;
+        final ScopeFlowRecord dfr;
 
         assertThat(it.hasNext()).isTrue();
         dfr = it.next();
@@ -1567,7 +1560,7 @@ public class TemplateDecoderIntegrationTest {
             final FieldType type,
             final Class<T> clazz,
             final T... values) {
-        DataFlowRecord dfr;
+        final DataFlowRecord dfr;
 
         assertThat(it.hasNext()).isTrue();
         dfr = it.next();

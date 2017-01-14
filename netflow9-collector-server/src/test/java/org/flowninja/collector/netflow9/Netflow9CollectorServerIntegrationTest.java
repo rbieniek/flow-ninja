@@ -68,6 +68,7 @@ public class Netflow9CollectorServerIntegrationTest {
     }
 
     @Test
+    @SuppressWarnings("checkstyle:IllegalCatch")
     public void shouldDecodeDataFlowWhenTemplateAndFlowInOneDatagram() throws Exception {
         completions.getServerEventCompletion().whenComplete((m, t) -> {
             if (m.isPresent()) {
@@ -86,7 +87,7 @@ public class Netflow9CollectorServerIntegrationTest {
                                 }
                             });
 
-                    DatagramChannel c = (DatagramChannel) b
+                    final DatagramChannel c = (DatagramChannel) b
                             .bind(new InetSocketAddress(netflow9CollectorProperties.getAddress(), 0)).sync().channel();
 
                     c.connect(
@@ -104,7 +105,7 @@ public class Netflow9CollectorServerIntegrationTest {
             }
         });
 
-        Optional<DataFlowMessage> m = completions.getDataFlowCompletion().get();
+        final Optional<DataFlowMessage> m = completions.getDataFlowCompletion().get();
 
         assertThat(m).isPresent();
 

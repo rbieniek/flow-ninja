@@ -215,7 +215,7 @@ public class Netflow9DatagramActorIntegrationTest {
                                                         0x00, // SRC AS
                                                 })).build())).build()).build(), null);
 
-        Optional<DataFlowMessage> m = completions.getDataFlowCompletion().get();
+        final Optional<DataFlowMessage> m = completions.getDataFlowCompletion().get();
 
         assertThat(m).isPresent();
 
@@ -289,7 +289,7 @@ public class Netflow9DatagramActorIntegrationTest {
                                                         0x52, // packets exported 13560
                                                 })).build())).build()).build(), null);
 
-        Optional<OptionsFlowMessage> m = completions.getOptionsFlowCompletion().get();
+        final Optional<OptionsFlowMessage> m = completions.getOptionsFlowCompletion().get();
 
         assertThat(m).isPresent();
 

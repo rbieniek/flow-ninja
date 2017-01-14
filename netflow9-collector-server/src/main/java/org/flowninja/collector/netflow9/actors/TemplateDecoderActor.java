@@ -41,6 +41,7 @@ public class TemplateDecoderActor extends UntypedActor {
                 .unhandled(m -> unhandled(m));
     }
 
+    @SuppressWarnings("checkstyle:IllegalCatch")
     private void decodeDataTemplate(final DataTemplateDecoderRequest request) {
         try {
             templateDecoder.decodeDataTemplate(request.getPeerAddress(), request.getFlowBuffer(), request.getDataTemplate())
@@ -56,6 +57,7 @@ public class TemplateDecoderActor extends UntypedActor {
         }
     }
 
+    @SuppressWarnings("checkstyle:IllegalCatch")
     private void decodeOptionsTemplate(final OptionsTemplateDecoderRequest request) {
         try {
             templateDecoder
@@ -89,7 +91,7 @@ public class TemplateDecoderActor extends UntypedActor {
 
         buf.resetReaderIndex();
 
-        byte[] memoryBuffer = new byte[buf.readableBytes()];
+        final byte[] memoryBuffer = new byte[buf.readableBytes()];
 
         buf.readBytes(memoryBuffer);
 

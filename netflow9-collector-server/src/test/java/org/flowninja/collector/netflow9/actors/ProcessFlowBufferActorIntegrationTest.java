@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -26,7 +27,6 @@ import org.flowninja.collector.netflow9.actors.UnknownFlowsetProcessingActor.Sto
 import org.flowninja.collector.netflow9.actors.support.ActorsTestConfiguration;
 import org.flowninja.collector.netflow9.actors.support.SingleMessageSinkActor;
 import org.flowninja.collector.netflow9.packet.FlowBuffer;
-import org.flowninja.common.TestConfig;
 import org.flowninja.common.akka.ActorUtils;
 import org.flowninja.common.akka.AkkaComponent;
 import org.flowninja.common.akka.AkkaConfiguration;
@@ -113,7 +113,7 @@ public class ProcessFlowBufferActorIntegrationTest {
                         .build(),
                 null);
 
-        StoreUnknownFlowBufferRequest m = unknownFlowsetCompletion.get();
+        final StoreUnknownFlowBufferRequest m = unknownFlowsetCompletion.get();
 
         assertThat(m.getPeerAddress()).isNotNull();
         assertThat(m.getFlowBuffer()).isNotNull();
@@ -143,7 +143,7 @@ public class ProcessFlowBufferActorIntegrationTest {
                         .build(),
                 null);
 
-        DataTemplateDecoderRequest m = dataTemplateCompletion.get();
+        final DataTemplateDecoderRequest m = dataTemplateCompletion.get();
 
         assertThat(m.getPeerAddress()).isNotNull();
         assertThat(m.getDataTemplate()).isNotNull();
@@ -175,7 +175,7 @@ public class ProcessFlowBufferActorIntegrationTest {
                         .build(),
                 null);
 
-        OptionsTemplateDecoderRequest m = optionsTemplateCompletion.get();
+        final OptionsTemplateDecoderRequest m = optionsTemplateCompletion.get();
 
         assertThat(m.getPeerAddress()).isNotNull();
         assertThat(m.getOptionsTemplate()).isNotNull();
@@ -187,7 +187,7 @@ public class ProcessFlowBufferActorIntegrationTest {
         assertThat(dataTemplateCompletion.isDone()).isFalse();
     }
 
-    @TestConfig
+    @Configuration
     @Import({ AkkaConfiguration.class, ActorsTestConfiguration.class })
     @ComponentScan(basePackageClasses = TemplateDecoderActor.class)
     public static class TestConfiguration {

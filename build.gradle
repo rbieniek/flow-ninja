@@ -160,6 +160,7 @@ configure(allprojects) {
             }
             exclude group: 'javax.servlet', module: 'javax.servlet-api'
             exclude group: 'commons-logging', module: 'commons-logging'
+            exclude group: 'org.slf4j', module: 'slf4j-log4j12'
         }
     }
 
