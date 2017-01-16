@@ -18,7 +18,7 @@ public class VariableSizeCounter implements Counter {
 
     private final BigInteger value;
 
-    VariableSizeCounter(byte[] binaryRepresentation) {
+    VariableSizeCounter(final byte[] binaryRepresentation) {
         value = new BigInteger(binaryRepresentation);
     }
 

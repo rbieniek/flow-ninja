@@ -8,5 +8,6 @@ import lombok.Getter;
 @Getter
 @Builder
 public class DataFlowMessage {
-	private DataFlow dataFlow;
+
+    private DataFlow dataFlow;
 }
