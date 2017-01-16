@@ -10,8 +10,8 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import org.flowninja.collector.common.netflow9.actors.NetworkServerStartupMessage;
 import org.flowninja.collector.common.netflow9.components.SinkActorsProvider;
-import org.flowninja.collector.netflow9.actors.NetworkServerStartupMessage;
 import org.flowninja.collector.netflow9.components.Netflow9DatagramDecoder;
 import org.flowninja.collector.netflow9.components.Netflow9DecodedDatagramHandler;
 

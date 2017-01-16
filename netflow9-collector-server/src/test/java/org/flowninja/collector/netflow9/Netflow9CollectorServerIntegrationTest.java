@@ -23,11 +23,11 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.SocketUtils;
 
 import org.flowninja.collector.common.netflow9.actors.DataFlowMessage;
+import org.flowninja.collector.common.netflow9.actors.NetworkServerStartupMessage;
 import org.flowninja.collector.common.netflow9.actors.OptionsFlowMessage;
 import org.flowninja.collector.common.netflow9.actors.TemplateDecodingFailureMessage;
 import org.flowninja.collector.common.netflow9.components.SinkActorsProvider;
 import org.flowninja.collector.common.netflow9.types.Header;
-import org.flowninja.collector.netflow9.actors.NetworkServerStartupMessage;
 import org.flowninja.collector.netflow9.actors.support.SingleMessageTimedSinkActor;
 import org.flowninja.common.TestConfig;
 import org.flowninja.common.akka.AkkaConfiguration;

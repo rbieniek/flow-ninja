@@ -10,8 +10,8 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import org.flowninja.collector.common.netflow9.actors.NetworkServerShutdownMessage;
 import org.flowninja.collector.netflow9.actors.Netflow9DatagramActor;
-import org.flowninja.collector.netflow9.actors.NetworkServerShutdownMessage;
 import org.flowninja.collector.netflow9.packet.Netflow9DecodedDatagram;
 import org.flowninja.common.akka.SpringActorProducer;
 

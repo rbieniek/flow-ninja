@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: FlowNinja Collectord
+server:
+  port: 8080
+
+netflow9:
+  server:
+    port: 2055    
+

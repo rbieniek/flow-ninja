@@ -2,6 +2,7 @@ package org.flowninja.collector.netflow9.actors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.flowninja.collector.common.netflow9.actors.NetworkServerShutdownMessage;
 import org.flowninja.collector.netflow9.packet.Netflow9DecodedDatagram;
 import org.flowninja.common.akka.ActorUtils;
 import org.flowninja.common.akka.AkkaComponent;

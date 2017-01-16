@@ -12,22 +12,24 @@ import org.springframework.context.annotation.Configuration;
 @EnableConfigurationProperties
 public class KafkaCommonConfiguration {
 
-	@Configuration
-	@ConditionalOnBean(value = { ZookeeperClusterProperties.class, KafkaBrokerClusterProperties.class })
-	public static class BrokerUtilsConfiguration {
-		@Bean
-		@Autowired
-		public BrokerUtils brokerUtils(final ZookeeperClusterProperties zookeeperClusterProperties,
-				final KafkaBrokerClusterProperties kafkaBrokerClusterProperties) {
-			return new BrokerUtils(zookeeperClusterProperties, kafkaBrokerClusterProperties);
-		}
+    @Configuration
+    @ConditionalOnBean(value = { ZookeeperClusterProperties.class, KafkaBrokerClusterProperties.class })
+    public static class BrokerUtilsConfiguration {
 
-		@Bean
-		@Autowired
-		public ProducerConfigFactoryBean producerConfigFactoryBean(
-				final KafkaBrokerClusterProperties kafkaBrokerClusterProperties) {
-			return new ProducerConfigFactoryBean(kafkaBrokerClusterProperties);
-		}
-	}
+        @Bean
+        @Autowired
+        public BrokerUtils brokerUtils(
+                final ZookeeperClusterProperties zookeeperClusterProperties,
+                final KafkaBrokerClusterProperties kafkaBrokerClusterProperties) {
+            return new BrokerUtils(zookeeperClusterProperties, kafkaBrokerClusterProperties);
+        }
+
+        @Bean
+        @Autowired
+        public ProducerConfigFactoryBean producerConfigFactoryBean(
+                final KafkaBrokerClusterProperties kafkaBrokerClusterProperties) {
+            return new ProducerConfigFactoryBean(kafkaBrokerClusterProperties);
+        }
+    }
 
 }
