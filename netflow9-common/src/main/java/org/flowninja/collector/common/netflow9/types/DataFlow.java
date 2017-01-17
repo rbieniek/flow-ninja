@@ -24,6 +24,6 @@ public class DataFlow {
 
 	private Header header;
 	private InetAddress peerAddress;
-	private List<DataFlowRecord> records = new LinkedList<>();
+	private List<FlowValueRecord> records = new LinkedList<>();
 	private UUID uuid = UUID.randomUUID();
 }

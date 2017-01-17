@@ -18,6 +18,7 @@ import lombok.Getter;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
 public class ScopeFlowRecord {
-	ScopeType type;
-	private Counter value;
+
+    private ScopeType type;
+    private Counter value;
 }

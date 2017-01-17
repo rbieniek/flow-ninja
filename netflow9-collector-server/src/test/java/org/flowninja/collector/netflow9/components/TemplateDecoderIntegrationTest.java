@@ -25,13 +25,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import org.flowninja.collector.common.netflow9.types.DataFlow;
-import org.flowninja.collector.common.netflow9.types.DataFlowRecord;
 import org.flowninja.collector.common.netflow9.types.DataTemplate;
 import org.flowninja.collector.common.netflow9.types.FieldType;
 import org.flowninja.collector.common.netflow9.types.FlowDirection;
+import org.flowninja.collector.common.netflow9.types.FlowValueRecord;
 import org.flowninja.collector.common.netflow9.types.Header;
 import org.flowninja.collector.common.netflow9.types.OptionsFlow;
-import org.flowninja.collector.common.netflow9.types.OptionsFlowRecord;
 import org.flowninja.collector.common.netflow9.types.OptionsTemplate;
 import org.flowninja.collector.common.netflow9.types.ScopeFlowRecord;
 import org.flowninja.collector.common.netflow9.types.ScopeType;
@@ -1175,7 +1174,7 @@ public class TemplateDecoderIntegrationTest {
         assertThat(header.getSequenceNumber()).isEqualTo(31);
         assertThat(header.getSourceId()).isEqualTo(0);
 
-        final Iterator<DataFlowRecord> it = flow.getRecords().iterator();
+        final Iterator<FlowValueRecord> it = flow.getRecords().iterator();
 
         assertDataFlowRecord(it, FieldType.LAST_SWITCHED, Long.valueOf(0x001ded18));
         assertDataFlowRecord(it, FieldType.FIRST_SWITCHED, Long.valueOf(0x001ded18));
@@ -1231,7 +1230,7 @@ public class TemplateDecoderIntegrationTest {
         assertThat(header.getSequenceNumber()).isEqualTo(31);
         assertThat(header.getSourceId()).isEqualTo(0);
 
-        Iterator<DataFlowRecord> it = flow.getRecords().iterator();
+        Iterator<FlowValueRecord> it = flow.getRecords().iterator();
 
         assertDataFlowRecord(it, FieldType.LAST_SWITCHED, Long.valueOf(0x001ded18));
         assertDataFlowRecord(it, FieldType.FIRST_SWITCHED, Long.valueOf(0x001ded18));
@@ -1341,7 +1340,7 @@ public class TemplateDecoderIntegrationTest {
         assertScopeFlowRecord(scopeIterator, ScopeType.SYSTEM, null);
         assertThat(scopeIterator.hasNext()).isFalse();
 
-        final Iterator<OptionsFlowRecord> optionsIterator = flow.getRecords().iterator();
+        final Iterator<FlowValueRecord> optionsIterator = flow.getRecords().iterator();
 
         assertOptionsFlowRecord(
                 optionsIterator,
@@ -1388,7 +1387,7 @@ public class TemplateDecoderIntegrationTest {
         assertThat(header.getSequenceNumber()).isEqualTo(31);
         assertThat(header.getSourceId()).isEqualTo(0);
 
-        final Iterator<DataFlowRecord> dataIt = dataFlow.getRecords().iterator();
+        final Iterator<FlowValueRecord> dataIt = dataFlow.getRecords().iterator();
 
         assertDataFlowRecord(dataIt, FieldType.LAST_SWITCHED, Long.valueOf(0x001ded18));
         assertDataFlowRecord(dataIt, FieldType.FIRST_SWITCHED, Long.valueOf(0x001ded18));
@@ -1441,7 +1440,7 @@ public class TemplateDecoderIntegrationTest {
         assertScopeFlowRecord(scopeIterator, ScopeType.SYSTEM, null);
         assertThat(scopeIterator.hasNext()).isFalse();
 
-        final Iterator<OptionsFlowRecord> optionsIterator = scopeFlow.getRecords().iterator();
+        final Iterator<FlowValueRecord> optionsIterator = scopeFlow.getRecords().iterator();
 
         assertOptionsFlowRecord(
                 optionsIterator,
@@ -1484,7 +1483,7 @@ public class TemplateDecoderIntegrationTest {
         assertThat(header.getSequenceNumber()).isEqualTo(31);
         assertThat(header.getSourceId()).isEqualTo(0);
 
-        final Iterator<DataFlowRecord> it = flow.getRecords().iterator();
+        final Iterator<FlowValueRecord> it = flow.getRecords().iterator();
 
         assertDataFlowRecord(it, FieldType.LAST_SWITCHED, Long.valueOf(0x001ded18));
         assertDataFlowRecord(it, FieldType.FIRST_SWITCHED, Long.valueOf(0x001ded18));
@@ -1520,8 +1519,8 @@ public class TemplateDecoderIntegrationTest {
         assertThat(it.hasNext()).isFalse();
     }
 
-    private void assertDataFlowRecord(final Iterator<DataFlowRecord> it, final FieldType type, final Object value) {
-        final DataFlowRecord dfr;
+    private void assertDataFlowRecord(final Iterator<FlowValueRecord> it, final FieldType type, final Object value) {
+        final FlowValueRecord dfr;
 
         assertThat(it.hasNext()).isTrue();
         dfr = it.next();
@@ -1530,8 +1529,8 @@ public class TemplateDecoderIntegrationTest {
 
     }
 
-    private void assertOptionsFlowRecord(final Iterator<OptionsFlowRecord> it, final FieldType type, final Object value) {
-        final OptionsFlowRecord dfr;
+    private void assertOptionsFlowRecord(final Iterator<FlowValueRecord> it, final FieldType type, final Object value) {
+        final FlowValueRecord dfr;
 
         assertThat(it.hasNext()).isTrue();
         dfr = it.next();
@@ -1556,11 +1555,11 @@ public class TemplateDecoderIntegrationTest {
 
     @SuppressWarnings("unchecked")
     private <T> void assertDataFlowRecord(
-            final Iterator<DataFlowRecord> it,
+            final Iterator<FlowValueRecord> it,
             final FieldType type,
             final Class<T> clazz,
             final T... values) {
-        final DataFlowRecord dfr;
+        final FlowValueRecord dfr;
 
         assertThat(it.hasNext()).isTrue();
         dfr = it.next();

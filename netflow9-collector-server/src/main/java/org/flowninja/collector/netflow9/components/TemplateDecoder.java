@@ -15,16 +15,15 @@ import java.util.function.Supplier;
 import org.springframework.stereotype.Component;
 
 import org.flowninja.collector.common.netflow9.types.DataFlow;
-import org.flowninja.collector.common.netflow9.types.DataFlowRecord;
 import org.flowninja.collector.common.netflow9.types.DataTemplate;
 import org.flowninja.collector.common.netflow9.types.DataTemplateField;
 import org.flowninja.collector.common.netflow9.types.EngineType;
 import org.flowninja.collector.common.netflow9.types.FieldType;
 import org.flowninja.collector.common.netflow9.types.FlowDirection;
+import org.flowninja.collector.common.netflow9.types.FlowValueRecord;
 import org.flowninja.collector.common.netflow9.types.IPv6OptionHeaders;
 import org.flowninja.collector.common.netflow9.types.OptionField;
 import org.flowninja.collector.common.netflow9.types.OptionsFlow;
-import org.flowninja.collector.common.netflow9.types.OptionsFlowRecord;
 import org.flowninja.collector.common.netflow9.types.OptionsTemplate;
 import org.flowninja.collector.common.netflow9.types.SamplingAlgorithm;
 import org.flowninja.collector.common.netflow9.types.ScopeField;
@@ -72,11 +71,11 @@ public class TemplateDecoder {
         buffer.markReaderIndex();
 
         while (buffer.readableBytes() >= dataLength) {
-            final List<DataFlowRecord> flowRecords = new LinkedList<>();
+            final List<FlowValueRecord> flowRecords = new LinkedList<>();
 
             for (final DataTemplateField field : template.getFields()) {
                 flowRecords.add(
-                        DataFlowRecord.builder()
+                        FlowValueRecord.builder()
                                 .type(field.getType())
                                 .value(decodeValue(field.getType(), field.getLength(), buffer))
                                 .build());
@@ -115,7 +114,7 @@ public class TemplateDecoder {
         buffer.markReaderIndex();
 
         while (buffer.readableBytes() >= dataLength) {
-            final List<OptionsFlowRecord> flowRecords = new LinkedList<>();
+            final List<FlowValueRecord> flowRecords = new LinkedList<>();
             final List<ScopeFlowRecord> scopeRecords = new LinkedList<>();
 
             for (final ScopeField field : template.getScopeFields()) {
@@ -134,7 +133,7 @@ public class TemplateDecoder {
 
             for (final OptionField field : template.getOptionFields()) {
                 flowRecords.add(
-                        OptionsFlowRecord.builder()
+                        FlowValueRecord.builder()
                                 .type(field.getType())
                                 .value(decodeValue(field.getType(), field.getLength(), buffer))
                                 .build());

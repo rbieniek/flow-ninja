@@ -12,10 +12,11 @@ import lombok.Getter;
  * @author rainer
  *
  */
-@Getter
 @Builder
+@Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class OptionsFlowRecord {
-	FieldType type;
+public class FlowValueRecord {
+	private FieldType type;
 	private Object value;
+
 }

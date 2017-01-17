@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
+import org.flowninja.collector.common.netflow9.components.Netflow9CommonComponentsConfiguration;
 import org.flowninja.collector.netflow9.Netflow9CollectorConfiguration;
 import org.flowninja.collectord.actors.FlowninjaActorsConfiguration;
 import org.flowninja.collectord.components.FlowninjaComponentsConfiguration;
@@ -18,7 +19,8 @@ import org.flowninja.common.akka.AkkaConfiguration;
         AkkaConfiguration.class,
         Netflow9CollectorConfiguration.class,
         FlowninjaActorsConfiguration.class,
-        FlowninjaComponentsConfiguration.class })
+        FlowninjaComponentsConfiguration.class,
+        Netflow9CommonComponentsConfiguration.class })
 @EnableConfigurationProperties
 public class FlowninjaConfiguration {
 

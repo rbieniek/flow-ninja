@@ -6,6 +6,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
+import org.flowninja.collector.common.netflow9.components.PortableDataFlowConverter;
+import org.flowninja.collector.common.netflow9.components.PortableOptionsFlowConverter;
+
 @Configuration
 @ComponentScan(basePackageClasses = FlowninjaComponentsConfiguration.class)
 public class FlowninjaComponentsConfiguration {
@@ -18,6 +21,15 @@ public class FlowninjaComponentsConfiguration {
         @Autowired
         public FileSinkManager fileSinkManager(final FileSinkProperties fileSinkProperties) {
             return new FileSinkManager(fileSinkProperties);
+        }
+
+        @Bean
+        @Autowired
+        public FlowFileWriter flowFileWriter(
+                final FileSinkManager fileSinkManager,
+                final PortableDataFlowConverter portableDataFlowConverter,
+                final PortableOptionsFlowConverter portableOptionsFlowConverter) {
+            return new FlowFileWriter(fileSinkManager, portableDataFlowConverter, portableOptionsFlowConverter);
         }
     }
 

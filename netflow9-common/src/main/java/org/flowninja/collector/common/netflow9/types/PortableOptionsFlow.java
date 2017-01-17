@@ -3,27 +3,29 @@
  */
 package org.flowninja.collector.common.netflow9.types;
 
-import java.net.InetAddress;
 import java.util.List;
-import java.util.UUID;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * @author rainer
  *
  */
 @Getter
+@Setter
 @Builder
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class OptionsFlow {
+@NoArgsConstructor
+public class PortableOptionsFlow {
 
-    private InetAddress peerAddress;
+    private String peerAddress;
     private Header header;
-    private UUID uuid;
-    private List<ScopeFlowRecord> scopes;
-    private List<FlowValueRecord> records;
+    private String uuid;
+    private List<PortableScopeFlowRecord> scopes;
+    private List<PortableFlowValueRecord> records;
 }
