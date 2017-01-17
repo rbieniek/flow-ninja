@@ -1,5 +1,6 @@
 package org.flowninja.collectord;
 
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -18,6 +19,7 @@ import org.flowninja.common.akka.AkkaConfiguration;
         Netflow9CollectorConfiguration.class,
         FlowninjaActorsConfiguration.class,
         FlowninjaComponentsConfiguration.class })
+@EnableConfigurationProperties
 public class FlowninjaConfiguration {
 
     @Configuration
