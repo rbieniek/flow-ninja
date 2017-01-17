@@ -1,4 +1,4 @@
-package org.flowninja.common.kafka;
+package org.flowninja.common.kafka.config;
 
 import java.net.InetAddress;
 
@@ -9,5 +9,5 @@ import lombok.Setter;
 @Setter
 public class ZookeeperHostProperties {
     private int portNumber;
-    private InetAddress bindAddr;
+    private InetAddress host;
 }

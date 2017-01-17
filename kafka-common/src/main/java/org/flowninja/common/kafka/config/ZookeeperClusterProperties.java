@@ -1,4 +1,4 @@
-package org.flowninja.common.kafka;
+package org.flowninja.common.kafka.config;
 
 import java.util.LinkedList;
 import java.util.List;

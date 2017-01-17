@@ -6,5 +6,5 @@ server:
 
 netflow9:
   server:
-    port: 2055    
+    port: 2055
 

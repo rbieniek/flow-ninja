@@ -8,6 +8,8 @@ import org.springframework.context.annotation.DependsOn;
 import org.springframework.util.SocketUtils;
 
 import org.flowninja.common.TestConfig;
+import org.flowninja.common.kafka.config.KafkaBrokerHostProperties;
+import org.flowninja.common.kafka.config.ZookeeperHostProperties;
 
 @TestConfig
 public class EmbeddedKafkaTestConfiguration {
@@ -16,7 +18,7 @@ public class EmbeddedKafkaTestConfiguration {
     public ZookeeperHostProperties zookeeperHostProperties() {
         final ZookeeperHostProperties properties = new ZookeeperHostProperties();
 
-        properties.setBindAddr(InetAddress.getLoopbackAddress());
+        properties.setHost(InetAddress.getLoopbackAddress());
         properties.setPortNumber(SocketUtils.findAvailableTcpPort(32768));
 
         return properties;
@@ -26,7 +28,7 @@ public class EmbeddedKafkaTestConfiguration {
     public KafkaBrokerHostProperties kafkaBrokerHostProperties() {
         final KafkaBrokerHostProperties properties = new KafkaBrokerHostProperties();
 
-        properties.setBindAddr(InetAddress.getLoopbackAddress());
+        properties.setHost(InetAddress.getLoopbackAddress());
         properties.setPortNumber(SocketUtils.findAvailableTcpPort(32768));
 
         return properties;
@@ -35,7 +37,9 @@ public class EmbeddedKafkaTestConfiguration {
     @Bean
     @Autowired
     @DependsOn("embeddedZookeeper")
-    public EmbeddedKafkaBroker embeddedKafkaBroker(final KafkaBrokerHostProperties kafkaProperties,final ZookeeperHostProperties zookeeperProperties) {
+    public EmbeddedKafkaBroker embeddedKafkaBroker(
+            final KafkaBrokerHostProperties kafkaProperties,
+            final ZookeeperHostProperties zookeeperProperties) {
         return new EmbeddedKafkaBroker(kafkaProperties, zookeeperProperties);
     }
 

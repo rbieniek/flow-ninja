@@ -1,4 +1,4 @@
-package org.flowninja.common.kafka;
+package org.flowninja.common.kafka.components;
 
 import java.util.Optional;
 import java.util.Properties;
@@ -11,6 +11,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 
+import org.flowninja.common.kafka.config.KafkaBrokerClusterProperties;
+import org.flowninja.common.kafka.config.ZookeeperClusterProperties;
+
 import lombok.RequiredArgsConstructor;
 
 import kafka.admin.AdminUtils;
@@ -20,6 +23,7 @@ import kafka.utils.ZkUtils;
 
 @RequiredArgsConstructor
 public class BrokerUtils implements InitializingBean, DisposableBean {
+
     private final ZookeeperClusterProperties zookeeperClusterProperties;
     private final KafkaBrokerClusterProperties kafkaBrokerClusterProperties;
 
@@ -31,8 +35,7 @@ public class BrokerUtils implements InitializingBean, DisposableBean {
         final int sessionTimeOutInMs = 15 * 1000; // 15 secs
         final int connectionTimeOutInMs = 10 * 1000; // 10 secs
 
-        zkClient = new ZkClient(zookeeperServers(), sessionTimeOutInMs, connectionTimeOutInMs,
-                ZKStringSerializer$.MODULE$);
+        zkClient = new ZkClient(zookeeperServers(), sessionTimeOutInMs, connectionTimeOutInMs, ZKStringSerializer$.MODULE$);
         zkUtils = new ZkUtils(zkClient, new ZkConnection(zookeeperServers()), false);
 
     }
@@ -42,24 +45,38 @@ public class BrokerUtils implements InitializingBean, DisposableBean {
         zkClient.close();
     }
 
-    public void createTopic(final String topicName, final Optional<Integer> numberOfPartitions,
-            final Optional<Integer> numberOfReplicatiopn, final Optional<Properties> topicConfiguration) {
+    public void createTopic(
+            final String topicName,
+            final Optional<Integer> numberOfPartitions,
+            final Optional<Integer> numberOfReplicatiopn,
+            final Optional<Properties> topicConfiguration) {
 
-        AdminUtils.createTopic(zkUtils, topicName, numberOfPartitions.orElse(1), numberOfReplicatiopn.orElse(1),
-                topicConfiguration.orElse(new Properties()), Safe$.MODULE$);
+        AdminUtils.createTopic(
+                zkUtils,
+                topicName,
+                numberOfPartitions.orElse(1),
+                numberOfReplicatiopn.orElse(1),
+                topicConfiguration.orElse(new Properties()),
+                Safe$.MODULE$);
 
     }
 
     public String bootstrapServers() {
-        return StringUtils.join(kafkaBrokerClusterProperties.getBrokers().stream().map(
-                bp -> "PLAINTEXT://" + bp.getBindAddr().getHostAddress() + ":" + Integer.toString(bp.getPortNumber()))
-                .collect(Collectors.toList()), ",");
+        return StringUtils.join(
+                kafkaBrokerClusterProperties.getBrokers()
+                        .stream()
+                        .map(bp -> "PLAINTEXT://" + bp.getHost().getHostAddress() + ":" + Integer.toString(bp.getPortNumber()))
+                        .collect(Collectors.toList()),
+                ",");
     }
 
     public String zookeeperServers() {
-        return StringUtils.join(zookeeperClusterProperties.getServers().stream()
-                .map(bp -> bp.getBindAddr().getHostAddress() + ":" + Integer.toString(bp.getPortNumber()))
-                .collect(Collectors.toList()), ",");
+        return StringUtils.join(
+                zookeeperClusterProperties.getServers()
+                        .stream()
+                        .map(bp -> bp.getHost().getHostAddress() + ":" + Integer.toString(bp.getPortNumber()))
+                        .collect(Collectors.toList()),
+                ",");
     }
 
 }

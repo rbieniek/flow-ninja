@@ -32,8 +32,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import org.flowninja.common.TestConfig;
 import org.flowninja.common.kafka.EmbeddedKafkaBroker;
-import org.flowninja.common.kafka.KafkaBrokerHostProperties;
 import org.flowninja.common.kafka.EmbeddedKafkaTestConfiguration;
+import org.flowninja.common.kafka.config.KafkaBrokerHostProperties;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

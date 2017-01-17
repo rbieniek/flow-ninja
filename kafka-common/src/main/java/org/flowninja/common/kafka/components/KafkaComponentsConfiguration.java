@@ -1,35 +1,30 @@
-package org.flowninja.common.kafka;
+package org.flowninja.common.kafka.components;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
+import org.flowninja.common.kafka.config.KafkaBrokerClusterProperties;
+import org.flowninja.common.kafka.config.ZookeeperClusterProperties;
+
 @Configuration
-@ComponentScan(basePackageClasses = KafkaCommonConfiguration.class)
-@EnableConfigurationProperties
-public class KafkaCommonConfiguration {
+@ComponentScan(basePackageClasses = KafkaComponentsConfiguration.class)
+public class KafkaComponentsConfiguration {
 
-    @Configuration
-    @ConditionalOnBean(value = { ZookeeperClusterProperties.class, KafkaBrokerClusterProperties.class })
-    public static class BrokerUtilsConfiguration {
+    @Bean
+    @Autowired
+    public BrokerUtils brokerUtils(
+            final ZookeeperClusterProperties zookeeperClusterProperties,
+            final KafkaBrokerClusterProperties kafkaBrokerClusterProperties) {
+        return new BrokerUtils(zookeeperClusterProperties, kafkaBrokerClusterProperties);
+    }
 
-        @Bean
-        @Autowired
-        public BrokerUtils brokerUtils(
-                final ZookeeperClusterProperties zookeeperClusterProperties,
-                final KafkaBrokerClusterProperties kafkaBrokerClusterProperties) {
-            return new BrokerUtils(zookeeperClusterProperties, kafkaBrokerClusterProperties);
-        }
-
-        @Bean
-        @Autowired
-        public ProducerConfigFactoryBean producerConfigFactoryBean(
-                final KafkaBrokerClusterProperties kafkaBrokerClusterProperties) {
-            return new ProducerConfigFactoryBean(kafkaBrokerClusterProperties);
-        }
+    @Bean
+    @Autowired
+    public ProducerConfigFactoryBean producerConfigFactoryBean(
+            final KafkaBrokerClusterProperties kafkaBrokerClusterProperties) {
+        return new ProducerConfigFactoryBean(kafkaBrokerClusterProperties);
     }
 
 }

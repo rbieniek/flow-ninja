@@ -12,10 +12,13 @@ import org.apache.zookeeper.server.persistence.FileTxnSnapLog;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 
+import org.flowninja.common.kafka.config.ZookeeperHostProperties;
+
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class EmbeddedZookeeper implements InitializingBean, DisposableBean {
+
     private final ZookeeperHostProperties zookeeperProperties;
 
     private ServerCnxnFactory cnxnFactory;
@@ -43,21 +46,19 @@ public class EmbeddedZookeeper implements InitializingBean, DisposableBean {
         zookeeperData.mkdirs();
         zookeeperLog.mkdirs();
 
-        config.setClientPortAddress(new InetSocketAddress(zookeeperProperties.getBindAddr(), zookeeperProperties.getPortNumber()));
+        config.setClientPortAddress(new InetSocketAddress(zookeeperProperties.getHost(), zookeeperProperties.getPortNumber()));
         config.setDataDir(zookeeperData.getAbsolutePath());
         config.setDataLogDir(zookeeperLog.getAbsolutePath());
 
         zkServer = new ZooKeeperServer();
 
-        final FileTxnSnapLog txnLog = new FileTxnSnapLog(new File(config.getDataLogDir()), new File(
-                config.getDataDir()));
+        final FileTxnSnapLog txnLog = new FileTxnSnapLog(new File(config.getDataLogDir()), new File(config.getDataDir()));
         zkServer.setTxnLogFactory(txnLog);
         zkServer.setTickTime(config.getTickTime());
         zkServer.setMinSessionTimeout(config.getMinSessionTimeout());
         zkServer.setMaxSessionTimeout(config.getMaxSessionTimeout());
         cnxnFactory = ServerCnxnFactory.createFactory();
-        cnxnFactory.configure(config.getClientPortAddress(),
-                config.getMaxClientCnxns());
+        cnxnFactory.configure(config.getClientPortAddress(), config.getMaxClientCnxns());
         cnxnFactory.startup(zkServer);
     }
 

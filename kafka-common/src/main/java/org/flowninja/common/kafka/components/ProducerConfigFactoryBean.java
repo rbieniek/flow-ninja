@@ -1,6 +1,8 @@
-package org.flowninja.common.kafka;
+package org.flowninja.common.kafka.components;
 
 import org.springframework.beans.factory.FactoryBean;
+
+import org.flowninja.common.kafka.config.KafkaBrokerClusterProperties;
 
 import lombok.RequiredArgsConstructor;
 

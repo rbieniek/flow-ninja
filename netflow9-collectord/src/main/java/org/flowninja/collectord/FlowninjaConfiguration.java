@@ -11,13 +11,11 @@ import org.flowninja.collector.netflow9.Netflow9CollectorConfiguration;
 import org.flowninja.collectord.actors.FlowninjaActorsConfiguration;
 import org.flowninja.collectord.components.FlowninjaComponentsConfiguration;
 import org.flowninja.common.akka.AkkaConfiguration;
-import org.flowninja.common.kafka.KafkaCommonConfiguration;
 
 @Configuration
 @Import({
         AkkaConfiguration.class,
         Netflow9CollectorConfiguration.class,
-        KafkaCommonConfiguration.class,
         FlowninjaActorsConfiguration.class,
         FlowninjaComponentsConfiguration.class })
 public class FlowninjaConfiguration {

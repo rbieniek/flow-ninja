@@ -1,4 +1,4 @@
-package org.flowninja.common.kafka;
+package org.flowninja.common.kafka.components;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -8,18 +8,23 @@ import org.apache.commons.lang3.StringUtils;
 
 import org.springframework.beans.factory.InitializingBean;
 
+import org.flowninja.common.kafka.config.KafkaBrokerClusterProperties;
+
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class ProducerConfig implements InitializingBean {
+
     private final KafkaBrokerClusterProperties kafkaBrokerClusterProperties;
 
     private Map<String, Object> producerConfig = new HashMap<>();
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        producerConfig.put("bootstrap.servers",StringUtils.join(kafkaBrokerClusterProperties.getBrokers().stream().map(
-                bp -> "PLAINTEXT://" + bp.getBindAddr().getHostAddress() + ":" + Integer.toString(bp.getPortNumber()))
+        producerConfig.put("bootstrap.servers", StringUtils.join(kafkaBrokerClusterProperties.getBrokers()
+                .stream()
+                .map(
+                        bp -> "PLAINTEXT://" + bp.getHost().getHostAddress() + ":" + Integer.toString(bp.getPortNumber()))
                 .collect(Collectors.toList()), ","));
         producerConfig.put("acks", "all");
         producerConfig.put("retries", 0);

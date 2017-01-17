@@ -1,0 +1,31 @@
+
+collectord:
+  kafka:
+    enabled: false
+
+kafka:
+  cluster:
+    brokers:
+      - 
+        host: hjob01.virt.urb.de
+        port: 9092
+      - 
+        host: hjob02.virt.urb.de
+        port: 9092
+      - 
+        host: hjob03.virt.urb.de
+        port: 9092
+      - 
+        host: hjob04.virt.urb.de
+        port: 9092
+      
+zookeeper:
+  cluster:
+    servers:
+      -
+        host: hns01.virt.urb.de
+        port: 2181
+      -
+        host: hns02.virt.urb.de
+        port: 2181
+        
