@@ -8,6 +8,8 @@ import org.springframework.context.annotation.Configuration;
 
 import org.flowninja.collector.common.netflow9.components.PortableDataFlowConverter;
 import org.flowninja.collector.common.netflow9.components.PortableOptionsFlowConverter;
+import org.flowninja.collectord.actors.FlowFileWriterActor;
+import org.flowninja.common.akka.SpringActorProducer;
 
 @Configuration
 @ComponentScan(basePackageClasses = FlowninjaComponentsConfiguration.class)
@@ -30,6 +32,12 @@ public class FlowninjaComponentsConfiguration {
                 final PortableDataFlowConverter portableDataFlowConverter,
                 final PortableOptionsFlowConverter portableOptionsFlowConverter) {
             return new FlowFileWriter(fileSinkManager, portableDataFlowConverter, portableOptionsFlowConverter);
+        }
+
+        @Bean
+        @Autowired
+        public TargetDistributionActorProvider fileTargetActorProvider(final SpringActorProducer springActorProducer) {
+            return () -> springActorProducer.createActor(FlowFileWriterActor.class);
         }
     }
 
