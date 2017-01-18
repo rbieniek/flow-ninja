@@ -2,5 +2,5 @@ collectord:
   disk:
     enabled: true
     baseDirectory: /data/netflow9
-    intermediatePattern: "%YYYY/%mm/%HH/%MM"
+    intermediatePattern: "%1$tY/%1$tm/%1$tH/%1$tM"
     
