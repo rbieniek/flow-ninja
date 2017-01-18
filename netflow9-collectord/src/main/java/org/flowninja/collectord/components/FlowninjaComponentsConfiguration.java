@@ -1,10 +1,11 @@
 package org.flowninja.collectord.components;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
 import org.flowninja.collector.common.netflow9.components.PortableDataFlowConverter;
 import org.flowninja.collector.common.netflow9.components.PortableOptionsFlowConverter;
@@ -15,8 +16,9 @@ import org.flowninja.common.akka.SpringActorProducer;
 @ComponentScan(basePackageClasses = FlowninjaComponentsConfiguration.class)
 public class FlowninjaComponentsConfiguration {
 
-    @ConditionalOnProperty(name = "collectord.disk.enabled")
+    @Profile("disk")
     @Configuration
+    @EnableConfigurationProperties(FileSinkProperties.class)
     public static class DiskSinkConfiguration {
 
         @Bean
