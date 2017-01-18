@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfigurat
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -20,6 +21,7 @@ import org.flowninja.collector.netflow9.components.PeerAddressMapper;
                 HibernateJpaAutoConfiguration.class,
                 MongoAutoConfiguration.class,
                 MongoDataAutoConfiguration.class })
+@EnableConfigurationProperties
 public class Netflow9CollectorConfiguration {
 
     @Bean
