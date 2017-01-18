@@ -3,6 +3,11 @@
  */
 package org.flowninja.collector.common.protocol.types;
 
+import java.util.Arrays;
+import java.util.Collection;
+
+import org.flowninja.collector.common.types.CollectionSource;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,7 +20,7 @@ import lombok.Getter;
 @Builder
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
-public class ICMPTypeCode {
+public class ICMPTypeCode implements CollectionSource {
 
     private ICMPType type;
     private ICMPCode code;
@@ -52,5 +57,10 @@ public class ICMPTypeCode {
         }
 
         return new ICMPTypeCode(type, code);
+    }
+
+    @Override
+    public Collection<?> toCollection() {
+        return Arrays.asList(type, code);
     }
 }
