@@ -1,5 +1,6 @@
 package org.flowninja.collector.common.netflow9.components;
 
+import java.lang.reflect.Array;
 import java.math.BigInteger;
 import java.net.InetAddress;
 import java.util.Base64;
@@ -29,18 +30,25 @@ public class PortableFlowValueConverter {
         if (record.getType() != null) {
             pfr.setType(record.getType().toString());
         }
-        pfr.setObjectClass(value.getClass().getName());
+
+        if (value.getClass().isArray()) {
+            pfr.setObjectClass(Array.class.getName());
+        } else {
+            pfr.setObjectClass(value.getClass().getName());
+        }
 
         if (value instanceof Counter) {
             pfr.setNumberValue(BigInteger.valueOf(((Counter) value).value().longValue()));
         } else if (value instanceof Enum<?>) {
             pfr.setEnumValue(value.toString());
         } else if (value instanceof Collection<?>) {
+            pfr.setObjectClass(Collection.class.getName());
             pfr.setCollectionValue(
                     ((Collection<?>) value).stream()
                             .map(o -> convertFlowValueRecord(FlowValueRecord.builder().value(o).build()))
                             .collect(Collectors.toList()));
         } else if (value instanceof CollectionSource) {
+            pfr.setObjectClass(Collection.class.getName());
             pfr.setCollectionValue(
                     ((CollectionSource) value).toCollection()
                             .stream()
