@@ -3,6 +3,7 @@ package org.flowninja.collectord.components;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.apache.commons.io.IOUtils;
@@ -30,6 +31,8 @@ public class FlowFileWriter implements InitializingBean {
     @Override
     public void afterPropertiesSet() throws Exception {
         this.objectMapper = new ObjectMapper();
+
+        objectMapper.setSerializationInclusion(Include.NON_NULL);
     }
 
     public void writeDataFlow(final DataFlow dataFlow) {
