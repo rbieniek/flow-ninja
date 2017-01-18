@@ -53,7 +53,8 @@ public class ICMPTypeCode implements CollectionSource {
             code = ICMPCode.fromCodeForType40(codeValue);
             break;
         default:
-            throw new IllegalArgumentException("Unknown ICMP type code: " + codeValue);
+            code = ICMPCode.UNASSIGNED;
+            break;
         }
 
         return new ICMPTypeCode(type, code);

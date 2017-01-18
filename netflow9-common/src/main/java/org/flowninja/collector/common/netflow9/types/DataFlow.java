@@ -13,7 +13,9 @@ import org.flowninja.common.types.Header;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 
 /**
  * @author rainer
@@ -22,10 +24,12 @@ import lombok.Getter;
 @Getter
 @Builder
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
+@ToString
+@EqualsAndHashCode
 public class DataFlow {
 
-	private Header header;
-	private InetAddress peerAddress;
-	private List<FlowValueRecord> records = new LinkedList<>();
-	private UUID uuid = UUID.randomUUID();
+    private Header header;
+    private InetAddress peerAddress;
+    private List<FlowValueRecord> records = new LinkedList<>();
+    private UUID uuid = UUID.randomUUID();
 }
