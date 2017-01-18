@@ -27,11 +27,11 @@ import org.flowninja.collector.common.netflow9.actors.NetworkServerStartupMessag
 import org.flowninja.collector.common.netflow9.actors.OptionsFlowMessage;
 import org.flowninja.collector.common.netflow9.actors.TemplateDecodingFailureMessage;
 import org.flowninja.collector.common.netflow9.components.SinkActorsProvider;
-import org.flowninja.collector.common.netflow9.types.Header;
 import org.flowninja.collector.netflow9.actors.support.SingleMessageTimedSinkActor;
 import org.flowninja.common.TestConfig;
 import org.flowninja.common.akka.AkkaConfiguration;
 import org.flowninja.common.akka.SpringActorProducer;
+import org.flowninja.common.types.Header;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;

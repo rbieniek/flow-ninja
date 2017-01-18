@@ -7,6 +7,8 @@ import java.net.InetAddress;
 import java.util.List;
 import java.util.UUID;
 
+import org.flowninja.common.types.Header;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -27,7 +27,6 @@ import org.flowninja.collector.common.netflow9.actors.TemplateDecodingFailureMes
 import org.flowninja.collector.common.netflow9.components.SinkActorsProvider;
 import org.flowninja.collector.common.netflow9.types.DataFlow;
 import org.flowninja.collector.common.netflow9.types.DataTemplate;
-import org.flowninja.collector.common.netflow9.types.Header;
 import org.flowninja.collector.common.netflow9.types.OptionsFlow;
 import org.flowninja.collector.common.netflow9.types.OptionsTemplate;
 import org.flowninja.collector.netflow9.actors.support.ActorsTestConfiguration;
@@ -37,6 +36,7 @@ import org.flowninja.collector.netflow9.packet.FlowBuffer;
 import org.flowninja.common.TestConfig;
 import org.flowninja.common.akka.AkkaConfiguration;
 import org.flowninja.common.akka.SpringActorProducer;
+import org.flowninja.common.types.Header;
 
 import io.netty.buffer.Unpooled;
 

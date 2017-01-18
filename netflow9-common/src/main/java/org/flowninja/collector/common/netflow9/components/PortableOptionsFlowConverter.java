@@ -7,9 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import org.flowninja.collector.common.netflow9.types.OptionsFlow;
-import org.flowninja.collector.common.netflow9.types.PortableOptionsFlow;
-import org.flowninja.collector.common.netflow9.types.PortableScopeFlowRecord;
 import org.flowninja.collector.common.netflow9.types.ScopeFlowRecord;
+import org.flowninja.common.types.PortableOptionsFlow;
+import org.flowninja.common.types.PortableScopeFlowRecord;
 
 import lombok.RequiredArgsConstructor;
 

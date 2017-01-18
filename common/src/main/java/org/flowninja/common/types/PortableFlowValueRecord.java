@@ -1,7 +1,7 @@
 /**
  *
  */
-package org.flowninja.collector.common.netflow9.types;
+package org.flowninja.common.types;
 
 import java.math.BigInteger;
 import java.util.List;

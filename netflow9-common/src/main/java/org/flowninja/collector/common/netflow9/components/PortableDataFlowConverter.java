@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import org.flowninja.collector.common.netflow9.types.DataFlow;
-import org.flowninja.collector.common.netflow9.types.PortableDataFlow;
+import org.flowninja.common.types.PortableDataFlow;
 
 import lombok.RequiredArgsConstructor;
 

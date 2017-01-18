@@ -1,10 +1,12 @@
 /**
  *
  */
-package org.flowninja.collector.common.netflow9.types;
+package org.flowninja.common.types;
 
 import java.io.Serializable;
 import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -21,12 +23,13 @@ import lombok.ToString;
  *
  */
 @NoArgsConstructor
-@AllArgsConstructor(access=AccessLevel.PRIVATE)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
 @Getter
 @ToString
 @EqualsAndHashCode
 public class Header implements Serializable {
+
     /**
      *
      */
@@ -39,7 +42,8 @@ public class Header implements Serializable {
     private long sequenceNumber;
     private long sourceId;
 
+    @JsonIgnore
     public Date getTimestamp() {
-        return new Date(unixSeconds*1000L);
+        return new Date(unixSeconds * 1000L);
     }
 }

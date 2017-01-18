@@ -2,8 +2,8 @@ package org.flowninja.collector.common.netflow9.actors;
 
 import java.net.InetAddress;
 
-import org.flowninja.collector.common.netflow9.types.Header;
 import org.flowninja.collector.common.netflow9.types.OptionsTemplate;
+import org.flowninja.common.types.Header;
 import org.flowninja.collector.common.netflow9.types.DataTemplate;
 
 import lombok.Builder;

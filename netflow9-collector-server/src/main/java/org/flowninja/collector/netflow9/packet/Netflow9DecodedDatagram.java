@@ -5,8 +5,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.flowninja.collector.common.netflow9.types.DataTemplate;
-import org.flowninja.collector.common.netflow9.types.Header;
 import org.flowninja.collector.common.netflow9.types.OptionsTemplate;
+import org.flowninja.common.types.Header;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

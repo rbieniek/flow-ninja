@@ -1,5 +1,7 @@
 
-dependencies {
+dependencies {	
+	compile project(':common')
+
 	compile group: 'org.slf4j', name: 'slf4j-api', version: slf4jVersion
 	
 	testCompile group: 'org.easytesting', name: 'fest-assert-core', version: festAssertVersion

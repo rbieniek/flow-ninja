@@ -29,7 +29,6 @@ import org.flowninja.collector.common.netflow9.components.SinkActorsProvider;
 import org.flowninja.collector.common.netflow9.types.DataTemplate;
 import org.flowninja.collector.common.netflow9.types.DataTemplateField;
 import org.flowninja.collector.common.netflow9.types.FieldType;
-import org.flowninja.collector.common.netflow9.types.Header;
 import org.flowninja.collector.common.netflow9.types.OptionField;
 import org.flowninja.collector.common.netflow9.types.OptionsTemplate;
 import org.flowninja.collector.common.netflow9.types.ScopeField;
@@ -44,6 +43,7 @@ import org.flowninja.collector.netflow9.packet.Netflow9DecodedDatagram;
 import org.flowninja.common.TestConfig;
 import org.flowninja.common.akka.AkkaConfiguration;
 import org.flowninja.common.akka.SpringActorProducer;
+import org.flowninja.common.types.Header;
 
 import io.netty.buffer.Unpooled;
 

@@ -13,13 +13,13 @@ import org.springframework.stereotype.Component;
 import org.flowninja.collector.common.netflow9.types.DataTemplate;
 import org.flowninja.collector.common.netflow9.types.DataTemplateField;
 import org.flowninja.collector.common.netflow9.types.FieldType;
-import org.flowninja.collector.common.netflow9.types.Header;
 import org.flowninja.collector.common.netflow9.types.OptionField;
 import org.flowninja.collector.common.netflow9.types.OptionsTemplate;
 import org.flowninja.collector.common.netflow9.types.ScopeField;
 import org.flowninja.collector.common.netflow9.types.ScopeType;
 import org.flowninja.collector.netflow9.packet.FlowBuffer;
 import org.flowninja.collector.netflow9.packet.Netflow9DecodedDatagram;
+import org.flowninja.common.types.Header;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandler.Sharable;

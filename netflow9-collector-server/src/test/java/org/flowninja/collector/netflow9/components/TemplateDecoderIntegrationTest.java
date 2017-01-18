@@ -29,7 +29,6 @@ import org.flowninja.collector.common.netflow9.types.DataTemplate;
 import org.flowninja.collector.common.netflow9.types.FieldType;
 import org.flowninja.collector.common.netflow9.types.FlowDirection;
 import org.flowninja.collector.common.netflow9.types.FlowValueRecord;
-import org.flowninja.collector.common.netflow9.types.Header;
 import org.flowninja.collector.common.netflow9.types.OptionsFlow;
 import org.flowninja.collector.common.netflow9.types.OptionsTemplate;
 import org.flowninja.collector.common.netflow9.types.ScopeFlowRecord;
@@ -42,6 +41,7 @@ import org.flowninja.collector.common.types.CounterFactory;
 import org.flowninja.collector.common.types.EnumCodeValue;
 import org.flowninja.collector.netflow9.packet.Netflow9DecodedDatagram;
 import org.flowninja.common.TestConfig;
+import org.flowninja.common.types.Header;
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler.Sharable;

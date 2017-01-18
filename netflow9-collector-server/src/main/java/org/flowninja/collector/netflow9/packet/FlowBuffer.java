@@ -5,7 +5,7 @@ package org.flowninja.collector.netflow9.packet;
 
 import java.io.Closeable;
 
-import org.flowninja.collector.common.netflow9.types.Header;
+import org.flowninja.common.types.Header;
 
 import io.netty.buffer.ByteBuf;
 import lombok.AccessLevel;

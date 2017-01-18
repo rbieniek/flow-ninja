@@ -18,7 +18,6 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import org.flowninja.collector.common.netflow9.types.DataTemplate;
-import org.flowninja.collector.common.netflow9.types.Header;
 import org.flowninja.collector.common.netflow9.types.OptionsTemplate;
 import org.flowninja.collector.netflow9.actors.ProcessFlowBufferActorIntegrationTest.TestConfiguration.MockTemplateRegistryActor;
 import org.flowninja.collector.netflow9.actors.TemplateDecoderActor.DataTemplateDecoderRequest;
@@ -31,6 +30,7 @@ import org.flowninja.common.akka.ActorUtils;
 import org.flowninja.common.akka.AkkaComponent;
 import org.flowninja.common.akka.AkkaConfiguration;
 import org.flowninja.common.akka.SpringActorProducer;
+import org.flowninja.common.types.Header;
 
 import io.netty.buffer.Unpooled;
 

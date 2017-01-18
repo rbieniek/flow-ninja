@@ -11,10 +11,10 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 
 import org.flowninja.collector.common.netflow9.types.FlowValueRecord;
-import org.flowninja.collector.common.netflow9.types.PortableFlowValueRecord;
 import org.flowninja.collector.common.types.CollectionSource;
 import org.flowninja.collector.common.types.Counter;
 import org.flowninja.collector.common.types.EncodedData;
+import org.flowninja.common.types.PortableFlowValueRecord;
 
 @Component
 public class PortableFlowValueConverter {
