@@ -12,11 +12,11 @@ import org.junit.Test;
 import org.flowninja.collector.common.netflow9.components.PortableFlowValueConverter;
 import org.flowninja.collector.common.netflow9.types.FieldType;
 import org.flowninja.collector.common.netflow9.types.FlowValueRecord;
-import org.flowninja.collector.common.protocol.types.ICMPCode;
-import org.flowninja.collector.common.protocol.types.ICMPType;
-import org.flowninja.collector.common.protocol.types.ICMPTypeCode;
-import org.flowninja.collector.common.protocol.types.TCPFLags;
 import org.flowninja.collector.common.types.EncodedData;
+import org.flowninja.common.protocol.types.ICMPCode;
+import org.flowninja.common.protocol.types.ICMPType;
+import org.flowninja.common.protocol.types.ICMPTypeCode;
+import org.flowninja.common.protocol.types.TCPFLags;
 import org.flowninja.common.types.PortableFlowValueRecord;
 
 import static org.assertj.core.api.Assertions.assertThat;

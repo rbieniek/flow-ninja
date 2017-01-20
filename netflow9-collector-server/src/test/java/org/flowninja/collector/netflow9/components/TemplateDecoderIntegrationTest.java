@@ -33,14 +33,14 @@ import org.flowninja.collector.common.netflow9.types.OptionsFlow;
 import org.flowninja.collector.common.netflow9.types.OptionsTemplate;
 import org.flowninja.collector.common.netflow9.types.ScopeFlowRecord;
 import org.flowninja.collector.common.netflow9.types.ScopeType;
-import org.flowninja.collector.common.protocol.types.IPProtocol;
-import org.flowninja.collector.common.protocol.types.IPTypeOfService;
-import org.flowninja.collector.common.protocol.types.TCPFLags;
 import org.flowninja.collector.common.types.Counter;
 import org.flowninja.collector.common.types.CounterFactory;
 import org.flowninja.collector.common.types.EnumCodeValue;
 import org.flowninja.collector.netflow9.packet.Netflow9DecodedDatagram;
 import org.flowninja.common.TestConfig;
+import org.flowninja.common.protocol.types.IPProtocol;
+import org.flowninja.common.protocol.types.IPTypeOfService;
+import org.flowninja.common.protocol.types.TCPFLags;
 import org.flowninja.common.types.Header;
 
 import io.netty.channel.Channel;

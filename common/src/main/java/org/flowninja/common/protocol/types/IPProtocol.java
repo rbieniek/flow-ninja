@@ -1,7 +1,7 @@
 /**
  *
  */
-package org.flowninja.collector.common.protocol.types;
+package org.flowninja.common.protocol.types;
 
 /**
  * IP Protocol definition

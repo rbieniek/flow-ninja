@@ -1,7 +1,7 @@
 /**
  *
  */
-package org.flowninja.collector.common.protocol.types;
+package org.flowninja.common.protocol.types;
 
 import java.util.Arrays;
 import java.util.Collection;

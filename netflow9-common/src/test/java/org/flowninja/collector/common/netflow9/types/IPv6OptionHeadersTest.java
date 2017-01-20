@@ -7,6 +7,8 @@ import java.util.Set;
 
 import org.junit.Test;
 
+import org.flowninja.common.protocol.types.IPv6OptionHeaders;
+
 import static org.fest.assertions.api.Assertions.assertThat;
 
 /**

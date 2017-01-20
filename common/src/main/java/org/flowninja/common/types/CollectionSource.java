@@ -1,4 +1,4 @@
-package org.flowninja.collector.common.types;
+package org.flowninja.common.types;
 
 import java.util.Collection;
 
