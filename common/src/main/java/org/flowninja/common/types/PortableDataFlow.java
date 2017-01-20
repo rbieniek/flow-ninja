@@ -32,4 +32,10 @@ public class PortableDataFlow {
     private String peerAddress;
     private List<PortableFlowValueRecord> records = new LinkedList<>();
     private String uuid;
+
+    private InternetAddress srcAddress;
+    private InternetAddress dstAddress;
+    private InternetAddress nextHop;
+    private InternetAddress bgpNextHop;
+    private PayloadCounters payloadCounters;
 }
