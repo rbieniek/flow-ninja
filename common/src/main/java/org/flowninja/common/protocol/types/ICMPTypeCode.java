@@ -6,7 +6,7 @@ package org.flowninja.common.protocol.types;
 import java.util.Arrays;
 import java.util.Collection;
 
-import org.flowninja.collector.common.types.CollectionSource;
+import org.flowninja.common.types.CollectionSource;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
