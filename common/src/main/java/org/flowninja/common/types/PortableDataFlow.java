@@ -37,5 +37,8 @@ public class PortableDataFlow {
     private InternetAddress dstAddress;
     private InternetAddress nextHop;
     private InternetAddress bgpNextHop;
+    private ProtocolFlags protocolFlags;
     private PayloadCounters payloadCounters;
+    private TypeOfService typeOfService;
+    private FlowStatistics flowStatistics;
 }

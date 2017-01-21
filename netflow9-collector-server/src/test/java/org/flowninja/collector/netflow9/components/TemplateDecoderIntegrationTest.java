@@ -27,7 +27,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.flowninja.collector.common.netflow9.types.DataFlow;
 import org.flowninja.collector.common.netflow9.types.DataTemplate;
 import org.flowninja.collector.common.netflow9.types.FieldType;
-import org.flowninja.collector.common.netflow9.types.FlowDirection;
 import org.flowninja.collector.common.netflow9.types.FlowValueRecord;
 import org.flowninja.collector.common.netflow9.types.OptionsFlow;
 import org.flowninja.collector.common.netflow9.types.OptionsTemplate;
@@ -41,6 +40,7 @@ import org.flowninja.common.TestConfig;
 import org.flowninja.common.protocol.types.IPProtocol;
 import org.flowninja.common.protocol.types.IPTypeOfService;
 import org.flowninja.common.protocol.types.TCPFLags;
+import org.flowninja.common.types.FlowDirection;
 import org.flowninja.common.types.Header;
 
 import io.netty.channel.Channel;

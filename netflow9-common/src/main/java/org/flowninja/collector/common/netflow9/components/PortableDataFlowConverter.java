@@ -5,10 +5,12 @@ import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.util.Base64;
 import java.util.List;
+import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -16,10 +18,22 @@ import org.springframework.stereotype.Component;
 import org.flowninja.collector.common.netflow9.types.DataFlow;
 import org.flowninja.collector.common.netflow9.types.FlowValueRecord;
 import org.flowninja.collector.common.types.Counter;
+import org.flowninja.common.protocol.types.ForwardingStatus;
+import org.flowninja.common.protocol.types.ICMPTypeCode;
+import org.flowninja.common.protocol.types.IGMPType;
+import org.flowninja.common.protocol.types.IPProtocol;
+import org.flowninja.common.protocol.types.IPProtocolVersion;
+import org.flowninja.common.protocol.types.IPTypeOfService;
+import org.flowninja.common.protocol.types.IPv6OptionHeaders;
+import org.flowninja.common.protocol.types.TCPFLags;
+import org.flowninja.common.types.FlowDirection;
+import org.flowninja.common.types.FlowStatistics;
 import org.flowninja.common.types.InternetAddress;
 import org.flowninja.common.types.InternetAddressType;
 import org.flowninja.common.types.PayloadCounters;
 import org.flowninja.common.types.PortableDataFlow;
+import org.flowninja.common.types.ProtocolFlags;
+import org.flowninja.common.types.TypeOfService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -42,6 +56,7 @@ public class PortableDataFlowConverter {
         return portableFlow;
     }
 
+    @SuppressWarnings("unchecked")
     private void fillPortableFlowFromFlowRecords(final PortableDataFlow flow, final List<FlowValueRecord> records) {
         for (final FlowValueRecord record : records) {
             switch (record.getType()) {
@@ -189,8 +204,94 @@ public class PortableDataFlowConverter {
                                 (g, v) -> g.setPayloadCounters(v),
                                 () -> new PayloadCounters()).setInPermanentBytes(bi));
                 break;
-            case TOTAL_FLOWS_EXP:
+            case SRC_TOS:
+                onDemandField(flow, f -> f.getTypeOfService(), (g, v) -> g.setTypeOfService(v), () -> new TypeOfService())
+                        .setSrcTos((IPTypeOfService) record.getValue());
                 break;
+            case DST_TOS:
+                onDemandField(flow, f -> f.getTypeOfService(), (g, v) -> g.setTypeOfService(v), () -> new TypeOfService())
+                        .setDstTos((IPTypeOfService) record.getValue());
+                break;
+            case POST_IP_DIFF_SERV_CODE_POINT:
+                onDemandField(flow, f -> f.getTypeOfService(), (g, v) -> g.setTypeOfService(v), () -> new TypeOfService())
+                        .setPostIpDiffServCodePoint((IPTypeOfService) record.getValue());
+                break;
+            case MIN_PKT_LNGTH:
+                onDemandField(flow, f -> f.getFlowStatistics(), (g, v) -> g.setFlowStatistics(v), () -> new FlowStatistics())
+                        .setMinPktLength((Integer) record.getValue());
+                break;
+            case MAX_PKT_LNGTH:
+                onDemandField(flow, f -> f.getFlowStatistics(), (g, v) -> g.setFlowStatistics(v), () -> new FlowStatistics())
+                        .setMaxPktLength((Integer) record.getValue());
+                break;
+            case FLOW_ACTIVE_TIMEOUT:
+                onDemandField(flow, f -> f.getFlowStatistics(), (g, v) -> g.setFlowStatistics(v), () -> new FlowStatistics())
+                        .setFlowActiveTimeout((Integer) record.getValue());
+                break;
+            case FLOW_INACTIVE_TIMEOUT:
+                onDemandField(flow, f -> f.getFlowStatistics(), (g, v) -> g.setFlowStatistics(v), () -> new FlowStatistics())
+                        .setFlowInactiveTimeout((Integer) record.getValue());
+                break;
+            case TOTAL_FLOWS_EXP:
+                onDemandField(flow, f -> f.getFlowStatistics(), (g, v) -> g.setFlowStatistics(v), () -> new FlowStatistics())
+                        .setTotalFlowsExported((Integer) record.getValue());
+                break;
+            case FLOW_CLASS:
+                onDemandField(flow, f -> f.getFlowStatistics(), (g, v) -> g.setFlowStatistics(v), () -> new FlowStatistics())
+                        .setFlowClass((Integer) record.getValue());
+                break;
+            case SAMPLING_INTERVAL:
+                onDemandField(flow, f -> f.getFlowStatistics(), (g, v) -> g.setFlowStatistics(v), () -> new FlowStatistics())
+                        .setSamplingInterval((Integer) record.getValue());
+                break;
+            case FLOW_SAMPLER_RANDOM_INTERVAL:
+                onDemandField(flow, f -> f.getFlowStatistics(), (g, v) -> g.setFlowStatistics(v), () -> new FlowStatistics())
+                        .setFlowSamplerRandomInterval((Integer) record.getValue());
+                break;
+            case LAST_SWITCHED:
+                onDemandField(flow, f -> f.getFlowStatistics(), (g, v) -> g.setFlowStatistics(v), () -> new FlowStatistics())
+                        .setLastSwitched((Long) record.getValue());
+                break;
+            case FIRST_SWITCHED:
+                onDemandField(flow, f -> f.getFlowStatistics(), (g, v) -> g.setFlowStatistics(v), () -> new FlowStatistics())
+                        .setFirstSwitched((Long) record.getValue());
+                break;
+            case DIRECTION:
+                onDemandField(flow, f -> f.getFlowStatistics(), (g, v) -> g.setFlowStatistics(v), () -> new FlowStatistics())
+                        .setFlowDirection((FlowDirection) record.getValue());
+                break;
+
+            case PROTOCOL:
+                onDemandField(flow, f -> f.getProtocolFlags(), (g, v) -> g.setProtocolFlags(v), () -> new ProtocolFlags())
+                        .setIpProtocol((IPProtocol) record.getValue());
+                break;
+            case IP_PROTOCOL_VERSION:
+                onDemandField(flow, f -> f.getProtocolFlags(), (g, v) -> g.setProtocolFlags(v), () -> new ProtocolFlags())
+                        .setIpProtocolVersion((IPProtocolVersion) record.getValue());
+                break;
+            case ICMP_TYPE:
+                onDemandField(flow, f -> f.getProtocolFlags(), (g, v) -> g.setProtocolFlags(v), () -> new ProtocolFlags())
+                        .setIcmpCode(((ICMPTypeCode) record.getValue()).getCode());
+                onDemandField(flow, f -> f.getProtocolFlags(), (g, v) -> g.setProtocolFlags(v), () -> new ProtocolFlags())
+                        .setIcmpType(((ICMPTypeCode) record.getValue()).getType());
+                break;
+            case MUL_IGMP_TYPE:
+                onDemandField(flow, f -> f.getProtocolFlags(), (g, v) -> g.setProtocolFlags(v), () -> new ProtocolFlags())
+                        .setIgmpType((IGMPType) record.getValue());
+                break;
+            case FORWARDING_STATUS:
+                onDemandField(flow, f -> f.getProtocolFlags(), (g, v) -> g.setProtocolFlags(v), () -> new ProtocolFlags())
+                        .setForwardingStatus((ForwardingStatus) record.getValue());
+                break;
+            case IPV6_OPTION_HEADERS:
+                onDemandField(flow, f -> f.getProtocolFlags(), (g, v) -> g.setProtocolFlags(v), () -> new ProtocolFlags())
+                        .setIpv6OptionHeaders(setToList((Set<IPv6OptionHeaders>) record.getValue()));
+                break;
+            case TCP_FLAGS:
+                onDemandField(flow, f -> f.getProtocolFlags(), (g, v) -> g.setProtocolFlags(v), () -> new ProtocolFlags())
+                        .setTcpFlags(setToList((Set<TCPFLags>) record.getValue()));
+                break;
+
             case INPUT_SNMP:
                 break;
             case OUTPUT_SNMP:
@@ -253,5 +354,9 @@ public class PortableDataFlowConverter {
         } else {
             consumer.accept(BigInteger.ZERO);
         }
+    }
+
+    private <T> List<T> setToList(final Set<T> set) {
+        return set.stream().collect(Collectors.toList());
     }
 }

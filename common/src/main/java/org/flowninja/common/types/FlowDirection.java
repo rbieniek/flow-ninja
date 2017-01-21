@@ -1,7 +1,7 @@
 /**
 * 
 */
-package org.flowninja.collector.common.netflow9.types;
+package org.flowninja.common.types;
 
 /**
  * @author rainer
