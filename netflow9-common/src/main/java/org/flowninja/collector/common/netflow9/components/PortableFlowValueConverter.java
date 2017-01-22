@@ -414,17 +414,12 @@ public class PortableFlowValueConverter {
         return exValue;
     }
 
-    private void putNumber(final Number value, final Consumer<BigInteger> consumer) {
-        if (value instanceof BigInteger) {
-            consumer.accept((BigInteger) value);
-        } else if (value instanceof Long) {
-            consumer.accept(BigInteger.valueOf((Long) value));
-        } else if (value instanceof Integer) {
-            consumer.accept(BigInteger.valueOf(Integer.valueOf((Integer) value).longValue()));
-        } else {
-            consumer.accept(BigInteger.ZERO);
-        }
-    }
+    /*
+     * private void putNumber(final Number value, final Consumer<BigInteger> consumer) { if (value instanceof BigInteger) {
+     * consumer.accept((BigInteger) value); } else if (value instanceof Long) { consumer.accept(BigInteger.valueOf((Long)
+     * value)); } else if (value instanceof Integer) { consumer.accept(BigInteger.valueOf(Integer.valueOf((Integer)
+     * value).longValue())); } else { consumer.accept(BigInteger.ZERO); } }
+     */
 
     private void putCounter(final Counter counter, final Consumer<BigInteger> consumer) {
         final Number value = counter.value();
