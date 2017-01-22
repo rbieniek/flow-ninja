@@ -37,4 +37,8 @@ public class ProtocolFlags {
     private ICMPCode icmpCode;
     private IGMPType igmpType;
     private ForwardingStatus forwardingStatus;
+    private Integer minTtl;
+    private Integer maxTtl;
+    private Integer ipv4Ident;
+    private Integer ipv6FlowLabel;
 }

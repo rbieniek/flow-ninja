@@ -17,13 +17,11 @@ import org.springframework.stereotype.Component;
 import org.flowninja.collector.common.netflow9.types.DataFlow;
 import org.flowninja.collector.common.netflow9.types.DataTemplate;
 import org.flowninja.collector.common.netflow9.types.DataTemplateField;
-import org.flowninja.collector.common.netflow9.types.EngineType;
 import org.flowninja.collector.common.netflow9.types.FieldType;
 import org.flowninja.collector.common.netflow9.types.FlowValueRecord;
 import org.flowninja.collector.common.netflow9.types.OptionField;
 import org.flowninja.collector.common.netflow9.types.OptionsFlow;
 import org.flowninja.collector.common.netflow9.types.OptionsTemplate;
-import org.flowninja.collector.common.netflow9.types.SamplingAlgorithm;
 import org.flowninja.collector.common.netflow9.types.ScopeField;
 import org.flowninja.collector.common.netflow9.types.ScopeFlowRecord;
 import org.flowninja.collector.common.types.Counter;
@@ -40,7 +38,9 @@ import org.flowninja.common.protocol.types.IPTypeOfService;
 import org.flowninja.common.protocol.types.IPv6OptionHeaders;
 import org.flowninja.common.protocol.types.MPLSTopLabelType;
 import org.flowninja.common.protocol.types.TCPFLags;
+import org.flowninja.common.types.EngineType;
 import org.flowninja.common.types.FlowDirection;
+import org.flowninja.common.types.SamplingAlgorithm;
 
 import io.netty.buffer.ByteBuf;
 

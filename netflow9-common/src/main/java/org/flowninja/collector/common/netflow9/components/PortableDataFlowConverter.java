@@ -12,12 +12,12 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import org.flowninja.collector.common.netflow9.types.DataFlow;
 import org.flowninja.collector.common.netflow9.types.FlowValueRecord;
 import org.flowninja.collector.common.types.Counter;
+import org.flowninja.collector.common.types.EncodedData;
 import org.flowninja.common.protocol.types.ForwardingStatus;
 import org.flowninja.common.protocol.types.ICMPTypeCode;
 import org.flowninja.common.protocol.types.IGMPType;
@@ -26,6 +26,7 @@ import org.flowninja.common.protocol.types.IPProtocolVersion;
 import org.flowninja.common.protocol.types.IPTypeOfService;
 import org.flowninja.common.protocol.types.IPv6OptionHeaders;
 import org.flowninja.common.protocol.types.TCPFLags;
+import org.flowninja.common.types.EngineType;
 import org.flowninja.common.types.FlowDirection;
 import org.flowninja.common.types.FlowStatistics;
 import org.flowninja.common.types.InternetAddress;
@@ -33,22 +34,17 @@ import org.flowninja.common.types.InternetAddressType;
 import org.flowninja.common.types.PayloadCounters;
 import org.flowninja.common.types.PortableDataFlow;
 import org.flowninja.common.types.ProtocolFlags;
+import org.flowninja.common.types.SamplingAlgorithm;
 import org.flowninja.common.types.TypeOfService;
 
-import lombok.RequiredArgsConstructor;
-
 @Component
-@RequiredArgsConstructor(onConstructor = @__({ @Autowired }))
 public class PortableDataFlowConverter {
-
-    private final PortableFlowValueConverter portableFlowValueConverter;
 
     public PortableDataFlow convertDataFlow(final DataFlow dataFlow) {
         final PortableDataFlow portableFlow = PortableDataFlow.builder()
                 .header(dataFlow.getHeader())
                 .peerAddress(dataFlow.getPeerAddress().getHostAddress())
                 .uuid(dataFlow.getUuid().toString())
-                .records(portableFlowValueConverter.convertFlowValueRecords(dataFlow.getRecords()))
                 .build();
 
         fillPortableFlowFromFlowRecords(portableFlow, dataFlow.getRecords());
@@ -56,12 +52,13 @@ public class PortableDataFlowConverter {
         return portableFlow;
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "checkstyle:JavaNCSS", "checkstyle:CyclomaticComplexity" })
     private void fillPortableFlowFromFlowRecords(final PortableDataFlow flow, final List<FlowValueRecord> records) {
         for (final FlowValueRecord record : records) {
             switch (record.getType()) {
             case IPV4_SRC_ADDR:
             case IPV6_SRC_ADDR:
+            case IPV4_SRC_PREFIX:
                 putInternetAddress(
                         (InetAddress) record.getValue(),
                         () -> onDemandField(
@@ -72,6 +69,7 @@ public class PortableDataFlowConverter {
                 break;
             case IPV4_DST_ADDR:
             case IPV6_DST_ADDR:
+            case IPV4_DST_PREFIX:
                 putInternetAddress(
                         (InetAddress) record.getValue(),
                         () -> onDemandField(
@@ -113,6 +111,48 @@ public class PortableDataFlowConverter {
             case L4_SRC_PORT:
                 onDemandField(flow, f -> f.getSrcAddress(), (g, a) -> g.setSrcAddress(a), () -> new InternetAddress())
                         .setPort((Integer) record.getValue());
+                break;
+            case DST_AS:
+                onDemandField(flow, f -> f.getDstAddress(), (g, a) -> g.setDstAddress(a), () -> new InternetAddress())
+                        .setAsNumber((Integer) record.getValue());
+                break;
+            case SRC_AS:
+                onDemandField(flow, f -> f.getSrcAddress(), (g, a) -> g.setSrcAddress(a), () -> new InternetAddress())
+                        .setAsNumber((Integer) record.getValue());
+                break;
+            case DST_VLAN:
+                onDemandField(flow, f -> f.getDstAddress(), (g, a) -> g.setDstAddress(a), () -> new InternetAddress())
+                        .setVlanNumber((Integer) record.getValue());
+                break;
+            case SRC_VLAN:
+                onDemandField(flow, f -> f.getSrcAddress(), (g, a) -> g.setSrcAddress(a), () -> new InternetAddress())
+                        .setVlanNumber((Integer) record.getValue());
+                break;
+            case DST_TRAFFIC_INDEX:
+                onDemandField(flow, f -> f.getDstAddress(), (g, a) -> g.setDstAddress(a), () -> new InternetAddress())
+                        .setTrafficIndex((Integer) record.getValue());
+                break;
+            case SRC_TRAFFIC_INDEX:
+                onDemandField(flow, f -> f.getSrcAddress(), (g, a) -> g.setSrcAddress(a), () -> new InternetAddress())
+                        .setTrafficIndex((Integer) record.getValue());
+                break;
+            case INPUT_SNMP:
+                putCounter(
+                        (Counter) record.getValue(),
+                        bi -> onDemandField(
+                                flow,
+                                f -> f.getSrcAddress(),
+                                (g, a) -> g.setSrcAddress(a),
+                                () -> new InternetAddress()).setSnmpInterfaceIndex(bi));
+                break;
+            case OUTPUT_SNMP:
+                putCounter(
+                        (Counter) record.getValue(),
+                        bi -> onDemandField(
+                                flow,
+                                f -> f.getDstAddress(),
+                                (g, a) -> g.setDstAddress(a),
+                                () -> new InternetAddress()).setSnmpInterfaceIndex(bi));
                 break;
             case IN_BYTES:
                 putCounter(
@@ -246,7 +286,7 @@ public class PortableDataFlowConverter {
                 break;
             case FLOW_SAMPLER_RANDOM_INTERVAL:
                 onDemandField(flow, f -> f.getFlowStatistics(), (g, v) -> g.setFlowStatistics(v), () -> new FlowStatistics())
-                        .setFlowSamplerRandomInterval((Integer) record.getValue());
+                        .setFlowSamplerRandomInterval((Long) record.getValue());
                 break;
             case LAST_SWITCHED:
                 onDemandField(flow, f -> f.getFlowStatistics(), (g, v) -> g.setFlowStatistics(v), () -> new FlowStatistics())
@@ -260,7 +300,48 @@ public class PortableDataFlowConverter {
                 onDemandField(flow, f -> f.getFlowStatistics(), (g, v) -> g.setFlowStatistics(v), () -> new FlowStatistics())
                         .setFlowDirection((FlowDirection) record.getValue());
                 break;
-
+            case APPLICATION_DESCRIPTION:
+                onDemandField(flow, f -> f.getFlowStatistics(), (g, v) -> g.setFlowStatistics(v), () -> new FlowStatistics())
+                        .setApplicationDescription((String) record.getValue());
+                break;
+            case APPLICATION_NAME:
+                onDemandField(flow, f -> f.getFlowStatistics(), (g, v) -> g.setFlowStatistics(v), () -> new FlowStatistics())
+                        .setApplicationName((String) record.getValue());
+                break;
+            case APPLICATION_TAG:
+                onDemandField(flow, f -> f.getFlowStatistics(), (g, v) -> g.setFlowStatistics(v), () -> new FlowStatistics())
+                        .setApplicationDescription(((EncodedData) record.getValue()).getEncodedData());
+                break;
+            case ENGINE_ID:
+                onDemandField(flow, f -> f.getFlowStatistics(), (g, v) -> g.setFlowStatistics(v), () -> new FlowStatistics())
+                        .setEngineId((Integer) record.getValue());
+                break;
+            case ENGINE_TYPE:
+                onDemandField(flow, f -> f.getFlowStatistics(), (g, v) -> g.setFlowStatistics(v), () -> new FlowStatistics())
+                        .setEngineType((EngineType) record.getValue());
+                break;
+            case FLOW_SAMPLER_ID:
+                onDemandField(flow, f -> f.getFlowStatistics(), (g, v) -> g.setFlowStatistics(v), () -> new FlowStatistics())
+                        .setFlowSamplerId((Integer) record.getValue());
+                break;
+            case FLOW_SAMPLER_MODE:
+            case SAMPLING_ALGORITHM:
+                onDemandField(flow, f -> f.getFlowStatistics(), (g, v) -> g.setFlowStatistics(v), () -> new FlowStatistics())
+                        .setSamplingAlgorithm((SamplingAlgorithm) record.getValue());
+                break;
+            case FLOWS:
+                putCounter(
+                        (Counter) record.getValue(),
+                        bi -> onDemandField(
+                                flow,
+                                f -> f.getFlowStatistics(),
+                                (g, v) -> g.setFlowStatistics(v),
+                                () -> new FlowStatistics()).setFlows(bi));
+                break;
+            case SAMPLER_NAME:
+                onDemandField(flow, f -> f.getFlowStatistics(), (g, v) -> g.setFlowStatistics(v), () -> new FlowStatistics())
+                        .setSamplerName((String) record.getValue());
+                break;
             case PROTOCOL:
                 onDemandField(flow, f -> f.getProtocolFlags(), (g, v) -> g.setProtocolFlags(v), () -> new ProtocolFlags())
                         .setIpProtocol((IPProtocol) record.getValue());
@@ -291,16 +372,28 @@ public class PortableDataFlowConverter {
                 onDemandField(flow, f -> f.getProtocolFlags(), (g, v) -> g.setProtocolFlags(v), () -> new ProtocolFlags())
                         .setTcpFlags(setToList((Set<TCPFLags>) record.getValue()));
                 break;
+            case MAX_TTL:
+                onDemandField(flow, f -> f.getProtocolFlags(), (g, v) -> g.setProtocolFlags(v), () -> new ProtocolFlags())
+                        .setMinTtl((Integer) record.getValue());
+                break;
+            case MIN_TTL:
+                onDemandField(flow, f -> f.getProtocolFlags(), (g, v) -> g.setProtocolFlags(v), () -> new ProtocolFlags())
+                        .setMaxTtl((Integer) record.getValue());
+                break;
+            case IPV4_IDENT:
+                onDemandField(flow, f -> f.getProtocolFlags(), (g, v) -> g.setProtocolFlags(v), () -> new ProtocolFlags())
+                        .setIpv4Ident((Integer) record.getValue());
+                break;
+            case IPV6_FLOW_LABEL:
+                onDemandField(flow, f -> f.getProtocolFlags(), (g, v) -> g.setProtocolFlags(v), () -> new ProtocolFlags())
+                        .setIpv6FlowLabel((Integer) record.getValue());
+                break;
 
-            case INPUT_SNMP:
+            case IF_DESC:
                 break;
-            case OUTPUT_SNMP:
+            case IF_NAME:
                 break;
-            case L2_PKT_SECT_OFFSET:
-                break;
-            case L2_PKT_SECT_SIZE:
-                break;
-            case FLOWS:
+            default:
                 break;
             }
         }

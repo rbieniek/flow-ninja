@@ -6,7 +6,7 @@ package org.flowninja.collector.netflow9.components;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.fest.assertions.core.Condition;
 import org.flowninja.collector.common.netflow9.types.ScopeField;
-import org.flowninja.collector.common.netflow9.types.ScopeType;
+import org.flowninja.common.types.ScopeType;
 
 /**
  * @author rainer

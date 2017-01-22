@@ -31,7 +31,6 @@ import org.flowninja.collector.common.netflow9.types.FlowValueRecord;
 import org.flowninja.collector.common.netflow9.types.OptionsFlow;
 import org.flowninja.collector.common.netflow9.types.OptionsTemplate;
 import org.flowninja.collector.common.netflow9.types.ScopeFlowRecord;
-import org.flowninja.collector.common.netflow9.types.ScopeType;
 import org.flowninja.collector.common.types.Counter;
 import org.flowninja.collector.common.types.CounterFactory;
 import org.flowninja.collector.common.types.EnumCodeValue;
@@ -42,6 +41,7 @@ import org.flowninja.common.protocol.types.IPTypeOfService;
 import org.flowninja.common.protocol.types.TCPFLags;
 import org.flowninja.common.types.FlowDirection;
 import org.flowninja.common.types.Header;
+import org.flowninja.common.types.ScopeType;
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler.Sharable;

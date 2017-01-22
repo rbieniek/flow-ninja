@@ -3,6 +3,8 @@
  */
 package org.flowninja.collector.common.netflow9.types;
 
+import org.flowninja.common.types.ScopeType;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

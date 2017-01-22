@@ -32,7 +32,6 @@ import org.flowninja.collector.common.netflow9.types.FieldType;
 import org.flowninja.collector.common.netflow9.types.OptionField;
 import org.flowninja.collector.common.netflow9.types.OptionsTemplate;
 import org.flowninja.collector.common.netflow9.types.ScopeField;
-import org.flowninja.collector.common.netflow9.types.ScopeType;
 import org.flowninja.collector.netflow9.actors.support.ActorsTestConfiguration;
 import org.flowninja.collector.netflow9.actors.support.SingleMessageTimedSinkActor;
 import org.flowninja.collector.netflow9.components.InetSocketAddressPeerAddressMapper;
@@ -44,6 +43,7 @@ import org.flowninja.common.TestConfig;
 import org.flowninja.common.akka.AkkaConfiguration;
 import org.flowninja.common.akka.SpringActorProducer;
 import org.flowninja.common.types.Header;
+import org.flowninja.common.types.ScopeType;
 
 import io.netty.buffer.Unpooled;
 

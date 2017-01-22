@@ -1,5 +1,7 @@
 package org.flowninja.common.types;
 
+import java.math.BigInteger;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,4 +25,8 @@ public class InternetAddress {
     private InternetAddressType type;
     private Integer port;
     private Integer mask;
+    private Integer asNumber;
+    private Integer vlanNumber;
+    private BigInteger snmpInterfaceIndex;
+    private Integer trafficIndex;
 }

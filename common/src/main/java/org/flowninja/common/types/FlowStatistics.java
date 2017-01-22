@@ -1,5 +1,7 @@
 package org.flowninja.common.types;
 
+import java.math.BigInteger;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,7 +28,16 @@ public class FlowStatistics {
     private Integer totalFlowsExported;
     private Integer flowClass;
     private Integer samplingInterval;
-    private Integer flowSamplerRandomInterval;
+    private Long flowSamplerRandomInterval;
     private Long firstSwitched;
     private Long lastSwitched;
+    private String applicationName;
+    private String applicationDescription;
+    private String applicationTag;
+    private Integer engineId;
+    private EngineType engineType;
+    private Integer flowSamplerId;
+    private SamplingAlgorithm samplingAlgorithm;
+    private BigInteger flows;
+    private String samplerName;
 }

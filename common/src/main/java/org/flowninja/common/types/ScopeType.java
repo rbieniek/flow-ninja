@@ -1,7 +1,7 @@
 /**
  *
  */
-package org.flowninja.collector.common.netflow9.types;
+package org.flowninja.common.types;
 
 /**
  * Scope type for exported Netflow 9 metadata

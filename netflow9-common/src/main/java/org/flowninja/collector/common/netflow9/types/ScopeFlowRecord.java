@@ -4,6 +4,7 @@
 package org.flowninja.collector.common.netflow9.types;
 
 import org.flowninja.collector.common.types.Counter;
+import org.flowninja.common.types.ScopeType;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

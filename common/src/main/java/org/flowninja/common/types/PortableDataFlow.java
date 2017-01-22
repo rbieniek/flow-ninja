@@ -3,9 +3,6 @@
  */
 package org.flowninja.common.types;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,7 +27,6 @@ public class PortableDataFlow {
 
     private Header header;
     private String peerAddress;
-    private List<PortableFlowValueRecord> records = new LinkedList<>();
     private String uuid;
 
     private InternetAddress srcAddress;
