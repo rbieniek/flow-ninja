@@ -27,6 +27,6 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class PortableScopeFlowRecord {
 
-    private String type;
+    private ScopeType type;
     private BigInteger value;
 }

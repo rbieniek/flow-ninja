@@ -1,5 +1,6 @@
 package org.flowninja.collector.common.netflow9.components;
 
+import java.math.BigInteger;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,7 +25,7 @@ public class PortableOptionsFlowConverter {
                 .header(optionsFlow.getHeader())
                 .peerAddress(optionsFlow.getPeerAddress().getHostAddress())
                 .uuid(optionsFlow.getUuid().toString())
-                .records(portableFlowValueConverter.convertFlowValueRecords(optionsFlow.getRecords()))
+                .values(portableFlowValueConverter.convertFlowValueRecord(optionsFlow.getRecords()))
                 .scopes(convertScopeFlowRecords(optionsFlow.getScopes()))
                 .build();
     }
@@ -36,7 +37,8 @@ public class PortableOptionsFlowConverter {
     private PortableScopeFlowRecord convertScopeFlowRecord(final ScopeFlowRecord record) {
         final PortableScopeFlowRecord pfr = new PortableScopeFlowRecord();
 
-        pfr.setType(record.getType().toString());
+        pfr.setType(record.getType());
+        pfr.setValue(BigInteger.valueOf(record.getValue().value().longValue()));
 
         return pfr;
     }

@@ -31,5 +31,5 @@ public class PortableOptionsFlow {
     private Header header;
     private String uuid;
     private List<PortableScopeFlowRecord> scopes;
-    private List<PortableFlowValueRecord> records;
+    private PortableFlowValueRecord values;
 }

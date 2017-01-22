@@ -29,12 +29,5 @@ public class PortableDataFlow {
     private String peerAddress;
     private String uuid;
 
-    private InternetAddress srcAddress;
-    private InternetAddress dstAddress;
-    private InternetAddress nextHop;
-    private InternetAddress bgpNextHop;
-    private ProtocolFlags protocolFlags;
-    private PayloadCounters payloadCounters;
-    private TypeOfService typeOfService;
-    private FlowStatistics flowStatistics;
+    private PortableFlowValueRecord values;
 }
